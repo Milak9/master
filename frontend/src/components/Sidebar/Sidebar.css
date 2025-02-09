@@ -1,0 +1,60 @@
+/* Sidebar.css */
+
+/* Sidebar styling */
+.sidebar {
+    width: 240px;  /* Fixed width for large screens */
+    background-color: #6200ea; /* Material-UI Purple */
+    color: white;
+    position: fixed; /* Fixed position on the left */
+    height: 100vh; /* Full height of the viewport */
+    top: 0;
+    left: 0;
+    z-index: 1200; /* Sidebar should be behind the button */
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* The fixed position button for opening the sidebar */
+  .menu-icon {
+    color: white; /* Button color */
+    position: fixed; /* Fixed position relative to the screen */
+    top: 20px; /* 20px from the top */
+    left: 20px; /* 20px from the left */
+    z-index: 1300; /* Button should be above the sidebar */
+  }
+  
+  /* When the sidebar is closed (on smaller screens, hidden) */
+  .sidebar-closed {
+    transform: translateX(-240px); /* Hide sidebar off-screen */
+  }
+  
+  /* Styling for Drawer */
+  .MuiDrawer-paper {
+    background-color: #6200ea; /* Material-UI Purple */
+    color: white;
+  }
+  
+  .MuiListItemText-primary {
+    color: white;
+  }
+  
+  .MuiListItem:hover {
+    background-color: #3700b3; /* Darker Purple */
+  }
+  
+  /* Responsive styling for mobile */
+  @media (max-width: 768px) {
+    /* On mobile, sidebar becomes a full-screen drawer */
+    .sidebar {
+      width: 100%; /* Full width on small screens */
+    }
+  
+    /* Hide sidebar when closed on mobile */
+    .sidebar-closed {
+      transform: translateX(100%); /* Move the sidebar off-screen */
+    }
+  
+    .content {
+      padding-left: 0; /* Remove padding when sidebar is off-screen */
+    }
+  }
+  
