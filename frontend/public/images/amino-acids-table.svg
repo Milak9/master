@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="450" height="632" viewBox="0 0 450 632">
+  <style>
+    .header { 
+      font-weight: bold; 
+      font-size: 14px; 
+      text-anchor: middle; 
+    }
+    .cell { 
+      font-size: 12px; 
+      text-anchor: middle; 
+    }
+  </style>
+  
+  <!-- Table Structure -->
+  <rect x="0" y="0" width="450" height="632" fill="white" stroke="black" stroke-width="1"/>
+  
+  <!-- Header Row -->
+  <rect x="0" y="0" width="450" height="30" fill="white"/>
+  <text x="100" y="20" fill="black" class="header">Aminokiselina</text>
+  <text x="275" y="20" fill="black" class="header">Skraćenica</text>
+  <text x="400" y="20" fill="black" class="header">Masa (Da)</text>
+  
+  <!-- Horizontal Lines -->
+  <line x1="0" y1="30" x2="450" y2="30" stroke="black" stroke-width="1"/>
+  
+  <!-- Table Rows -->
+  <text x="100" y="55" class="cell">Glycine</text>
+  <text x="275" y="55" class="cell">G</text>
+  <text x="400" y="55" class="cell">57</text>
+  <line x1="0" y1="60" x2="450" y2="60" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="85" class="cell">Alanine</text>
+  <text x="275" y="85" class="cell">A</text>
+  <text x="400" y="85" class="cell">71</text>
+  <line x1="0" y1="90" x2="450" y2="90" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="115" class="cell">Serine</text>
+  <text x="275" y="115" class="cell">S</text>
+  <text x="400" y="115" class="cell">87</text>
+  <line x1="0" y1="120" x2="450" y2="120" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="145" class="cell">Proline</text>
+  <text x="275" y="145" class="cell">P</text>
+  <text x="400" y="145" class="cell">97</text>
+  <line x1="0" y1="150" x2="450" y2="150" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="175" class="cell">Valine</text>
+  <text x="275" y="175" class="cell">V</text>
+  <text x="400" y="175" class="cell">99</text>
+  <line x1="0" y1="180" x2="450" y2="180" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="205" class="cell">Threonine</text>
+  <text x="275" y="205" class="cell">T</text>
+  <text x="400" y="205" class="cell">101</text>
+  <line x1="0" y1="210" x2="450" y2="210" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="235" class="cell">Cysteine</text>
+  <text x="275" y="235" class="cell">C</text>
+  <text x="400" y="235" class="cell">103</text>
+  <line x1="0" y1="240" x2="450" y2="240" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="265" class="cell">Isoleucine</text>
+  <text x="275" y="265" class="cell">I</text>
+  <text x="400" y="265" class="cell">113</text>
+  <line x1="0" y1="270" x2="450" y2="270" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="295" class="cell">Leucine</text>
+  <text x="275" y="295" class="cell">L</text>
+  <text x="400" y="295" class="cell">113</text>
+  <line x1="0" y1="300" x2="450" y2="300" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="325" class="cell">Asparagine</text>
+  <text x="275" y="325" class="cell">N</text>
+  <text x="400" y="325" class="cell">114</text>
+  <line x1="0" y1="330" x2="450" y2="330" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="355" class="cell">Aspartic Acid</text>
+  <text x="275" y="355" class="cell">D</text>
+  <text x="400" y="355" class="cell">115</text>
+  <line x1="0" y1="360" x2="450" y2="360" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="385" class="cell">Lysine</text>
+  <text x="275" y="385" class="cell">K</text>
+  <text x="400" y="385" class="cell">128</text>
+  <line x1="0" y1="390" x2="450" y2="390" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="415" class="cell">Glutamine</text>
+  <text x="275" y="415" class="cell">Q</text>
+  <text x="400" y="415" class="cell">128</text>
+  <line x1="0" y1="420" x2="450" y2="420" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="445" class="cell">Glutamic Acid</text>
+  <text x="275" y="445" class="cell">E</text>
+  <text x="400" y="445" class="cell">129</text>
+  <line x1="0" y1="450" x2="450" y2="450" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="475" class="cell">Methionine</text>
+  <text x="275" y="475" class="cell">M</text>
+  <text x="400" y="475" class="cell">131</text>
+  <line x1="0" y1="480" x2="450" y2="480" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="505" class="cell">Histidine</text>
+  <text x="275" y="505" class="cell">H</text>
+  <text x="400" y="505" class="cell">137</text>
+  <line x1="0" y1="510" x2="450" y2="510" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="535" class="cell">Phenylalanine</text>
+  <text x="275" y="535" class="cell">F</text>
+  <text x="400" y="535" class="cell">147</text>
+  <line x1="0" y1="540" x2="450" y2="540" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="565" class="cell">Arginine</text>
+  <text x="275" y="565" class="cell">R</text>
+  <text x="400" y="565" class="cell">156</text>
+  <line x1="0" y1="570" x2="450" y2="570" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="595" class="cell">Tyrosine</text>
+  <text x="275" y="595" class="cell">Y</text>
+  <text x="400" y="595" class="cell">163</text>
+  <line x1="0" y1="600" x2="450" y2="600" stroke="black" stroke-width="0.5"/>
+  
+  <text x="100" y="625" class="cell">Tryptophan</text>
+  <text x="275" y="625" class="cell">W</text>
+  <text x="400" y="625" class="cell">186</text>
+  <line x1="0" y1="630" x2="450" y2="630" stroke="black" stroke-width="0.5"/>
+  
+  <!-- Vertical Lines -->
+  <line x1="200" y1="0" x2="200" y2="700" stroke="black" stroke-width="1"/>
+  <line x1="350" y1="0" x2="350" y2="700" stroke="black" stroke-width="1"/>
+</svg>
