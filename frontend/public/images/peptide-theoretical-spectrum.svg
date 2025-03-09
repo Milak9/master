@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 820">
+  <!-- Background -->
+  <rect width="680" height="820" fill="#f8f9fa" rx="10" ry="10"/>
+
+  <!-- Individual Amino Acids Section -->
+  <text x="36" y="55" font-size="18" font-weight="bold">Pojedinačne Aminokiseline:</text>
+
+  <!-- N Box -->
+  <rect x="80" y="85" width="120" height="100" rx="5" ry="5" fill="#d6e5f3" stroke="#000" stroke-width="1"/>
+  <text x="140" y="125" font-size="32" font-weight="bold" text-anchor="middle">N</text>
+  <text x="140" y="150" font-size="16" text-anchor="middle">Asparagin</text>
+  <text x="140" y="170" font-size="16" text-anchor="middle">114 Da</text>
+
+  <!-- Q Box -->
+  <rect x="215" y="85" width="120" height="100" rx="5" ry="5" fill="#e6f3d6" stroke="#000" stroke-width="1"/>
+  <text x="275" y="125" font-size="32" font-weight="bold" text-anchor="middle">Q</text>
+  <text x="275" y="150" font-size="16" text-anchor="middle">Glutamin</text>
+  <text x="275" y="170" font-size="16" text-anchor="middle">128 Da</text>
+
+  <!-- E Box -->
+  <rect x="350" y="85" width="120" height="100" rx="5" ry="5" fill="#f3d6d6" stroke="#000" stroke-width="1"/>
+  <text x="410" y="125" font-size="32" font-weight="bold" text-anchor="middle">E</text>
+  <text x="410" y="150" font-size="13" text-anchor="middle">Glutaminska Kiselina</text>
+  <text x="410" y="170" font-size="16" text-anchor="middle">129 Da</text>
+
+  <!-- L Box -->
+  <rect x="485" y="85" width="120" height="100" rx="5" ry="5" fill="#f3e8d6" stroke="#000" stroke-width="1"/>
+  <text x="545" y="125" font-size="32" font-weight="bold" text-anchor="middle">L</text>
+  <text x="545" y="150" font-size="16" text-anchor="middle">Leucin</text>
+  <text x="545" y="170" font-size="16" text-anchor="middle">113 Da</text>
+
+  <!-- Empty Peptide Section -->
+  <text x="36" y="245" font-size="18" font-weight="bold">Prazan Peptid:</text>
+
+  <!-- Empty Peptide Box -->
+  <rect x="265" y="265" width="170" height="50" rx="5" ry="5" fill="#e6e9f0" stroke="#000" stroke-width="1"/>
+  <text x="350" y="285" font-size="22" font-weight="bold" text-anchor="middle">-</text>
+  <text x="350" y="305" font-size="16" text-anchor="middle">0 Da</text>
+
+  <!-- Dipeptides Section -->
+  <text x="36" y="355" font-size="18" font-weight="bold">Di-peptidi:</text>
+
+  <!-- NQ Box -->
+  <rect x="150" y="375" width="170" height="50" rx="5" ry="5" fill="#d9ecf5" stroke="#000" stroke-width="1"/>
+  <text x="235" y="400" font-size="22" font-weight="bold" text-anchor="middle">NQ</text>
+  <text x="235" y="420" font-size="16" text-anchor="middle">242 Da</text>
+
+  <!-- QE Box -->
+  <rect x="350" y="375" width="170" height="50" rx="5" ry="5" fill="#dff5d9" stroke="#000" stroke-width="1"/>
+  <text x="435" y="400" font-size="22" font-weight="bold" text-anchor="middle">QE</text>
+  <text x="435" y="420" font-size="16" text-anchor="middle">257 Da</text>
+
+  <!-- EL Box -->
+  <rect x="150" y="435" width="170" height="50" rx="5" ry="5" fill="#f5d9d9" stroke="#000" stroke-width="1"/>
+  <text x="235" y="460" font-size="22" font-weight="bold" text-anchor="middle">EL</text>
+  <text x="235" y="480" font-size="16" text-anchor="middle">242 Da</text>
+
+  <!-- LN Box -->
+  <rect x="350" y="435" width="170" height="50" rx="5" ry="5" fill="#f5e5d9" stroke="#000" stroke-width="1"/>
+  <text x="435" y="460" font-size="22" font-weight="bold" text-anchor="middle">LN</text>
+  <text x="435" y="480" font-size="16" text-anchor="middle">227 Da</text>
+
+  <!-- Tripeptides Section -->
+  <text x="36" y="510" font-size="18" font-weight="bold">Tri-peptidi:</text>
+
+  <!-- NQE Box -->
+  <rect x="150" y="530" width="170" height="50" rx="5" ry="5" fill="#e9d9f5" stroke="#000" stroke-width="1"/>
+  <text x="235" y="555" font-size="22" font-weight="bold" text-anchor="middle">NQE</text>
+  <text x="235" y="575" font-size="16" text-anchor="middle">371 Da</text>
+
+  <!-- QEL Box -->
+  <rect x="350" y="530" width="170" height="50" rx="5" ry="5" fill="#f5f0d9" stroke="#000" stroke-width="1"/>
+  <text x="435" y="555" font-size="22" font-weight="bold" text-anchor="middle">QEL</text>
+  <text x="435" y="575" font-size="16" text-anchor="middle">370 Da</text>
+
+  <!-- LNQ Box -->
+  <rect x="150" y="590" width="170" height="50" rx="5" ry="5" fill="#d9f5e5" stroke="#000" stroke-width="1"/>
+  <text x="235" y="615" font-size="22" font-weight="bold" text-anchor="middle">LNQ</text>
+  <text x="235" y="635" font-size="16" text-anchor="middle">355 Da</text>
+
+  <!-- ELN Box -->
+  <rect x="350" y="590" width="170" height="50" rx="5" ry="5" fill="#f5d9e5" stroke="#000" stroke-width="1"/>
+  <text x="435" y="615" font-size="22" font-weight="bold" text-anchor="middle">ELN</text>
+  <text x="435" y="635" font-size="16" text-anchor="middle">356 Da</text>
+
+  <!-- Complete Peptide Section -->
+  <text x="36" y="665" font-size="18" font-weight="bold">Kompletan Peptid:</text>
+
+  <!-- NQEL Box -->
+  <rect x="265" y="685" width="170" height="50" rx="5" ry="5" fill="#d6e5f3" stroke="#000" stroke-width="1"/>
+  <text x="350" y="710" font-size="22" font-weight="bold" text-anchor="middle">NQEL</text>
+  <text x="350" y="730" font-size="16" text-anchor="middle">484 Da</text>
+
+    <!-- Theoretical Spectrum Section -->
+  <text x="36" y="765" font-size="18" font-weight="bold">Teorijski Spektar peptida NQEL:</text>
+
+  <!-- Theoretical Spectrum Values -->
+  <text x="350" y="790" font-size="16" font-weight="bold" text-anchor="middle">
+    0, 113, 114, 128, 129, 227, 242, 242, 257, 355, 356, 370, 371, 484
+  </text>
+</svg>

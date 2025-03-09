@@ -54,16 +54,16 @@ export default function IntroPage() {
                 <button
                   onClick={() => openLightbox("/images/RNA-Codon-Wheel.png")}
                   className="relative w-full max-w-xs mx-auto aspect-square mb-2 cursor-pointer group"
-                  aria-label="Open RNA Codon Wheel image in full size"
+                  aria-label="Otvori sliku u punoj veličini"
                 >
                   <Image
                     src="/images/RNA-Codon-Wheel.png"
-                    alt="RNA Codon Wheel"
+                    alt="RNK Kodoni"
                     fill
                     style={{ objectFit: "contain" }}
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                    <span className="sr-only">Click to enlarge</span>
+                    <span className="sr-only">Klikni da uvećaš</span>
                   </div>
                 </button>
                 <p className="text-sm text-muted-foreground text-center">
@@ -87,12 +87,12 @@ export default function IntroPage() {
             >
               <Image
                 src="/images/dna-rna-transcription.svg"
-                alt="DNA to RNA Transcription Process"
+                alt="Transkripcija DNK u RNK"
                 fill
                 style={{ objectFit: "contain" }}
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                <span className="sr-only">Click to enlarge</span>
+                <span className="sr-only">Klikni da uvećaš</span>
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
@@ -140,12 +140,12 @@ export default function IntroPage() {
             >
               <Image
                 src="/images/tyrocidine.svg"
-                alt="Tyrocidine structure showing cyclic peptide"
+                alt="Ciklična struktura tirocidina"
                 fill
                 style={{ objectFit: "contain" }}
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                <span className="sr-only">Click to enlarge</span>
+                <span className="sr-only">Klikni da uvećaš</span>
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
@@ -199,21 +199,69 @@ export default function IntroPage() {
             <button
               onClick={() => openLightbox("/images/amino-acids-table.svg")}
               className="relative w-full h-[500px] mb-2 cursor-pointer group"
-              aria-label="Open amino acids table image in full size"
+              aria-label="Otvori sliku u punoj veličini"
             >
               <Image
                 src="/images/amino-acids-table.svg"
-                alt="Table showing masses of amino acids"
+                alt="Tabela koja pokazuje mase aminokiselina"
                 fill
                 style={{ objectFit: "contain" }}
                 priority
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                <span className="sr-only">Click to enlarge</span>
+                <span className="sr-only">Klikni da uvećaš</span>
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
               Slika 4: Tabela masa aminokiselina izraženih u daltonima (Da).
+              <span className="text-xs block text-primary-foreground/70 italic mt-1">
+                Kliknite na sliku za uvećani prikaz
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-semibold mb-6">Teorijski spektar peptida</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <div className="flex flex-col">
+            <div className="prose prose-lg">
+              <p className="text-muted-foreground mb-6">
+                Teorijski spektar peptida predstavlja mase svih mogućih podpeptida, uključujući 0 i masu celog peptida.
+                Na osnovu peptida možemo lako da odredimo teorijski spektar ali na osnovu spektra ne možemo lako
+                da odredimo koji je peptid u pitanju. 
+              </p>
+              <p className="text-muted-foreground mb-6">
+                <span className="font-semibold">Problem sekvenciranja ciklopeptida</span> je problem kako rekonstruisati
+                ciklični peptid na osnovu njegovog teorijskog spektra.
+                U nastavku će biti prikazani 4 različita algoritma koje možete videti u sekciji <span className="italic">Dostupni algoritmi</span>.
+              </p>
+              <p className="text-muted-foreground mb-6">
+                Na slici 5 su prikazane mase svih podpeptida peptida <span className="font-semibold">NQEL</span>, kao i masa praznog 
+                peptida i celog peptida, takođe je prikazan i teorijski spektar.
+              </p>
+            </div>
+          </div>
+
+
+          <div className="flex flex-col items-center justify-center">
+            <button
+              onClick={() => openLightbox("/images/peptide-theoretical-spectrum.svg")}
+              className="relative w-full h-[600px] mb-2 cursor-pointer group"
+              aria-label="Otvori sliku u punoj veličini"
+            >
+              <Image
+                src="/images/peptide-theoretical-spectrum.svg"
+                alt="Teorijski spektar peptida kao i svi njegovi podpeptidi"
+                fill
+                style={{ objectFit: "contain" }}
+                priority
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                <span className="sr-only">Klikni da uvećaš</span>
+              </div>
+            </button>
+            <p className="text-sm text-muted-foreground text-center">
+              Slika 5: Teorijski spektar peptida NQEL koji prikazuje sve moguće podpeptide, njihove mase i njegov teorijski spektar.
               <span className="text-xs block text-primary-foreground/70 italic mt-1">
                 Kliknite na sliku za uvećani prikaz
               </span>
