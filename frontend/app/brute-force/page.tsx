@@ -25,7 +25,6 @@ interface VisibleNode {
   isActive?: boolean
 }
 
-// Update the TheoreticalSpectrum interface to include subpeptides
 interface SpectrumItem {
   mass: number
   subpeptide: string
@@ -44,7 +43,6 @@ interface VisualizationResult {
 const NODE_RADIUS = 35
 const TARGET_MASS = 579
 
-// Update the getMockData function to include subpeptides
 const getMockData = (): VisualizationResult => ({
   tree: {
     node: "Root",
@@ -166,7 +164,6 @@ const getMockData = (): VisualizationResult => ({
   solution: "FPAYT",
 })
 
-// Update the renderSpectrum function to display subpeptides
 const renderSpectrum = (spectrum: SpectrumItem[], isSolution: boolean) => {
   const maxMass = Math.max(...spectrum.map((item) => item.mass))
 
@@ -188,7 +185,6 @@ const renderSpectrum = (spectrum: SpectrumItem[], isSolution: boolean) => {
               {item.subpeptide || "-"}
             </div>
 
-            {/* Peak - increased width and ensured visibility */}
             <div
               className={`w-3 ${isSolution ? "bg-green-500" : "bg-blue-500"}`}
               style={{
@@ -261,7 +257,6 @@ const getNodeColor = (node: TreeNode, isActive: boolean) => {
   return isActive ? "rgb(59 130 246)" : "rgb(209 213 219)" // Blue when active, gray when inactive
 }
 
-// Function to get tooltip text based on node type
 const getNodeTooltip = (node: TreeNode) => {
   if (node.mass === TARGET_MASS && node.end) {
     return "Masa je jednaka eksperimentalnoj masi, ovo je potencijalni kandidat za rešenje."
@@ -292,7 +287,6 @@ export default function BruteForcePage() {
 
   const STEP_DURATION = 1000
 
-  // Add the handleNodeMouseEnter and handleNodeMouseLeave functions here
   const handleNodeMouseEnter = (node: TreeNode, event: React.MouseEvent) => {
     const tooltip = getNodeTooltip(node)
     if (tooltip && containerRef.current) {
@@ -451,8 +445,6 @@ export default function BruteForcePage() {
     }
   }
 
-  // Handle showing tooltip on node hover
-
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Algoritam grube sile</h1>
@@ -538,7 +530,149 @@ export default function BruteForcePage() {
           kandidat peptid i uporedi ga sa eksperimentalnim spektrom. Ovo dodatno povećava računsku složenost algoritma,
           ali je neophodno za pronalaženje tačnog rešenja.
         </p>
+
+        <p className="text-muted-foreground mb-6">
+          Naredni deo prikazuje implementaciju ovog algoritma u programskom jeziku Python.
+        </p>
       </div>
+
+      <Card className="p-6 mb-8">
+        <h3 className="text-xl font-semibold mb-4">Kod za algoritam grube sile</h3>
+        <p className="text-muted-foreground mb-8">
+          Algoritam na ulazu očekuje eksperimentalni spektar uređen rastuće koji uključuje 0 i masu celog peptida koji
+          se sekvencira.
+          <br />
+          Implementacija algoritma grube sile počinje od praznog peptida i u svakom prolasku proširuje peptide
+          dodavanjem aminokiseline uz pomoć funkcije <span className="italic">extends</span>. Za svaki korak, algoritam
+          proverava da li je masa peptida jednaka ciljanoj masi. Ako jeste, proverava se da li teorijski spektar peptida
+          odgovara eksperimentalnom spektru. U slučaju da je teorijski spektar jednak eksperimentalnom spektru taj
+          peptid predstavlja rešenje algoritma. U slučaju da se teorijski spektar razlikuje od eksperimentalnog kandidat
+          nije rešenje i on se odbacuje. Ako masa peptida prelazi ciljanu masu, taj peptid se odbacuje i na taj način se
+          obezbeđuje smanjivanje broja peptida koji se proširuje u svakom koraku. Algoritam nastavlja sa peptidima čija
+          je masa manja od ciljane mase i u sledećem koraku ih ponovo proširuje.
+        </p>
+
+        <div className="overflow-x-auto mt-6 mb-8">
+          <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
+            <code className="text-sm font-mono">
+              {`def brute_force(target_spectrum)
+    peptides = ['']
+    results = []
+    target_peptide_mass = target_spectrum[-1]
+
+    while len(peptides) > 0:
+        extended_peptides = extend(peptides)
+
+        candidates = []
+
+        for peptide in extended_peptides:
+            peptide_mass = calculate_peptide_mass(peptide)
+            if peptide_mass == target_peptide_mass:
+                if cyclic_spectrum(peptide) == target_spectrum:
+                    results.append(peptide)
+            elif peptide_mass < target_peptide_mass:
+                candidates.append(peptide)
+
+        peptides = candidates
+
+    return results
+`}
+            </code>
+          </pre>
+        </div>
+
+        <p className="text-muted-foreground mb-8">
+          Funkcija <span className="italic">extends</span> koja proširuje peptide dodavanjem aminokiselina na peptide
+          koji su ulaz u funkciju:
+        </p>
+
+        <div className="overflow-x-auto mt-6 mb-8">
+          <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
+            <code className="text-sm font-mono">
+              {`def extend(peptides, amino_acid_candidates):
+    extended_peptides = []
+
+    for peptide in peptides:
+        for amino_acid in amino_acid_candidates:
+            if amino_acid != "":
+                extended_peptides.append(peptide + amino_acid)
+
+    return extended_peptides`}
+            </code>
+          </pre>
+        </div>
+
+        <p className="text-muted-foreground mb-8">
+          Funkcija <span className="italic">calculate_peptide_mass</span> računa masu peptida na osnovu tabele
+          aminokiselina i njihovih masa:
+        </p>
+
+        <div className="overflow-x-auto mt-6 mb-8">
+          <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
+            <code className="text-sm font-mono">
+              {`def calculate_peptide_mass(peptide):
+    total_mass = 0
+
+    for aa in peptide:
+        total_mass += AMINO_ACID_MASSES[aa]
+
+    return total_mass`}
+            </code>
+          </pre>
+        </div>
+
+        <p className="text-muted-foreground mb-8">
+          Funkcija <span className="italic">cyclic_spectrum</span> računa teorijski cikličan spektar datog peptida.
+          Razlika u odnosu na linear spektar je što ova funkcija uzima u obzir to da peptidi (npr. tirocidin) mogu biti
+          ciklični i samim tim treba uvrstiti mase podpeptida koji počinju na krajnjim pozicijama peptida a završavaju
+          se na početnim pozicijama.
+          <br />
+          Funkcija prvo na osnovu prefiksnih masa računa mase podpeptida i masu celog peptida. Potom prolazi kroz sam
+          peptid i računa parcijalne mase, odnosno na osnovu prefiksnih masa (mase podpeptida) i njihovim međusobnim
+          oduzimanjem dobija masu fragmenta u okviru peptida. Zbog uslova
+        </p>
+        <div className="overflow-x-auto mt-6 mb-8">
+          <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
+            <code className="text-sm font-mono">
+              {`if i > 0 and j < n:
+            spectrum.append(peptide_mass - fragment_mass)`}
+            </code>
+          </pre>
+        </div>
+        <p className="text-muted-foreground mb-8">
+          osigurava da dodaje i mase cikličnih podpeptida, odnosno od mase celog peptida oduzeće masu nekog unutrašnjeg
+          peptida čime će dobiti masu <span className="italic">spoljašnjeg</span> peptida.
+        </p>
+
+        <div className="overflow-x-auto mt-6 mb-8">
+          <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
+            <code className="text-sm font-mono">
+              {`def cyclic_spectrum(peptide):
+    n = len(peptide)
+
+    prefix_mass = [0 for _ in range(n + 1)]
+
+    for i in range(n):
+        amino_acid = peptide[i]
+        prefix_mass[i + 1] = prefix_mass[i] + AMINO_ACID_MASSES[amino_acid]
+
+    spectrum = [0]
+    peptide_mass = prefix_mass[-1]
+
+    for i in range(n):
+        for j in range(i + 1, n + 1):
+            fragment_mass = prefix_mass[j] - prefix_mass[i]
+            spectrum.append(fragment_mass)
+
+            if i > 0 and j < n:
+                spectrum.append(peptide_mass - fragment_mass)
+
+    spectrum.sort()
+    return spectrum`}
+            </code>
+          </pre>
+        </div>
+      </Card>
 
       <Card className="p-6 mb-8">
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -758,7 +892,7 @@ export default function BruteForcePage() {
                             r={8}
                             fill="white"
                             className="cursor-pointer"
-                            onMouseEnter={(e) => handleNodeMouseEnter(visibleNode.node, e)}
+                            onMouseEnter={(e) => hasTooltip && handleNodeMouseEnter(visibleNode.node, e)}
                             onMouseLeave={handleNodeMouseLeave}
                           />
                         )}
