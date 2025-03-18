@@ -3,7 +3,7 @@ from collections import Counter
 
 from django.views.generic.base import View
 from django.http import JsonResponse
-from utils import (calculate_peptide_mass, cyclic_spectrum, consistent, extend, leaderboard_sequencing,
+from utils import (calculate_peptide_mass, cyclic_spectrum, is_consistent_with_spectrum, extend, leaderboard_sequencing,
                    prepare_amino_acids_that_are_candidates)
 import numpy as np
 
@@ -51,11 +51,12 @@ class BranchAndBound(View):
             consistent_peptides = []
 
             for peptide in extended_peptides:
-                if calculate_peptide_mass(peptide) == target_peptide_mass:
+                peptide_mass = calculate_peptide_mass(peptide)
+                if peptide_mass == target_peptide_mass:
                     if cyclic_spectrum(peptide) == target_spectrum:
                         results.append(peptide)
-                else:
-                    if consistent(peptide, target_spectrum):
+                elif peptide_mass < target_peptide_mass:
+                    if is_consistent_with_spectrum(peptide, target_spectrum):
                         consistent_peptides.append(peptide)
 
             peptides = consistent_peptides

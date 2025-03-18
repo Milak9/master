@@ -44,7 +44,7 @@ def cyclic_spectrum(peptide):
     return spectrum
 
 
-def extend(peptides, amino_acid_candidates):
+def extend(peptides, amino_acid_candidates=AMINO_ACID_MASSES.keys()):
     extended_peptides = []
 
     for peptide in peptides:
@@ -64,7 +64,7 @@ def calculate_peptide_mass(peptide):
     return total_mass
 
 
-def consistent(peptide, target_spectrum):
+def is_consistent_with_spectrum(peptide, target_spectrum):
     peptide_spectrum = linear_spectrum(peptide)
 
     i = 0
