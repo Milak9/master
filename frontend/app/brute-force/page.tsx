@@ -170,9 +170,8 @@ const renderSpectrum = (spectrum: SpectrumItem[], isSolution: boolean) => {
   return (
     <div className="relative h-48 w-full bg-gray-100 dark:bg-gray-800 rounded-lg mt-4 mb-12 px-4 pt-8 pb-10">
       {spectrum.map((item, index) => {
-        // Calculate position with padding to keep values inside the box
-        const position = (index / (spectrum.length - 1)) * (100 - 8) + 4 // 4% padding on each side
-        const height = Math.max(20, (item.mass / maxMass) * 60) // Ensure minimum height and max 60% of container
+        const position = (index / (spectrum.length - 1)) * (100 - 8) + 4
+        const height = Math.max(20, (item.mass / maxMass) * 60)
 
         return (
           <div
@@ -222,19 +221,41 @@ const flattenTree = (
 ): VisibleNode[] => {
   result.push({ node, x, y, parentX, parentY })
 
-  const levelHeight = 120
+  const levelHeight = 90
+
+  const childrenCount = node.children.length
+  if (childrenCount === 0) return result
+
+  const subtreeWidths: number[] = []
+  let totalSubtreeWidth = 0
+
+  for (const child of node.children) {
+    const { width } = getTreeDimensions(child)
+    subtreeWidths.push(width)
+    totalSubtreeWidth += width
+  }
+
+  // Base spacing between siblings
   const siblingSpacing = 140
 
+  // Position for the leftmost child
+  let currentX = x - (totalSubtreeWidth * siblingSpacing) / 2
+
+  // Position each child based on its subtree width
   node.children.forEach((child, index) => {
-    const childX = x + (index - (node.children.length - 1) / 2) * siblingSpacing
+    const subtreeWidth = subtreeWidths[index]
+    const childX = currentX + (subtreeWidth * siblingSpacing) / 2
     const childY = y + levelHeight
+
     flattenTree(child, childX, childY, x, y, result)
+
+    // Move to the next child position
+    currentX += subtreeWidth * siblingSpacing
   })
 
   return result
 }
 
-// Helper function to find all target nodes in the tree
 const findTargetNodes = (node: TreeNode, result: TreeNode[] = []): TreeNode[] => {
   if (node.mass === TARGET_MASS && node.end) {
     result.push(node)
@@ -247,14 +268,65 @@ const findTargetNodes = (node: TreeNode, result: TreeNode[] = []): TreeNode[] =>
   return result
 }
 
-const getNodeColor = (node: TreeNode, isActive: boolean) => {
-  if (node.mass === TARGET_MASS && node.end) {
-    return "rgb(34 197 94)" // Green for target mass end nodes
+const getTreeDimensions = (node: TreeNode): { width: number; depth: number } => {
+  if (node.children.length === 0) {
+    return { width: 1, depth: 1 }
   }
+
+  let totalWidth = 0
+  let maxDepth = 0
+
+  for (const child of node.children) {
+    const { width, depth } = getTreeDimensions(child)
+    totalWidth += width
+    maxDepth = Math.max(maxDepth, depth)
+  }
+
+  return { width: totalWidth, depth: maxDepth + 1 }
+}
+
+const calculateSvgDimensions = (tree: TreeNode) => {
+  const { width, depth } = getTreeDimensions(tree)
+
+  // Base dimensions
+  const baseWidth = 1200
+  const baseHeight = 400
+
+  // Scale factors
+  const widthScale = Math.max(1, width / 5) * 1.2
+  const depthScale = Math.max(1, depth / 4) * 0.9
+
+  // Calculate dimensions
+  const svgWidth = baseWidth * widthScale
+  const svgHeight = baseHeight * depthScale
+
+  // Calculate viewBox
+  const viewBoxWidth = svgWidth
+  const viewBoxHeight = svgHeight
+  const viewBoxX = -viewBoxWidth / 2
+  const viewBoxY = -50
+
+  return {
+    width: "100%",
+    height: svgHeight,
+    viewBox: `${viewBoxX} ${viewBoxY} ${viewBoxWidth} ${viewBoxHeight}`,
+  }
+}
+
+const getNodeColor = (node: TreeNode, isActive: boolean) => {
+  if (isActive) {
+    return "rgb(59 130 246)" // Blue when active
+  }
+
   if (node.mass > TARGET_MASS) {
     return "rgb(239 68 68)" // Red for over target mass
   }
-  return isActive ? "rgb(59 130 246)" : "rgb(209 213 219)" // Blue when active, gray when inactive
+
+  if (node.mass === TARGET_MASS && node.end) {
+    return "rgb(34 197 94)" // Green for target mass end nodes
+  }
+
+  return "rgb(209 213 219)" // Gray when inactive
 }
 
 const getNodeTooltip = (node: TreeNode) => {
@@ -284,6 +356,12 @@ export default function BruteForcePage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef<number>()
   const lastTimeRef = useRef<number>(0)
+
+  const [svgDimensions, setSvgDimensions] = useState({
+    width: "100%",
+    height: 400,
+    viewBox: "-600 -30 1200 600",
+  })
 
   const STEP_DURATION = 1000
 
@@ -315,6 +393,10 @@ export default function BruteForcePage() {
       // Find all target nodes in the tree
       const targets = findTargetNodes(visualizationData.tree)
       setTargetNodes(targets)
+
+      // Calculate and set SVG dimensions based on tree structure
+      const dimensions = calculateSvgDimensions(visualizationData.tree)
+      setSvgDimensions(dimensions)
     }
   }, [visualizationData])
 
@@ -333,6 +415,14 @@ export default function BruteForcePage() {
           } else {
             setIsAnimationComplete(true)
             setIsPlaying(false)
+
+            // When animation completes, set all nodes as inactive
+            setVisibleNodes(
+              allNodes.map((node) => ({
+                ...node,
+                isActive: false,
+              })),
+            )
             return
           }
         } else {
@@ -435,11 +525,10 @@ export default function BruteForcePage() {
       setIsAnimationComplete(true)
       setIsPlaying(false)
 
-      // Ensure all nodes are visible, including target nodes
       setVisibleNodes(
-        allNodes.map((node, index) => ({
+        allNodes.map((node) => ({
           ...node,
-          isActive: index === allNodes.length - 1,
+          isActive: false, // Set all nodes as inactive at the end
         })),
       )
     }
@@ -556,26 +645,30 @@ export default function BruteForcePage() {
           <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
             <code className="text-sm font-mono">
               {`def brute_force(target_spectrum)
-    peptides = ['']
-    results = []
-    target_peptide_mass = target_spectrum[-1]
+  peptides = ['']
+  results = []
+  target_peptide_mass = target_spectrum[-1]
 
-    while len(peptides) > 0:
-        extended_peptides = extend(peptides)
+  while len(peptides) > 0:
+      # Proširujemo peptide aminokiselinama
+      extended_peptides = extend(peptides)
 
-        candidates = []
+      candidates = []
 
-        for peptide in extended_peptides:
-            peptide_mass = calculate_peptide_mass(peptide)
-            if peptide_mass == target_peptide_mass:
-                if cyclic_spectrum(peptide) == target_spectrum:
-                    results.append(peptide)
-            elif peptide_mass < target_peptide_mass:
-                candidates.append(peptide)
+      for peptide in extended_peptides:
+          peptide_mass = calculate_peptide_mass(peptide)
+          # Ako je masa jednaka traženoj masi, ovo je potencijalno rešenje
+          if peptide_mass == target_peptide_mass:
+              # Provera da li je ciklični spektar jednak traženom spektru
+              if cyclic_spectrum(peptide) == target_spectrum:
+                  results.append(peptide)
+          # Ako je masa manja od tražene, peptid je i dalje potencijalno rešenje, inače se odbacuje
+          elif peptide_mass < target_peptide_mass:
+              candidates.append(peptide)
 
-        peptides = candidates
+      peptides = candidates
 
-    return results
+  return results
 `}
             </code>
           </pre>
@@ -590,14 +683,15 @@ export default function BruteForcePage() {
           <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
             <code className="text-sm font-mono">
               {`def extend(peptides, amino_acid_candidates):
-    extended_peptides = []
+  extended_peptides = []
 
-    for peptide in peptides:
-        for amino_acid in amino_acid_candidates:
-            if amino_acid != "":
-                extended_peptides.append(peptide + amino_acid)
+  for peptide in peptides:
+      # Svaki od peptida proširujemo aminokiselinama
+      for amino_acid in amino_acid_candidates:
+          if amino_acid != "":
+              extended_peptides.append(peptide + amino_acid)
 
-    return extended_peptides`}
+  return extended_peptides`}
             </code>
           </pre>
         </div>
@@ -611,12 +705,12 @@ export default function BruteForcePage() {
           <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
             <code className="text-sm font-mono">
               {`def calculate_peptide_mass(peptide):
-    total_mass = 0
+  total_mass = 0
 
-    for aa in peptide:
-        total_mass += AMINO_ACID_MASSES[aa]
+  for aa in peptide:
+      total_mass += AMINO_ACID_MASSES[aa]
 
-    return total_mass`}
+  return total_mass`}
             </code>
           </pre>
         </div>
@@ -635,7 +729,7 @@ export default function BruteForcePage() {
           <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
             <code className="text-sm font-mono">
               {`if i > 0 and j < n:
-            spectrum.append(peptide_mass - fragment_mass)`}
+          spectrum.append(peptide_mass - fragment_mass)`}
             </code>
           </pre>
         </div>
@@ -648,27 +742,29 @@ export default function BruteForcePage() {
           <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
             <code className="text-sm font-mono">
               {`def cyclic_spectrum(peptide):
-    n = len(peptide)
+  n = len(peptide)
 
-    prefix_mass = [0 for _ in range(n + 1)]
+  prefix_mass = [0 for _ in range(n + 1)]
 
-    for i in range(n):
-        amino_acid = peptide[i]
-        prefix_mass[i + 1] = prefix_mass[i] + AMINO_ACID_MASSES[amino_acid]
+  for i in range(n):
+      amino_acid = peptide[i]
+      prefix_mass[i + 1] = prefix_mass[i] + AMINO_ACID_MASSES[amino_acid]
 
-    spectrum = [0]
-    peptide_mass = prefix_mass[-1]
+  spectrum = [0] # masa praznog peptida
+  peptide_mass = prefix_mass[-1] # masa celog peptida
 
-    for i in range(n):
-        for j in range(i + 1, n + 1):
-            fragment_mass = prefix_mass[j] - prefix_mass[i]
-            spectrum.append(fragment_mass)
+  for i in range(n):
+      for j in range(i + 1, n + 1):
+          # Masa središnjeg dela peptida
+          fragment_mass = prefix_mass[j] - prefix_mass[i]
+          spectrum.append(fragment_mass)
 
-            if i > 0 and j < n:
-                spectrum.append(peptide_mass - fragment_mass)
+          # Uslov za proveru da li se dodaje masa podpeptida koji obuhvata kraj i početak peptida
+          if i > 0 and j < n:
+              spectrum.append(peptide_mass - fragment_mass)
 
-    spectrum.sort()
-    return spectrum`}
+  spectrum.sort()
+  return spectrum`}
             </code>
           </pre>
         </div>
@@ -727,7 +823,7 @@ export default function BruteForcePage() {
           <span>Pređite mišem preko crvenih ili zelenih čvorova za dodatne informacije</span>
         </div>
 
-        <div ref={containerRef} className="bg-card rounded-lg p-6 min-h-[400px] overflow-auto relative">
+        <div ref={containerRef} className="bg-card rounded-lg p-6 min-h-[300px] overflow-auto relative">
           {/* Tooltip */}
           {activeTooltip && (
             <div
@@ -745,11 +841,12 @@ export default function BruteForcePage() {
 
           {visualizationData ? (
             <>
+              {/* Update the SVG element to use the dynamic dimensions */}
               <svg
                 ref={svgRef}
-                width="100%"
-                height="800"
-                viewBox="-600 -100 1200 1000"
+                width={svgDimensions.width}
+                height={svgDimensions.height}
+                viewBox={svgDimensions.viewBox}
                 preserveAspectRatio="xMidYMid meet"
                 className="mx-auto"
               >
@@ -892,7 +989,7 @@ export default function BruteForcePage() {
                             r={8}
                             fill="white"
                             className="cursor-pointer"
-                            onMouseEnter={(e) => hasTooltip && handleNodeMouseEnter(visibleNode.node, e)}
+                            onMouseEnter={(e) => handleNodeMouseEnter(visibleNode.node, e)}
                             onMouseLeave={handleNodeMouseLeave}
                           />
                         )}
@@ -989,4 +1086,3 @@ export default function BruteForcePage() {
     </div>
   )
 }
-
