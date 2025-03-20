@@ -15,7 +15,7 @@ interface TreeNode {
   candidate: boolean
   children: TreeNode[]
   spectrum?: number[]
-  reason: string
+  reason?: string
   mass: number
 }
 
@@ -186,11 +186,9 @@ const flattenTree = (
 
   const levelHeight = 90
 
-  // Calculate the total width needed for this subtree
   const childrenCount = node.children.length
   if (childrenCount === 0) return result
 
-  // Calculate subtree widths to position children
   const subtreeWidths: number[] = []
   let totalSubtreeWidth = 0
 
@@ -220,7 +218,6 @@ const flattenTree = (
   return result
 }
 
-// Helper function to find all target nodes in the tree
 const findTargetNodes = (node: TreeNode, result: TreeNode[] = []): TreeNode[] => {
   if (node.mass === TARGET_MASS && node.end) {
     result.push(node)
@@ -340,12 +337,31 @@ export default function BranchAndBoundPage() {
 
   const STEP_DURATION = 1000
 
+  const skipToEnd = () => {
+    if (visualizationData) {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+
+      const allNodes = flattenTree(visualizationData.tree, 0, 0)
+      setCurrentStep(allNodes.length - 1)
+      setLineProgress(100)
+      setIsAnimationComplete(true)
+      setIsPlaying(false)
+
+      setVisibleNodes(allNodes)
+      setCurrentTime(totalDuration)
+    }
+  }
+
   const handleNodeMouseEnter = (node: TreeNode, event: React.MouseEvent) => {
     const tooltip = getNodeTooltip(node)
     if (tooltip && containerRef.current) {
+      // Get the position relative to the viewport
       const rect = event.currentTarget.getBoundingClientRect()
       const containerRect = containerRef.current.getBoundingClientRect()
 
+      // Calculate position relative to the container
       const x = rect.left + rect.width / 2 - containerRect.left
       const y = rect.top - containerRect.top
 
@@ -366,9 +382,11 @@ export default function BranchAndBoundPage() {
       const targets = findTargetNodes(visualizationData.tree)
       setTargetNodes(targets)
 
+      // Find all candidate nodes
       const candidates = allNodes.map((vn) => vn.node).filter((node) => node.candidate)
-      setCandidateNodes(allNodes.map((vn) => vn.node).filter((node) => node.candidate))
+      setCandidateNodes(candidates)
 
+      // Calculate and set SVG dimensions based on tree structure
       const dimensions = calculateSvgDimensions(visualizationData.tree)
       setSvgDimensions(dimensions)
     }
@@ -376,13 +394,14 @@ export default function BranchAndBoundPage() {
 
   useEffect(() => {
     if (visualizationData && isPlaying) {
+      const allNodes = flattenTree(visualizationData.tree, 0, 0)
+
       const animate = (timestamp: number) => {
         if (!lastTimeRef.current) lastTimeRef.current = timestamp
         const deltaTime = timestamp - lastTimeRef.current
 
         if (deltaTime >= STEP_DURATION) {
           lastTimeRef.current = timestamp
-          const allNodes = flattenTree(visualizationData.tree, 0, 0)
           if (currentStep < allNodes.length - 1) {
             setCurrentStep((prev) => prev + 1)
             setLineProgress(0)
@@ -390,7 +409,6 @@ export default function BranchAndBoundPage() {
             setIsAnimationComplete(true)
             setIsPlaying(false)
 
-            // When animation completes, set all nodes as inactive
             setVisibleNodes(
               allNodes.map((node) => ({
                 ...node,
@@ -406,6 +424,13 @@ export default function BranchAndBoundPage() {
         animationRef.current = requestAnimationFrame(animate)
       }
 
+      // Reset animation state when starting
+      if (isAnimationComplete && currentStep === allNodes.length - 1) {
+        setCurrentStep(0)
+        setLineProgress(0)
+        setIsAnimationComplete(false)
+      }
+
       lastTimeRef.current = 0
       animationRef.current = requestAnimationFrame(animate)
 
@@ -415,21 +440,28 @@ export default function BranchAndBoundPage() {
         }
       }
     }
-  }, [visualizationData, isPlaying, currentStep])
+  }, [visualizationData, isPlaying, currentStep, isAnimationComplete])
 
   useEffect(() => {
     if (visualizationData) {
       const allNodes = flattenTree(visualizationData.tree, 0, 0)
       const currentNodes = allNodes.slice(0, currentStep + 1)
-      setVisibleNodes(
-        currentNodes.map((node, index) => ({
-          ...node,
-          isActive: index === currentStep,
-        })),
-      )
+
+      // If animation is complete, don't mark any node as active to allow proper coloring
+      if (isAnimationComplete) {
+        setVisibleNodes(currentNodes)
+      } else {
+        setVisibleNodes(
+          currentNodes.map((node, index) => ({
+            ...node,
+            isActive: index === currentStep,
+          })),
+        )
+      }
+
       setCurrentTime(currentStep * STEP_DURATION + (STEP_DURATION * lineProgress) / 100)
     }
-  }, [visualizationData, currentStep, lineProgress])
+  }, [visualizationData, currentStep, lineProgress, isAnimationComplete])
 
   const handleTimelineChange = (value: number[]) => {
     if (!visualizationData) return
@@ -487,27 +519,6 @@ export default function BranchAndBoundPage() {
     setIsAnimationComplete(false)
   }
 
-  const skipToEnd = () => {
-    if (visualizationData) {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
-      }
-
-      const allNodes = flattenTree(visualizationData.tree, 0, 0)
-      setCurrentStep(allNodes.length - 1)
-      setLineProgress(100)
-      setIsAnimationComplete(true)
-      setIsPlaying(false)
-
-      setVisibleNodes(
-        allNodes.map((node) => ({
-          ...node,
-          isActive: false, // Set all nodes as inactive at the end
-        })),
-      )
-    }
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Branch and Bound Algoritam</h1>
@@ -531,7 +542,7 @@ export default function BranchAndBoundPage() {
           </li>
           <li>
             <strong>Ograničavanje (Bound):</strong> Za svaki čvor, algoritam procenjuje da li taj put može dovesti do
-            validnog rešenja. Ako masa peptida već premašuje ciljanu masu, ili ako se teorijski spektar delimične sekvence peptida
+            validnog rešenja. Ako masa peptida već premašuje ciljanu masu, ili ako teorijski spektar delimične sekvence peptida
             nije konzistentan sa eksperimentalnim, ta grana se "odseca" i dalje ne istražuje.
           </li>
           <li>
@@ -783,7 +794,7 @@ export default function BranchAndBoundPage() {
                         NODE_RADIUS,
                       )
 
-                      const progress = isLastNode ? lineProgress : 100
+                      const progress = isAnimationComplete ? 100 : isLastNode ? lineProgress : 100
                       const currentEndPoint = {
                         x: startPoint.x + (endPoint.x - startPoint.x) * (progress / 100),
                         y: startPoint.y + (endPoint.y - startPoint.y) * (progress / 100),

@@ -170,6 +170,7 @@ const renderSpectrum = (spectrum: SpectrumItem[], isSolution: boolean) => {
   return (
     <div className="relative h-48 w-full bg-gray-100 dark:bg-gray-800 rounded-lg mt-4 mb-12 px-4 pt-8 pb-10">
       {spectrum.map((item, index) => {
+        // Calculate position with padding to keep values inside the box
         const position = (index / (spectrum.length - 1)) * (100 - 8) + 4
         const height = Math.max(20, (item.mass / maxMass) * 60)
 
@@ -179,7 +180,6 @@ const renderSpectrum = (spectrum: SpectrumItem[], isSolution: boolean) => {
             className="absolute bottom-10"
             style={{ left: `${position}%`, transform: "translateX(-50%)" }}
           >
-            {/* Subpeptide label above the peak */}
             <div className="text-xs font-mono text-center absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 w-16 overflow-visible whitespace-nowrap">
               {item.subpeptide || "-"}
             </div>
@@ -223,6 +223,7 @@ const flattenTree = (
 
   const levelHeight = 90
 
+  // Calculate the total width needed for this subtree
   const childrenCount = node.children.length
   if (childrenCount === 0) return result
 
@@ -235,7 +236,6 @@ const flattenTree = (
     totalSubtreeWidth += width
   }
 
-  // Base spacing between siblings
   const siblingSpacing = 140
 
   // Position for the leftmost child
@@ -326,7 +326,7 @@ const getNodeColor = (node: TreeNode, isActive: boolean) => {
     return "rgb(34 197 94)" // Green for target mass end nodes
   }
 
-  return "rgb(209 213 219)" // Gray when inactive
+  return "rgb(209 213 219)" // Gray for other nodes
 }
 
 const getNodeTooltip = (node: TreeNode) => {
@@ -356,7 +356,6 @@ export default function BruteForcePage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef<number>()
   const lastTimeRef = useRef<number>(0)
-
   const [svgDimensions, setSvgDimensions] = useState({
     width: "100%",
     height: 400,
@@ -364,6 +363,23 @@ export default function BruteForcePage() {
   })
 
   const STEP_DURATION = 1000
+
+  const skipToEnd = () => {
+    if (visualizationData) {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+
+      const allNodes = flattenTree(visualizationData.tree, 0, 0)
+      setCurrentStep(allNodes.length - 1)
+      setLineProgress(100)
+      setIsAnimationComplete(true)
+      setIsPlaying(false)
+
+      setVisibleNodes(allNodes)
+      setCurrentTime(totalDuration)
+    }
+  }
 
   const handleNodeMouseEnter = (node: TreeNode, event: React.MouseEvent) => {
     const tooltip = getNodeTooltip(node)
@@ -385,6 +401,7 @@ export default function BruteForcePage() {
     setActiveTooltip(null)
   }
 
+  // Update the useEffect that handles visualization data to calculate SVG dimensions
   useEffect(() => {
     if (visualizationData) {
       const allNodes = flattenTree(visualizationData.tree, 0, 0)
@@ -447,15 +464,22 @@ export default function BruteForcePage() {
     if (visualizationData) {
       const allNodes = flattenTree(visualizationData.tree, 0, 0)
       const currentNodes = allNodes.slice(0, currentStep + 1)
-      setVisibleNodes(
-        currentNodes.map((node, index) => ({
-          ...node,
-          isActive: index === currentStep,
-        })),
-      )
+
+      // If animation is complete, don't mark any node as active to allow proper coloring
+      if (isAnimationComplete) {
+        setVisibleNodes(currentNodes)
+      } else {
+        setVisibleNodes(
+          currentNodes.map((node, index) => ({
+            ...node,
+            isActive: index === currentStep,
+          })),
+        )
+      }
+
       setCurrentTime(currentStep * STEP_DURATION + (STEP_DURATION * lineProgress) / 100)
     }
-  }, [visualizationData, currentStep, lineProgress])
+  }, [visualizationData, currentStep, lineProgress, isAnimationComplete])
 
   const handleTimelineChange = (value: number[]) => {
     if (!visualizationData) return
@@ -489,7 +513,6 @@ export default function BruteForcePage() {
       setIsAnimationComplete(false)
       setTargetNodes([])
 
-      // Set visualization data after resetting state
       setTimeout(() => {
         const data = getMockData()
         setVisualizationData(data)
@@ -511,27 +534,6 @@ export default function BruteForcePage() {
     setCurrentTime(0)
     lastTimeRef.current = 0
     setIsAnimationComplete(false)
-  }
-
-  const skipToEnd = () => {
-    if (visualizationData) {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
-      }
-
-      const allNodes = flattenTree(visualizationData.tree, 0, 0)
-      setCurrentStep(allNodes.length - 1)
-      setLineProgress(100)
-      setIsAnimationComplete(true)
-      setIsPlaying(false)
-
-      setVisibleNodes(
-        allNodes.map((node) => ({
-          ...node,
-          isActive: false, // Set all nodes as inactive at the end
-        })),
-      )
-    }
   }
 
   return (
