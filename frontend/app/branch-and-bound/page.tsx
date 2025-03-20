@@ -334,6 +334,7 @@ export default function BranchAndBoundPage() {
     height: 400,
     viewBox: "-600 -30 1200 600",
   })
+  const [controlsEnabled, setControlsEnabled] = useState(false)
 
   const STEP_DURATION = 1000
 
@@ -494,6 +495,7 @@ export default function BranchAndBoundPage() {
       lastTimeRef.current = 0
       setIsAnimationComplete(false)
       setTargetNodes([])
+      setControlsEnabled(true)
 
       // Set visualization data after resetting state
       setTimeout(() => {
@@ -542,8 +544,8 @@ export default function BranchAndBoundPage() {
           </li>
           <li>
             <strong>Ograničavanje (Bound):</strong> Za svaki čvor, algoritam procenjuje da li taj put može dovesti do
-            validnog rešenja. Ako masa peptida već premašuje ciljanu masu, ili ako teorijski spektar delimične sekvence peptida
-            nije konzistentan sa eksperimentalnim, ta grana se "odseca" i dalje ne istražuje.
+            validnog rešenja. Ako masa peptida već premašuje ciljanu masu, ili ako teorijski spektar delimične sekvence
+            peptida nije konzistentan sa eksperimentalnim, ta grana se "odseca" i dalje ne istražuje.
           </li>
           <li>
             <strong>Optimizacija:</strong> Algoritam može koristiti dodatne heuristike za procenu koje grane prvo
@@ -571,7 +573,10 @@ export default function BranchAndBoundPage() {
               <h3 className="text-lg font-semibold">Branch and Bound</h3>
               <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                 <li>Inteligentno eliminiše neperspektivne grane</li>
-                <li>Značajno bolja vremenska složenost (u najgorem slučaju je i dalje eksponencijalne složenosti ali i dalje dosta brži)</li>
+                <li>
+                  Značajno bolja vremenska složenost (u najgorem slučaju je i dalje eksponencijalne složenosti ali i
+                  dalje dosta brži)
+                </li>
                 <li>I dalje garantuje pronalaženje svih rešenja</li>
                 <li>Efikasniji za duže peptide</li>
               </ul>
@@ -712,13 +717,13 @@ export default function BranchAndBoundPage() {
 
       <div className="space-y-4">
         <div className="flex space-x-2">
-          <Button variant="outline" size="icon" onClick={() => setIsPlaying(!isPlaying)}>
+          <Button variant="outline" size="icon" onClick={() => setIsPlaying(!isPlaying)} disabled={!controlsEnabled}>
             {isPlaying ? <PauseCircle className="h-4 w-4" /> : <PlayCircle className="h-4 w-4" />}
           </Button>
-          <Button variant="outline" size="icon" onClick={handleReset}>
+          <Button variant="outline" size="icon" onClick={handleReset} disabled={!controlsEnabled}>
             <RotateCcw className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={skipToEnd} title="Skip to end">
+          <Button variant="outline" size="icon" onClick={skipToEnd} title="Skip to end" disabled={!controlsEnabled}>
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
@@ -1026,4 +1031,3 @@ export default function BranchAndBoundPage() {
     </div>
   )
 }
-

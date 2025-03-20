@@ -361,6 +361,7 @@ export default function BruteForcePage() {
     height: 400,
     viewBox: "-600 -30 1200 600",
   })
+  const [controlsEnabled, setControlsEnabled] = useState(false)
 
   const STEP_DURATION = 1000
 
@@ -512,6 +513,7 @@ export default function BruteForcePage() {
       lastTimeRef.current = 0
       setIsAnimationComplete(false)
       setTargetNodes([])
+      setControlsEnabled(true)
 
       setTimeout(() => {
         const data = getMockData()
@@ -791,13 +793,13 @@ export default function BruteForcePage() {
 
       <div className="space-y-4">
         <div className="flex space-x-2">
-          <Button variant="outline" size="icon" onClick={() => setIsPlaying(!isPlaying)}>
+          <Button variant="outline" size="icon" onClick={() => setIsPlaying(!isPlaying)} disabled={!controlsEnabled}>
             {isPlaying ? <PauseCircle className="h-4 w-4" /> : <PlayCircle className="h-4 w-4" />}
           </Button>
-          <Button variant="outline" size="icon" onClick={handleReset}>
+          <Button variant="outline" size="icon" onClick={handleReset} disabled={!controlsEnabled}>
             <RotateCcw className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={skipToEnd} title="Skip to end">
+          <Button variant="outline" size="icon" onClick={skipToEnd} title="Skip to end" disabled={!controlsEnabled}>
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
