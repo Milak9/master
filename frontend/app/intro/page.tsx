@@ -300,7 +300,7 @@ export default function IntroPage() {
               Direktan pristup gde se isprobavaju sve moguće kombinacije da bi se našlo optimalno rešenje.
             </p>
             <Button asChild variant="outline" className="w-full">
-              <Link href="/brute-force">
+              <Link href="/brute_force">
                 Istraži <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -312,20 +312,20 @@ export default function IntroPage() {
               Optimizovan algoritam koji će odbacivati kandidate čim prestanu da budu potencijalno rešenje.
             </p>
             <Button asChild variant="outline" className="w-full">
-              <Link href="/branch-and-bound">
+              <Link href="/branch_and_bound">
                 Istraži <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </Card>
 
           <Card className="p-6">
-            <h3 className="text-xl font-semibold mb-3">Score Algoritam</h3>
+            <h3 className="text-xl font-semibold mb-3">Leaderboard Algoritam</h3>
             <p className="text-muted-foreground mb-4">
               Algoritam koji održava listu N najboljih kandidata za rešenje i na osnovu njih smanjuje broj potencijalnih
               kandidata.
             </p>
             <Button asChild variant="outline" className="w-full">
-              <Link href="/score">
+              <Link href="/leaderboard">
                 Istraži <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>

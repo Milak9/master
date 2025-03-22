@@ -17,14 +17,14 @@ export function Header() {
               <Link href="/intro" className="text-sm font-medium transition-colors hover:text-primary">
                 Uvod
               </Link>
-              <Link href="/brute-force" className="text-sm font-medium transition-colors hover:text-primary">
+              <Link href="/brute_force" className="text-sm font-medium transition-colors hover:text-primary">
                 Algoritam grube sile
               </Link>
-              <Link href="/branch-and-bound" className="text-sm font-medium transition-colors hover:text-primary">
+              <Link href="/branch_and_bound" className="text-sm font-medium transition-colors hover:text-primary">
                 Branch & Bound
               </Link>
-              <Link href="/score" className="text-sm font-medium transition-colors hover:text-primary">
-                Score Algoritam
+              <Link href="/leaderboard" className="text-sm font-medium transition-colors hover:text-primary">
+                Leaderboard Algoritam
               </Link>
               <Link href="/convolution" className="text-sm font-medium transition-colors hover:text-primary">
                 Spektralna konvolucija

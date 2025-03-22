@@ -60,22 +60,22 @@ export default function NotFound() {
           </p>
           <div className="flex flex-wrap gap-3 justify-center mt-4">
             <Link
-              href="/brute-force"
+              href="/brute_force"
               className="text-sm px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
             >
               Algoritam grube sile
             </Link>
             <Link
-              href="/branch-and-bound"
+              href="/branch_and_bound"
               className="text-sm px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
             >
               Branch & Bound
             </Link>
             <Link
-              href="/score"
+              href="/leaderboard"
               className="text-sm px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
             >
-              Score algoritam
+              Leaderboard algoritam
             </Link>
             <Link
               href="/convolution"
