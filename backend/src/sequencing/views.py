@@ -1,11 +1,7 @@
-import heapq
-from collections import Counter
-
 from django.views.generic.base import View
 from django.http import JsonResponse
 from utils import (calculate_peptide_mass, cyclic_spectrum, is_consistent_with_spectrum, extend, leaderboard_sequencing,
                    prepare_amino_acids_that_are_candidates)
-import numpy as np
 
 
 class BruteForce(View):
