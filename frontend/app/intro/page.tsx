@@ -21,13 +21,13 @@ export default function IntroPage() {
   }
 
   return (
-    <div className="min-h-screen py-12">
+    <div className="min-h-screen py-12 overflow-hidden">
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-bold mb-8">Uvod u sekvenciranje antibiotika</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <div className="flex flex-col">
-            <div className="prose prose-lg mb-6">
+            <div className="prose prose-lg mb-6 max-w-full">
               <p className="text-muted-foreground mb-6">
                 Proces sekvenciranja antibiotika je fundamentalan u razumevanju kako su ovi molekuli proizvedeni od
                 strane bakterija i kako se oni mogu sintetizovati ili modifikovani za primene u medicini. Antibiotici su
@@ -82,8 +82,8 @@ export default function IntroPage() {
           <div className="flex flex-col items-center">
             <button
               onClick={() => openLightbox("/images/dna-rna-transcription.svg")}
-              className="relative w-full aspect-[4/3] mb-4 cursor-pointer group"
-              aria-label="Open DNA to RNA Transcription image in full size"
+              className="relative w-full max-w-full aspect-[4/3] mb-4 cursor-pointer group"
+              aria-label="Otvori sliku u punoj veličini"
             >
               <Image
                 src="/images/dna-rna-transcription.svg"
@@ -108,7 +108,7 @@ export default function IntroPage() {
         <h2 className="text-2xl font-semibold mb-6">Odstupanje od centralne dogme</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <div className="flex flex-col">
-            <div className="prose prose-lg">
+            <div className="prose prose-lg max-w-full">
               <p className="text-muted-foreground mb-6">
                 Naučnici su probali da pronađu 30-gram u genomu <span className="italic">Bacillus brevis</span>
                 koji se prepisuje i prevodi u antibiotik tirocidin B1. Tirocidin je cikličan peptid dužine 10 (slika 3),
@@ -136,7 +136,7 @@ export default function IntroPage() {
             <button
               onClick={() => openLightbox("/images/tyrocidine.svg")}
               className="relative w-full max-w-xs mx-auto aspect-square mb-2 cursor-pointer group"
-              aria-label="Open Tyrocidine structure image in full size"
+              aria-label="Otvori sliku u punoj veličini"
             >
               <Image
                 src="/images/tyrocidine.svg"
@@ -160,7 +160,7 @@ export default function IntroPage() {
         <h2 className="text-2xl font-semibold mb-6">Maseni spektrometar</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <div className="flex flex-col">
-            <div className="prose prose-lg">
+            <div className="prose prose-lg max-w-full">
               <p className="text-muted-foreground mb-6">
                 Maseni spektrometar je moćan alat pomoću koga mogu da se odrede mase molekula, uključujući mase peptida
                 i proteina. Omogućava naučnicima da odrede nepoznate komponente, saznaju strukturu molekula i
@@ -198,7 +198,7 @@ export default function IntroPage() {
           <div className="flex flex-col items-center justify-center">
             <button
               onClick={() => openLightbox("/images/amino-acids-table.svg")}
-              className="relative w-full h-[500px] mb-2 cursor-pointer group"
+              className="relative w-full max-w-full h-[500px] mb-2 cursor-pointer group"
               aria-label="Otvori sliku u punoj veličini"
             >
               <Image
@@ -224,29 +224,24 @@ export default function IntroPage() {
         <h2 className="text-2xl font-semibold mb-6">Teorijski spektar peptida</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <div className="flex flex-col">
-            <div className="prose prose-lg">
+            <div className="prose prose-lg max-w-full">
               <p className="text-muted-foreground mb-6">
                 Teorijski spektar peptida predstavlja mase svih mogućih podpeptida, uključujući 0 i masu celog peptida.
-                Na osnovu peptida možemo lako da odredimo teorijski spektar ali na osnovu spektra ne možemo lako
-                da odredimo koji je peptid u pitanju. 
+                Na osnovu peptida možemo lako da odredimo teorijski spektar ali na osnovu spektra ne možemo lako da
+                odredimo koji je peptid u pitanju.
               </p>
               <p className="text-muted-foreground mb-6">
                 <span className="font-semibold">Problem sekvenciranja ciklopeptida</span> je problem kako rekonstruisati
-                ciklični peptid na osnovu njegovog teorijskog spektra.
-                U nastavku će biti prikazani 4 različita algoritma koje možete videti u sekciji <span className="italic">Dostupni algoritmi</span>.
-              </p>
-              <p className="text-muted-foreground mb-6">
-                Na slici 5 su prikazane mase svih podpeptida peptida <span className="font-semibold">NQEL</span>, kao i masa praznog 
-                peptida i celog peptida, takođe je prikazan i teorijski spektar.
+                ciklični peptid na osnovu njegovog teorijskog spektra. U nastavku će biti prikazani 4 različita
+                algoritma koje možete videti u sekciji <span className="italic">Dostupni algoritmi</span>.
               </p>
             </div>
           </div>
 
-
           <div className="flex flex-col items-center justify-center">
             <button
               onClick={() => openLightbox("/images/peptide-theoretical-spectrum.svg")}
-              className="relative w-full h-[600px] mb-2 cursor-pointer group"
+              className="relative w-full max-w-full h-[300px] mb-2 cursor-pointer group"
               aria-label="Otvori sliku u punoj veličini"
             >
               <Image
@@ -293,7 +288,7 @@ export default function IntroPage() {
         )}
 
         <h2 className="text-2xl font-semibold mb-6">Dostupni algoritmi</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="p-6">
             <h3 className="text-xl font-semibold mb-3">Algoritam grube sile</h3>
             <p className="text-muted-foreground mb-4">
