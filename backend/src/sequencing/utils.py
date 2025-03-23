@@ -118,8 +118,8 @@ def cyclic_score(peptide, target_spectrum):
     return score(peptide_cyclic_spectrum, target_spectrum)
 
 
-def trim(peptides, target_spectrum, max_number_of_elements):
-    if len(peptides) <= max_number_of_elements:
+def trim(peptides, target_spectrum, max_number_of_candidates):
+    if len(peptides) <= max_number_of_candidates:
         return peptides
 
     leaderboard = []
@@ -129,8 +129,8 @@ def trim(peptides, target_spectrum, max_number_of_elements):
         leaderboard.append((peptide_score, peptide))
     leaderboard.sort(reverse=True)
 
-    for i in range(max_number_of_elements, len(leaderboard)):
-        if leaderboard[i][0] < leaderboard[max_number_of_elements - 1][0]:
+    for i in range(max_number_of_candidates, len(leaderboard)):
+        if leaderboard[i][0] < leaderboard[max_number_of_candidates - 1][0]:
             break
 
     trimmed_leaderboard = leaderboard[:i]
@@ -159,12 +159,13 @@ def leaderboard_sequencing(target_spectrum, amino_acid_candidates=AMINO_ACID_MAS
         consistent_peptides = []
 
         for peptide in extended_peptides:
-            if calculate_peptide_mass(peptide) == target_peptide_mass:
+            peptide_mass = calculate_peptide_mass(peptide)
+            if peptide_mass == target_peptide_mass:
                 peptide_score = cyclic_score(peptide, target_spectrum)
                 if peptide_score > leader_peptide_score:
                     leader_peptide = peptide
                     leader_peptide_score = peptide_score
-            elif calculate_peptide_mass(peptide) < target_peptide_mass:
+            elif peptide_mass < target_peptide_mass:
                 consistent_peptides.append(peptide)
 
         peptides = trim(consistent_peptides, target_spectrum, MAX_NUMBER_OF_CANDIDATES)
