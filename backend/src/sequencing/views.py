@@ -86,25 +86,28 @@ class SpectralConvolution(View):
     def post(cls, request):
         target_spectrum = request.body.target_spectrum
         num_of_el_in_spectrum = len(target_spectrum)
-        convolution_matrix = np.zeros((num_of_el_in_spectrum, num_of_el_in_spectrum - 1))
+        convolution = []
 
         for i in range(num_of_el_in_spectrum):
-            for j in range(num_of_el_in_spectrum):
-                difference = abs(target_spectrum[i] - target_spectrum[j])
-                if difference == 0:
-                    break
-                convolution_matrix[i][j] = difference
+            for j in range(i):
+                diff = target_spectrum[i] - target_spectrum[j]
+                if 57 <= diff <= 200:
+                    convolution.append(diff)
 
-        flattened_matrix = convolution_matrix.flatten()
-        non_zero_elements = [element for element in flattened_matrix if element != 0]
-        element_counts = Counter(non_zero_elements)
-        most_common_elements = heapq.nlargest(cls.NUMBER_OF_LARGEST_ELEMENTS, element_counts.items(), key=lambda x: x[1])
+        freq_dict = {}
+        for mass in convolution:
+            if mass in freq_dict:
+                freq_dict[mass] += 1
+            else:
+                freq_dict[mass] = 1
 
-        amino_acid_candidates = prepare_amino_acids_that_are_candidates(most_common_elements)
+        sorted_masses = sorted(freq_dict.items(), key=lambda x: x[1], reverse=True)
+        top_masses = [mass for mass, _ in sorted_masses[:cls.NUMBER_OF_LARGEST_ELEMENTS]]
+        amino_acid_candidates = prepare_amino_acids_that_are_candidates(top_masses)
         leader_peptide, tree = leaderboard_sequencing(target_spectrum, amino_acid_candidates)
 
         response = {
-            "most_common_elements": most_common_elements,
+            "most_common_elements": sorted_masses,
             "amino_acid_candidates": amino_acid_candidates,
             "leader_peptide": leader_peptide,
             "tree": tree

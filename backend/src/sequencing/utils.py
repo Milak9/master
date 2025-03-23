@@ -137,9 +137,9 @@ def trim(peptides, target_spectrum, max_number_of_candidates):
     return [el[1] for el in trimmed_leaderboard]
 
 
-def prepare_amino_acids_that_are_candidates(elements_with_number_of_appearances):
+def prepare_amino_acids_that_are_candidates(top_masses):
     candidates = ['']
-    for element, _ in elements_with_number_of_appearances:
+    for element in top_masses:
         candidates = candidates + AMINO_ACID_BASED_ON_MASSES[element]
 
     return candidates
