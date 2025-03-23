@@ -270,71 +270,165 @@ export default function LeaderboardPage() {
           <p className="text-muted-foreground mb-8">
             Algoritam održava listu najboljih kandidata (leaderboard) i u svakoj iteraciji proširuje samo
             najperspektivnije peptide. Ovo značajno smanjuje prostor pretrage u poređenju sa algoritmom grube sile.
+            Za svaki od peptida koji se generiše određujemo koji je njegov <span className="italic">score</span>, odnosno broj masa linearnog spektra peptida
+            koji je jednak masama u eksperimentalnom spektru.
           </p>
 
           <div className="overflow-x-auto mt-6 mb-8">
             <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
               <code className="text-sm font-mono">
-                {`def leaderboard_sequencing(spectrum, N):
-  leaderboard = ['']  # Start with empty peptide
-  leader_peptide = ''
-  parent_mass = spectrum[-1]  # Last mass in spectrum is parent mass
-  
-  while len(leaderboard) > 0:
-      # Expand each peptide in leaderboard
-      leaderboard = expand(leaderboard)
-      
-      # For each expanded peptide
-      for peptide in leaderboard[:]:
-          mass = calculate_mass(peptide)
-          
-          if mass == parent_mass:
-              if score(peptide, spectrum) > score(leader_peptide, spectrum):
-                  leader_peptide = peptide
-          elif mass > parent_mass:
-              leaderboard.remove(peptide)
-      
-      # Trim leaderboard to top N scoring peptides
-      leaderboard = trim(leaderboard, spectrum, N)
-  
-  return leader_peptide
+                {`def leaderboard_sequencing(target_spectrum):
+    # Krećemo od praznog peptida
+    peptides = ['']
 
-def trim(leaderboard, spectrum, N):
-  if len(leaderboard) <= N:
-      return leaderboard
-      
-  scores = [(peptide, score(peptide, spectrum)) 
-            for peptide in leaderboard]
-  scores.sort(key=lambda x: x[1], reverse=True)
-  
-  # Find the N-th score
-  nth_score = scores[N-1][1]
-  
-  # Keep all peptides with score >= nth_score
-  return [peptide for peptide, s in scores if s >= nth_score]
+    # Peptid koji je trenutno najbolji kandidat i njegov score
+    leader_peptide = ''
+    leader_peptide_score = 0
 
-def score(peptide, spectrum):
-  theoretical = generate_spectrum(peptide)
-  return sum(min(theoretical.count(mass), spectrum.count(mass))
-            for mass in set(theoretical + spectrum))`}
+    target_peptide_mass = target_spectrum[-1]
+
+    while len(peptides) > 0:
+        extended_peptides = extend(peptides, amino_acid_candidates)
+
+        consistent_peptides = []
+
+        for peptide in extended_peptides:
+            peptide_mass = calculate_peptide_mass(peptide)
+            if peptide_mass == target_peptide_mass:
+                # Računamo koji je broj poklapanja cikličnog peptida sa eksperimentalnim spektrom
+                peptide_score = cyclic_score(peptide, target_spectrum)
+                # Ako je score bolji, ažuriramo vrednost najboljeg kandidata
+                if peptide_score > leader_peptide_score:
+                    leader_peptide = peptide
+                    leader_peptide_score = peptide_score
+            elif peptide_mass < target_peptide_mass:
+                consistent_peptides.append(peptide)
+
+        # Funkcija u kojoj se pravi lista kandidata i vraćaju samo najbolji kandidati
+        peptides = trim(consistent_peptides, target_spectrum, MAX_NUMBER_OF_CANDIDATES)
+
+    return leader_peptide`}
               </code>
             </pre>
           </div>
 
-          <p className="text-muted-foreground mb-4">Ključne funkcije algoritma:</p>
+          <p className="text-muted-foreground mb-8">
+            Jedna od glavnih funkcija je <span className="italic">trim</span>. Ulaz u funkciju predstavljaju peptidi
+            koji su kandidati za rešenje, eksperimentalni spektar kao i broj peptida koji ćemo vratiti iz funkcije odnosno
+            najbolji kandidati za potencijalno rešenje. Bitno je izabrati dobro broj kandidata koji prolazi u dalju rundu.
+            U slučaju da je taj broj previše mali rizujemo da previše agresivno odsečemo neke kandidate i da potencijalno
+            izgubimo rešenje. U slučaju da je borj previše veliki čuvaćemo previše kandidata i samim tim povećati vreme izvršavanja
+            algoritma. Generalno, dobra je praksa ako se traže peptidi sa manjom masom da se koristi manji broj kandidata koji nastavlja u sledeću rundu
+             a ako se masa poveća da se samim tim poveća i broj kandidata koji nastavlja u sledeću rundu.
+          </p>
 
-          <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-            <li>
-              <strong>leaderboard_sequencing:</strong> Glavna funkcija koja vodi proces sekvenciranja održavajući listu
-              najboljih kandidata.
-            </li>
-            <li>
-              <strong>trim:</strong> Funkcija koja zadržava samo N najboljih peptida na osnovu njihovog skora.
-            </li>
-            <li>
-              <strong>score:</strong> Računa skor peptida poređenjem njegovog teorijskog spektra sa eksperimentalnim.
-            </li>
-          </ul>
+          <div className="overflow-x-auto mt-6 mb-8">
+            <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
+              <code className="text-sm font-mono">
+                {`def trim(peptides, target_spectrum, max_number_of_candidates):
+    # Ako je broj peptida manji od broja kandidata koji može da prođe
+    # u sledeću rundu, vraćamo sve peptide
+    if len(peptides) <= max_number_of_candidates:
+        return peptides
+
+    leaderboard = []
+
+    # Za svaki od peptida računamo njegov score
+    for peptide in peptides:
+        # Bitno je koristiti linear_score funkciju jer ovo nije finalni izgled peptida
+        # samim tim, ako se koristi cyclic_score možemo da dobijemo mase koje možda neće
+        # postojati kada se peptid proširi
+        peptide_score = linear_score(peptide, target_spectrum)
+        leaderboard.append((peptide_score, peptide))
+
+    # Sortiramo listu peptida u opadajućem redosledu po njihovom score-u
+    leaderboard.sort(reverse=True)
+
+    # Ako u listi kandidata ima još neka sekvenca peptida čiji je 
+    # score jednak poslednjoj sekvenci koja prolazi u sledeću rundu,
+    # dodajemo i tu sekvencu da potencijalno ne bismo izgubili dobro
+    # rešenje 
+    for i in range(max_number_of_candidates, len(leaderboard)):
+        if leaderboard[i][0] < leaderboard[max_number_of_candidates - 1][0]:
+            break
+
+    # Lista kandidata koja je prošla u sledeću rundu
+    trimmed_leaderboard = leaderboard[:i]
+    # Pošto smo u listi čuvali peptide sa njihovim rezultatima,
+    # vraćamo samo listu peptida odnosno njihove sekvence
+    return [el[1] for el in trimmed_leaderboard]`}
+              </code>
+            </pre>
+          </div>
+
+          <p className="text-muted-foreground mb-8">
+            Funkcija <span className="italic">cyclic_score</span> računa broj poklapanja teorijskog spektra cikličnog peptida sa eksperimentalnim spektrom.
+            Ova funkcija se koristi u slučaju da je masa peptida jednaka najvećoj teoorijskoj masi jer je u tom slučaju formiran ceo peptid i mogu da se nađu
+            svi podpeptidi.
+          </p>
+
+          <div className="overflow-x-auto mt-6 mb-8">
+            <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
+              <code className="text-sm font-mono">
+                {`def cyclic_score(peptide, target_spectrum):
+    # Formira se ciklični spektar i na osnovu njega se računa score
+    peptide_cyclic_spectrum = cyclic_spectrum(peptide)
+    return score(peptide_cyclic_spectrum, target_spectrum)`}
+              </code>
+            </pre>
+          </div>
+
+          <p className="text-muted-foreground mb-8">
+            Funkcija <span className="italic">linear_score</span> računa broj poklapanja teorijskog spektra peptida sa eksperimentalnim spektrom.
+            Ova funkcija se koristi kada se ceo peptid još ne zna i samim tim ne mogu da se kreiraju sve ciklične varijacije jer bi se dobile mase
+            koje se možda ne bi dobile kada se peptid proširi aminokiselinama.
+          </p>
+
+          <div className="overflow-x-auto mt-6 mb-8">
+            <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
+              <code className="text-sm font-mono">
+                {`def linear_score(peptide, target_spectrum):
+    # Formira se linearni spektar i na osnovu njega se računa score
+    peptide_linear_spectrum = linear_spectrum(peptide)
+    return score(peptide_linear_spectrum, target_spectrum)`}
+              </code>
+            </pre>
+          </div>
+
+          <p className="text-muted-foreground mb-8">
+            Funkcija <span className="italic">score</span> računa broj poklapanja teorijskog spektra peptida sa eksperimentalnim spektrom.
+          </p>
+
+          <div className="overflow-x-auto mt-6 mb-8">
+            <pre className="p-4 bg-gray-800 text-gray-100 rounded-md">
+              <code className="text-sm font-mono">
+                {`def score(peptide_spectrum, target_spectrum):
+    total_score = 0
+
+    i = 0
+    j = 0
+    n = len(peptide_spectrum)
+    m = len(target_spectrum)
+
+    # Prolazi se kroz spektre i upoređuju mase
+    while i < n and j < m:
+        # Ako su mase jednake prelazimo na sledeće mase u oba spektra i uvećavamo broj poklapanja
+        if peptide_spectrum[i] == target_spectrum[j]:
+            i += 1
+            j += 1
+            total_score += 1
+        # U slučaju da je masa teorijskog spektra veća, prelazimo na sledeću masu u eksperimentalnom spektru
+        elif peptide_spectrum[i] > target_spectrum[j]:
+            j += 1
+        # U slučaju da je masa teorijskog spektra manja, prelazimo na sledeću masu u teorijskom spektru
+        else:
+            i += 1
+
+    return total_score`}
+              </code>
+            </pre>
+          </div>
+
         </Card>
       </div>
 
