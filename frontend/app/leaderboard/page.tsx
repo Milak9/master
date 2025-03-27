@@ -24,10 +24,15 @@ import {
 } from "lucide-react"
 import { ZoomableSpectrum } from "@/components/zoom_spectrum/visualization_controls"
 
+interface SpectrumItem {
+  mass: number
+  subpeptide: string
+}
+
 interface PeptideCandidate {
   peptide: string
   number_of_matches: number
-  spectrum: number[]
+  spectrum: SpectrumItem[]
   mass: number
   qualified: boolean
 }
@@ -35,7 +40,7 @@ interface PeptideCandidate {
 interface Solution {
   peptide: string
   mass: number
-  theoretical_spectrum: number[]
+  theoretical_spectrum: SpectrumItem[]
   number_of_matches: number
 }
 
@@ -43,39 +48,6 @@ interface VisualizationData {
   leaderboard: PeptideCandidate[][]
   solution: Solution
   N: number
-}
-
-const generateSubpeptideLabels = (peptide: string, masses: number[]): { [mass: number]: string } => {
-  const sortedMasses = [...masses].sort((a, b) => a - b)
-
-  const massToSubpeptide: { [mass: number]: string } = {}
-  massToSubpeptide[0] = ""
-
-  const maxMass = Math.max(...masses)
-  massToSubpeptide[maxMass] = peptide
-  const peptideLength = peptide.length
-
-  for (let i = 1; i < peptideLength; i++) {
-    const subpeptide = peptide.substring(0, i)
-    for (const mass of sortedMasses) {
-      if (mass > 0 && mass < maxMass && !massToSubpeptide[mass]) {
-        massToSubpeptide[mass] = subpeptide
-        break
-      }
-    }
-  }
-
-  for (let i = 1; i < peptideLength; i++) {
-    const subpeptide = peptide.substring(peptideLength - i)
-    for (const mass of sortedMasses) {
-      if (mass > 0 && mass < maxMass && !massToSubpeptide[mass]) {
-        massToSubpeptide[mass] = subpeptide
-        break
-      }
-    }
-  }
-
-  return massToSubpeptide
 }
 
 export default function LeaderboardPage() {
@@ -120,27 +92,42 @@ export default function LeaderboardPage() {
       const mockData: VisualizationData = {
         leaderboard: [
           [
-            { peptide: "P", number_of_matches: 2, spectrum: [0, 97], mass: 97, qualified: true },
-            { peptide: "G", number_of_matches: 1, spectrum: [0, 57], mass: 57, qualified: true },
-            { peptide: "A", number_of_matches: 1, spectrum: [0, 71], mass: 71, qualified: false },
+            { peptide: "P", number_of_matches: 2, spectrum: [
+              { mass: 0, subpeptide: "-" }, { mass: 97, subpeptide: "P" }], mass: 97, qualified: true },
+            { peptide: "G", number_of_matches: 1, spectrum: [
+              { mass: 0, subpeptide: "-" }, { mass: 57, subpeptide: "G"} ], mass: 57, qualified: true },
+            { peptide: "A", number_of_matches: 1, spectrum: [ 
+              { mass: 0, subpeptide: "-" }, { mass: 71, subpeptide: "A"} ], mass: 71, qualified: false },
           ],
           [
-            { peptide: "PQ", number_of_matches: 3, spectrum: [0, 97, 128, 225], mass: 225, qualified: true },
-            { peptide: "GP", number_of_matches: 2, spectrum: [0, 57, 97, 154], mass: 154, qualified: true },
-            { peptide: "PA", number_of_matches: 2, spectrum: [0, 71, 97, 168], mass: 168, qualified: false },
+            { peptide: "PQ", number_of_matches: 3, spectrum: [
+              { mass: 0, subpeptide: "-" }, {mass: 97, subpeptide: "P" }, 
+              { mass: 128, subpeptide: "Q" }, { mass: 225, subpeptide: "PQ" }], mass: 225, qualified: true },
+            { peptide: "GP", number_of_matches: 2, spectrum: [
+              { mass: 0, subpeptide: "-" }, { mass: 57, subpeptide: "G" }, 
+              {mass: 97, subpeptide: "P" }, { mass: 154, subpeptide: "GP" }], mass: 154, qualified: true },
+            { peptide: "PA", number_of_matches: 2, spectrum: [
+              { mass: 0, subpeptide: "-" }, { mass: 71, subpeptide: "A" }, 
+              { mass: 97, subpeptide: "P" }, { mass: 168, subpeptide: "PA" }], mass: 168, qualified: false },
           ],
           [
             {
               peptide: "PQG",
               number_of_matches: 4,
-              spectrum: [0, 57, 97, 128, 154, 225, 282],
+              spectrum: [
+                { mass: 0, subpeptide: "-" }, { mass: 57, subpeptide: "G" }, 
+                {mass: 97, subpeptide: "P" }, { mass: 128, subpeptide: "Q" }, 
+                { mass: 154, subpeptide: "GP" }, { mass: 225, subpeptide: "PQ" }, { mass: 282, subpeptide: "PQG" } ],
               mass: 282,
               qualified: true,
             },
             {
               peptide: "GPQ",
               number_of_matches: 3,
-              spectrum: [0, 57, 97, 128, 154, 225, 282],
+              spectrum: [
+                { mass: 0, subpeptide: "-" }, { mass: 57, subpeptide: "G" }, 
+                {mass: 97, subpeptide: "P" }, { mass: 128, subpeptide: "Q" }, 
+                { mass: 154, subpeptide: "GP" }, { mass: 225, subpeptide: "PQ" }, { mass: 282, subpeptide: "PQG" } ],
               mass: 282,
               qualified: false,
             },
@@ -149,7 +136,10 @@ export default function LeaderboardPage() {
         solution: {
           peptide: "PQG",
           mass: 282,
-          theoretical_spectrum: [0, 57, 97, 128, 154, 225, 282],
+          theoretical_spectrum: [
+            { mass: 0, subpeptide: "-" }, { mass: 57, subpeptide: "G" }, 
+            {mass: 97, subpeptide: "P" }, { mass: 128, subpeptide: "Q" }, 
+            { mass: 154, subpeptide: "GP" }, { mass: 225, subpeptide: "PQ" }, { mass: 282, subpeptide: "PQG" } ],
           number_of_matches: 4,
         },
         N: 2,
@@ -500,11 +490,6 @@ export default function LeaderboardPage() {
                   {visualizationData.leaderboard[currentRound].map((candidate, index) => {
                     const isLastRound = currentRound === visualizationData.leaderboard.length - 1
                     const isSolution = candidate.peptide === visualizationData.solution.peptide
-                    const subpeptideMap = generateSubpeptideLabels(candidate.peptide, candidate.spectrum)
-                    const spectrumItems = candidate.spectrum.map((mass) => ({
-                      mass,
-                      subpeptide: subpeptideMap[mass] || "",
-                    }))
 
                     return (
                       <div
@@ -552,7 +537,7 @@ export default function LeaderboardPage() {
                         <div className="px-4 pb-4">
                           <p className="text-sm font-medium mb-2">Teorijski spektar:</p>
                           <ZoomableSpectrum
-                            spectrum={spectrumItems}
+                            spectrum={candidate.spectrum}
                             experimentalSpectrum={visualizationData.solution.theoretical_spectrum.map(
                               (item) => item.mass,
                             )}

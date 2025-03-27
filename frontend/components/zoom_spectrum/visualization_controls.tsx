@@ -9,7 +9,7 @@ import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
 
 interface ZoomableSpectrumProps {
-  spectrum: { mass: number; subpeptide: string }[] | number[]
+  spectrum: { mass: number; subpeptide: string }[]
   experimentalSpectrum?: number[]
   peptide?: string
   qualified?: boolean
