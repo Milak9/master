@@ -1,0 +1,19 @@
+FROM python:3.10
+WORKDIR /app
+
+# Copy Pipfile and install dependencies
+COPY ../backend/Pipfile ../backend/Pipfile.lock ./
+RUN pip install --no-cache-dir pipenv && pipenv install --deploy --ignore-pipfile
+
+# Copy the entire backend application
+COPY ../backend ./
+
+# Set environment variables
+ENV PORT=8000
+ENV DJANGO_SETTINGS_MODULE=configuration.settings
+
+# Expose the port Django runs on
+EXPOSE 8000
+
+# Run migrations and start the Django application
+CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 configuration.wsgi:application"]
