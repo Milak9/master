@@ -493,11 +493,12 @@ export default function ConvolutionPage() {
             odgovaraju aminokiselinama prisutnim u peptidu. Te aminokiseline se izdvajaju i koriste u <span className="italic">Leaderboard</span> algoritmu.
           </li>
         </ol>
-        
+
         <p className="text-muted-foreground mb-6">
-          Glavna prednost ovog algoritma jeste to što u samom startu smanjuje skup aminokiselina koje mogu da učestvuju u građenju peptida, čime se algoritam dosta
-          ubrzava. Takođe, ovim se otvara mogućnost da se identifikuju nepoznate ili modifikovane aminokiseline.
-          Još jedna od prednosti ovog algoritma jeste to što može da radi na eksperimentalnim spektrima koji imaju još više pogrešnih ili nedostajućih masa.
+          Glavna prednost ovog algoritma jeste to što u samom startu smanjuje skup aminokiselina koje mogu da učestvuju
+          u građenju peptida, čime se algoritam dosta ubrzava. Takođe, ovim se otvara mogućnost da se identifikuju
+          nepoznate ili modifikovane aminokiseline. Još jedna od prednosti ovog algoritma jeste to što može da radi na
+          eksperimentalnim spektrima koji imaju još više pogrešnih ili nedostajućih masa.
         </p>
       </div>
 
@@ -542,7 +543,6 @@ export default function ConvolutionPage() {
             </code>
           </pre>
         </div>
-
       </Card>
 
       <Card className="p-6 mb-8">
@@ -583,6 +583,26 @@ export default function ConvolutionPage() {
                 </Button>
                 <Button variant="outline" size="icon" onClick={handleReset} disabled={!matrixState || isLoading}>
                   <RotateCcw className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => {
+                    if (matrixState) {
+                      const totalSteps = (matrixState.sequence.length * (matrixState.sequence.length - 1)) / 2 - 1
+                      setCurrentTime(totalDuration)
+                      setMatrixState((prevState) => {
+                        if (!prevState) return null
+                        return updateMatrixState(prevState, totalSteps, 100)
+                      })
+                      setIsAnimationComplete(true)
+                      setIsPlaying(false)
+                    }
+                  }}
+                  disabled={!matrixState || isLoading}
+                  title="Skip to end"
+                >
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -810,3 +830,4 @@ export default function ConvolutionPage() {
     </div>
   )
 }
+
