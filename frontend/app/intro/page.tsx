@@ -37,14 +37,27 @@ export default function IntroPage() {
               </p>
 
               <p className="text-muted-foreground mb-6">
-                Tradicionalno, proteini prate{" "}
-                <span className="font-semibold">Centralnu Dogmu Molekularne biologije</span>, koja kaže da se DNK prvo
-                prepisuje u RNK - slika 1, a zatim se RNK prevodi u protein.
+                DNK sadrži recept za kreiranje proteina. Odnosno, sastoji se od gena koji mogu biti uključeni 
+                i tada će se na osnovu njih kreirati proteini ili isključeni kada se oni neće koristiti za kreiranje proteina.
+                Isključenost ili uključenost nekog gena zavisi od toga da li je potrebno da se kreira neki protein ili nije potrebno 
+                (npr. fotosinteza kod biljaka koja se obavlja samo preko dana).
               </p>
 
               <p className="text-muted-foreground mb-6">
-                RNK se prevode u proteni tako što se kodoni (triplet nukleotida) prevodi u odgovarajuću aminokiselinu
-                (slika 2) čime nastaje genetski kod. Postoje start i stop kodoni koji određuju početak odnosno kraj
+                Tradicionalno, proteini prate{" "}
+                <span className="font-semibold">Centralnu Dogmu Molekularne biologije</span>, koja kaže da se DNK prvo
+                prepisuje u RNK - slika 1, a zatim se RNK prevodi u protein.
+                Na slici jedan se može se primetiti da se DNK sastoji od 2 lanca koja su komplementarna. Enzim <span className="italic">RNK polimeraza</span> 
+                {" "}se kači na početak gena i kreće kroz gene gde razdvaja lanac i stvara prostor za prepisivanje DNK u RNK čime se dobija RNK.
+              </p>
+
+              <p className="text-muted-foreground mb-6">
+                Prilikom prevođenja RNK u protein potrebno je na osnovu nukleitoda odrediti koja je aminokiselina u pitanju.
+                Organela ribozom je zadužena da odradi ovaj posao i pošto je potrebno na osnovu nukleotidne sekvence uniformno odrediti
+                koja je aminokiselina u pitanju uzima se sekvenca od 3 nukleotida takođe poznata kao kodon.
+                Pošto je uzeta sekvenca od 3 nukleotida ovo nam daje 64 različita kodona koja treba da se prevedu u 20 aminokiselina,
+                da smo uzeli sekvencu od 2 nukleotida dobili bismo 16 različitih kombinacija čime ne bismo mogli da dobijemo sve aminokiseline.
+                Na slici 2 može se videti kako se kodoni prevode u odgovarajuće aminokiseline. Postoje start i stop kodoni koji određuju početak odnosno kraj
                 sekvence koja se prevodi u protein.
               </p>
             </div>
@@ -110,24 +123,24 @@ export default function IntroPage() {
           <div className="flex flex-col">
             <div className="prose prose-lg max-w-full">
               <p className="text-muted-foreground mb-6">
-                Naučnici su probali da pronađu 30-gram u genomu <span className="italic">Bacillus brevis</span>
-                koji se prepisuje i prevodi u antibiotik tirocidin B1. Tirocidin je cikličan peptid dužine 10 (slika 3),
-                što znači da postoji njegovih 10 različitih linearnih reprezentacija. Analiziranjem genoma utvrđeno je
+                Tirocidin B1 je cikličan peptid dužine 10 (slika 3),
+                što znači da su prva i poslednja aminokiselina povezane i da samim tim 
+                postoji 10 njegovih različitih linearnih reprezentacija.
+                Prateći centralnu dogmu i zaključka da se 1 kodon prevodi u 1 aminokiselinu, 
+                naučnici su probali da pronađu 10 kodona odnosno 30 nukleotida u genomu bakterije <span className="italic">Bacillus brevis</span>{" "}
+                od koje nastaje ovaj antibiotik. Ovaj postupak je veoma dugotrajan obzirom da mora da se proveri više hiljada 30-grama
+                koji mogu da počnu bilo gde u genomu. Analiziranjem genoma utvrđeno je
                 da ne postoji 30-gram koji se kodira u neki od 10 različitih reprenzatacija traženog antibiotika.
               </p>
 
               <p className="text-muted-foreground mb-6">
-                Naučnik Edvard Tatum je ihhibirao (blokirao) ribozom bakterije{" "}
-                <span className="italic">Bacillus brevis</span> čime je očekivao da prestane proizvodnja proteina. Na
-                njegovo iznenađenje, nastavljena je proizvodnja nekih peptida među kojima je i Tirocidin. Ovime je
-                utvrđeno da postoje peptidi koji odstupaju od centralne dogme molekularne biologije.
-              </p>
-
-              <p className="text-muted-foreground mb-6">
-                Biohemičar Fric Lipman je pokazao da su tirocidini{" "}
-                <span className="font-semibold">ne-ribozomalni peptidi (NRP-ovi)</span>, odnosno za njihovu sintezu nisu
-                odgovorni ribozomi već enzimi <span className="font-semibold">NRP sintetaze</span>. Zbog ovoga metode za
-                sekvencioniranje DNK nisu od pomoći nego mora direktno sam peptid da se sekvencionira.
+                Dokazano je da Tirocidin B1 ne prati centralnu dogmu molekularne biologije i da postoje posebni
+                enzimi koji su zaduženi za njihovo sintentisanje. Ovi enzimi se zovu <span className="italic">NRP sintetaza</span>.{" "}
+                Ovi enzimi sadrže komplikovane module, koji govore koje aminokiseline učetvuju u sastavu proteina.
+                U slučaju Tirocidina B1, enzim sadrži 10 modula i svaki od module kodira 1 aminokiselinu čime je određena struktura
+                antibiotika.<br/>
+                Samim tim, pošto struktura proteina nije određena na osnovu genoma bakterije, metode za sekvencioniranje DNK
+                ovde nisu od pomoći i potrebno je sekvencirati direktno sam peptid.
               </p>
             </div>
           </div>
@@ -231,9 +244,16 @@ export default function IntroPage() {
                 odredimo koji je peptid u pitanju.
               </p>
               <p className="text-muted-foreground mb-6">
-                <span className="font-semibold">Problem sekvenciranja ciklopeptida</span> je problem kako rekonstruisati
-                ciklični peptid na osnovu njegovog teorijskog spektra. U nastavku će biti prikazani 4 različita
+                <span className="font-semibold">Problem sekvenciranja ciklopeptida</span> samim tim se svodi na problem kako rekonstruisati
+                ciklični peptid na osnovu njegovog teorijskog spektra. U nastavku će biti prikazani nekoliko različitih
                 algoritma koje možete videti u sekciji <span className="italic">Dostupni algoritmi</span>.
+              </p>
+
+              <p className="text-muted-foreground mb-6">
+                Kao ulaz u svaki od ovih algoritama očekuje se eksperimentalni spektar, odnosno spektar koji je dobijen uz pomoć
+                masenog spektrometra za neki peptid.
+                Na slici 5 su prikazane mase svih podpeptida peptida NQEL koje se dobijaju uz pomoć
+                masenog spektrometra, kao i masa praznog peptida i celog peptida, takođe je prikazan i teorijski spektar.
               </p>
             </div>
           </div>
@@ -333,6 +353,18 @@ export default function IntroPage() {
             </p>
             <Button asChild variant="outline" className="w-full">
               <Link href="/convolution">
+                Istraži <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </Card>
+
+          <Card className="p-6">
+            <h3 className="text-xl font-semibold mb-3">Deep Novo sekvenciranje</h3>
+            <p className="text-muted-foreground mb-4">
+              Metoda zasnovana na dubokom učenju koja omogućava sekvenciranje peptida bez oslanjanja na baze podataka.
+            </p>
+            <Button asChild variant="outline" className="w-full">
+              <Link href="/deep_novo">
                 Istraži <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>

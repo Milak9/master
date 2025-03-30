@@ -97,7 +97,7 @@
     <rect x="-175" y="-50" width="350" height="100" rx="20" ry="20" fill="#ffeecc" stroke="#cc6600" stroke-width="2"/>
     <text x="0" y="-20" font-family="Arial" font-size="18" text-anchor="middle" font-weight="bold">Timin (T) → Uracil (U) Konverzija</text>
     <text x="0" y="10" font-family="Arial" font-size="14" text-anchor="middle">Tokom transkripcije, timin (T) iz DNK se zamenjuje</text>
-    <text x="0" y="30" font-family="Arial" font-size="14" text-anchor="middle">uracilom (U) u nastaloj RNK molekuli</text>
+    <text x="0" y="30" font-family="Arial" font-size="14" text-anchor="middle">uracilom (U) u nastalom RNK molekulu</text>
   </g>
   
   <!-- Nucleotide Legend -->
