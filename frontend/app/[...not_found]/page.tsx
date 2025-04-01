@@ -83,6 +83,12 @@ export default function NotFound() {
             >
               Spektralna konvolucija
             </Link>
+            <Link 
+              href="/deep_novo" 
+              className="text-sm px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+            >
+              Deep Novo sekvenciranje
+            </Link>
           </div>
         </div>
       </div>

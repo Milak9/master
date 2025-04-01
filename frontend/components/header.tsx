@@ -36,6 +36,9 @@ export function Header() {
               <Link href="/convolution" className="text-sm font-medium transition-colors hover:text-primary">
                 Spektralna konvolucija
               </Link>
+              <Link href="/deep_novo" className="text-sm font-medium transition-colors hover:text-primary">
+                Deep Novo sekvenciranje
+              </Link>
             </div>
           </div>
           <div className="flex items-center">
