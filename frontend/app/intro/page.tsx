@@ -23,7 +23,7 @@ export default function IntroPage() {
   return (
     <div className="min-h-screen py-12 overflow-hidden">
       <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-8">Uvod u sekvenciranje antibiotika</h1>
+        <h1 className="text-3xl font-bold mb-6">Uvod u sekvenciranje antibiotika</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <div className="flex flex-col">
