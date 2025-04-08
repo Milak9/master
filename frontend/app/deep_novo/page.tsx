@@ -80,7 +80,7 @@ export default function DeepNovoPage() {
                   <h4 className="text-lg font-semibold">Nedostajući podaci</h4>
                 </div>
                 <p className="text-muted-foreground">
-                  Podaci generisani iz eksperimenata masene spektrometrije mogu biti bučni i nepotpuni, što otežava
+                  Podaci generisani iz eksperimenata masene spektrometrije mogu biti pogrešni i nepotpuni, što otežava
                   pouzdano poređenje.
                 </p>
               </Card>

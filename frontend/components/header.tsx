@@ -20,24 +20,27 @@ export function Header() {
             <Link href="/" className="flex items-center hover:opacity-80">
               <Dna className="h-6 w-6" />
             </Link>
-            <div className="hidden md:flex space-x-8 ml-10">
-              <Link href="/intro" className="text-sm font-medium transition-colors hover:text-primary">
+            <div className="hidden md:flex space-x-8 ml-10 mr-6">
+              <Link href="/intro" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
                 Uvod
               </Link>
-              <Link href="/brute_force" className="text-sm font-medium transition-colors hover:text-primary">
+              <Link href="/brute_force" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
                 Algoritam grube sile
               </Link>
-              <Link href="/branch_and_bound" className="text-sm font-medium transition-colors hover:text-primary">
+              <Link href="/branch_and_bound" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
                 Branch & Bound
               </Link>
-              <Link href="/leaderboard" className="text-sm font-medium transition-colors hover:text-primary">
+              <Link href="/leaderboard" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
                 Leaderboard Algoritam
               </Link>
-              <Link href="/convolution" className="text-sm font-medium transition-colors hover:text-primary">
+              <Link href="/convolution" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
                 Spektralna konvolucija
               </Link>
-              <Link href="/deep_novo" className="text-sm font-medium transition-colors hover:text-primary">
+              <Link href="/deep_novo" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
                 Deep Novo sekvenciranje
+              </Link>
+              <Link href="/literature" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
+                Literatura
               </Link>
             </div>
           </div>
@@ -70,38 +73,52 @@ export function Header() {
             <nav className="flex flex-col space-y-4">
               <Link
                 href="/intro"
-                className="text-sm font-medium py-2 hover:text-primary"
+                className="text-sm font-medium py-2 hover:text-primary items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Uvod
               </Link>
               <Link
                 href="/brute_force"
-                className="text-sm font-medium py-2 hover:text-primary"
+                className="text-sm font-medium py-2 hover:text-primary items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Algoritam grube sile
               </Link>
               <Link
                 href="/branch_and_bound"
-                className="text-sm font-medium py-2 hover:text-primary"
+                className="text-sm font-medium py-2 hover:text-primary items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Branch & Bound
               </Link>
               <Link
                 href="/leaderboard"
-                className="text-sm font-medium py-2 hover:text-primary"
+                className="text-sm font-medium py-2 hover:text-primary items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Leaderboard Algoritam
               </Link>
               <Link
                 href="/convolution"
-                className="text-sm font-medium py-2 hover:text-primary"
+                className="text-sm font-medium py-2 hover:text-primary items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Spektralna konvolucija
+              </Link>
+              <Link
+                href="/deep_novo"
+                className="text-sm font-medium py-2 hover:text-primary items-center"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Deep Novo sekvenciranje
+              </Link>
+              <Link
+                href="/literature"
+                className="text-sm font-medium py-2 flex hover:text-primary items-center"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Literatura
               </Link>
             </nav>
           </div>
