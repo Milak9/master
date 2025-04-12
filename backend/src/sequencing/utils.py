@@ -1,4 +1,4 @@
-from consts import AMINO_ACID_MASSES, AMINO_ACID_BASED_ON_MASSES, MAX_NUMBER_OF_CANDIDATES
+from .consts import AMINO_ACID_MASSES, AMINO_ACID_BASED_ON_MASSES, MAX_NUMBER_OF_CANDIDATES
 
 
 def linear_spectrum(peptide):
@@ -140,7 +140,8 @@ def trim(peptides, target_spectrum, max_number_of_candidates):
 def prepare_amino_acids_that_are_candidates(top_masses):
     candidates = ['']
     for element in top_masses:
-        candidates = candidates + AMINO_ACID_BASED_ON_MASSES[element]
+        if element in AMINO_ACID_BASED_ON_MASSES:
+            candidates = candidates + AMINO_ACID_BASED_ON_MASSES[element]
 
     return candidates
 
@@ -170,4 +171,4 @@ def leaderboard_sequencing(target_spectrum, amino_acid_candidates=AMINO_ACID_MAS
 
         peptides = trim(consistent_peptides, target_spectrum, MAX_NUMBER_OF_CANDIDATES)
 
-    return leader_peptide, tree
+    return leader_peptide, None

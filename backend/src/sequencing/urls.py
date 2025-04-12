@@ -1,5 +1,5 @@
 from django.urls import path
-from views import BruteForce, BranchAndBound, Leaderboard, SpectralConvolution
+from .views import BruteForce, BranchAndBound, Leaderboard, SpectralConvolution
 
 urlpatterns = [
     path('brute_force/', BruteForce.as_view(), name='brute_force'),
