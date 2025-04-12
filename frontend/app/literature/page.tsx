@@ -1,7 +1,7 @@
 "use client"
 
 import { Card } from "@/components/ui/card"
-import { BookOpen, ExternalLink } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 
 export default function LiteraturaPage() {
   return (
@@ -20,7 +20,8 @@ export default function LiteraturaPage() {
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">Algoritmi za sekvenciranje peptida</h2>
           <ul className="space-y-4">
-            <li className="border-b pb-4">
+            <li className="border-b pb-4 relative pl-8">
+              <span className="absolute left-0 top-0 font-semibold">[1]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">Bioinformatics Algorithms: An Active Learning Approach Vol. II</p>
@@ -39,7 +40,8 @@ export default function LiteraturaPage() {
               </div>
             </li>
 
-            <li className="border-b pb-4">
+            <li className="border-b pb-4 relative pl-8">
+              <span className="absolute left-0 top-0 font-semibold">[2]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">Materijal sa predavanja "Uvod u bioinformatiku"</p>
@@ -62,7 +64,8 @@ export default function LiteraturaPage() {
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">De Novo tehnike za sekvenciranje peptida</h2>
           <ul className="space-y-4">
-            <li className="border-b pb-4">
+            <li className="border-b pb-4 relative pl-8">
+              <span className="absolute left-0 top-0 font-semibold">[3]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">DeepNovo: De novo peptide sequencing by deep learning</p>
@@ -82,13 +85,18 @@ export default function LiteraturaPage() {
                 </a>
               </div>
             </li>
-            
-            <li className="border-b pb-4">
+
+            <li className="border-b pb-4 relative pl-8">
+              <span className="absolute left-0 top-0 font-semibold">[4]</span>
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="font-semibold">PEAKS DB: De Novo Sequencing Assisted Database Search for Sensitive and Accurate Peptide Identification</p>
+                  <p className="font-semibold">
+                    PEAKS DB: De Novo Sequencing Assisted Database Search for Sensitive and Accurate Peptide
+                    Identification
+                  </p>
                   <p className="text-sm text-muted-foreground">
-                  Jing Zhang, Lei Xin, Baozhen Shan, Weiwu Chen, Mingjie Xie, Denis Yuen, Weiming Zhang, Zefeng Zhang, Gilles A. Lajoie Bin Ma (2011)
+                    Jing Zhang, Lei Xin, Baozhen Shan, Weiwu Chen, Mingjie Xie, Denis Yuen, Weiming Zhang, Zefeng Zhang,
+                    Gilles A. Lajoie Bin Ma (2011)
                   </p>
                   <p className="text-sm text-muted-foreground">Molecular & Cellular Proteomics, 11 (4)</p>
                 </div>
@@ -104,14 +112,15 @@ export default function LiteraturaPage() {
               </div>
             </li>
 
-            <li className="border-b pb-4">
+            <li className="border-b pb-4 relative pl-8">
+              <span className="absolute left-0 top-0 font-semibold">[5]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">Novor: Real-Time Peptide de Novo Sequencing Software</p>
+                  <p className="text-sm text-muted-foreground">Bin Ma (2015)</p>
                   <p className="text-sm text-muted-foreground">
-                    Bin Ma (2015)
+                    Journal of The American Society for Mass Spectrometry, 26 (11), 1885-1894
                   </p>
-                  <p className="text-sm text-muted-foreground">Journal of The American Society for Mass Spectrometry, 26 (11), 1885-1894</p>
                 </div>
                 <a
                   href="https://doi.org/10.1007/s13361-015-1204-0"
@@ -124,14 +133,15 @@ export default function LiteraturaPage() {
                 </a>
               </div>
             </li>
-            
-            <li className="border-b pb-4">
+
+            <li className="border-b pb-4 relative pl-8">
+              <span className="absolute left-0 top-0 font-semibold">[6]</span>
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="font-semibold">PepNovo:  De Novo Peptide Sequencing via Probabilistic Network Modeling</p>
-                  <p className="text-sm text-muted-foreground">
-                    Ari Frank, Pavel Pevzner (2005)
+                  <p className="font-semibold">
+                    PepNovo:  De Novo Peptide Sequencing via Probabilistic Network Modeling
                   </p>
+                  <p className="text-sm text-muted-foreground">Ari Frank, Pavel Pevzner (2005)</p>
                   <p className="text-sm text-muted-foreground">Analytical Chemistry, 77 (4), 964-973</p>
                 </div>
                 <a
@@ -151,7 +161,8 @@ export default function LiteraturaPage() {
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">Masena spektrometrija i analiza peptida</h2>
           <ul className="space-y-4">
-            <li className="border-b pb-4">
+            <li className="border-b pb-4 relative pl-8">
+              <span className="absolute left-0 top-0 font-semibold">[7]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">Mass Spectrometer</p>
@@ -168,14 +179,14 @@ export default function LiteraturaPage() {
                 </a>
               </div>
             </li>
-
           </ul>
         </Card>
-        
+
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">Dodatno korišćena literatura</h2>
           <ul className="space-y-4">
-            <li className="border-b pb-4">
+            <li className="border-b pb-4 relative pl-8">
+              <span className="absolute left-0 top-0 font-semibold">[8]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">Codon Chart: Table, Amino Acids & RNA Wheel Explained</p>
