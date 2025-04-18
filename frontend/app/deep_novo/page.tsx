@@ -226,19 +226,90 @@ export default function DeepNovoPage() {
           <div className="prose prose-lg max-w-none">
             <h2 className="text-2xl font-semibold mb-4">DeepNovo arhitektura neuronske mreže</h2>
             <p className="text-muted-foreground mb-6">
-              Srce DeepNovo pristupa je njegov model dubokog učenja, koji se sastoji od:
+              Srce DeepNovo pristupa je njegov model dubokog učenja (slika 1), koji se sastoji od:
+              <ul className="list-disc pl-8 mb-4 space-y-2 text-muted-foreground mt-2">
+                <li>
+                  <strong>Konvolucione neuronske mreže (CNN)</strong>
+                </li>
+                <li>
+                  <strong>Rekurentne neuronske mreže (RNN)</strong>
+                </li>
+              </ul>
             </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-8">
+              <div className="order-1 lg:order-2">
+                <h3 className="text-xl font-semibold mb-3">Konvolucione neuronske mreže (CNN)</h3>
+                <p className="text-muted-foreground mb-4">
+                  CNN je tip dubokog učenja koji se koristi da otkrije značajne šablone koji se pojavljuju
+                  u ulaznim podacima. Veoma je efikasna mreža i koristi tehniku <span className="italic">sliding window</span>
+                  {' '}i procesuira male lokalne regione koristeći filtere.
+                </p>
+                <p className="text-muted-foreground mb-4">
+                  U slučaju Deep Novo tehnike, konvoluciona mreža se sastoji od 3 konvoluciona sloja i koristi <span className="italic">ReLu</span>
+                  {' '}aktivacionu funkciju. 
+                  Ova mreža je trenirana da prepozna lokalne šablone, različite tipove jona i da pretvori sirove podatke u reprezentaciju
+                  svojstava ulaznih podataka.
+                </p>
+                <p className="text-muted-foreground mb-4">
+                  U ovom modelu su korišćene 2 CNN mreže, jedna je spektralna CNN a druga jonska CNN.
+                </p>
+
+                <h4 className="font-semibold mb-3">Spektralna CNN</h4>
+                <p className="text-muted-foreground mb-4">
+                  Spektar dobijen masenom spektrometrijom konvertuje u vektor fiksne dužine (koji obično ima od 50 do 100 hiljada elemenata) i dobijeni
+                  vektor se prosleđuje ovoj mreži. Ovime se uče šabloni nad svim podacima spektrometrije i rezultat ove mreže se dalje koristni u rekurentnoj mreži.
+                  Ovo predstavlja značajan deo arhitekture jer može dosta da poboljša preciznost sekvenciranja i može
+                  da nauči šablone u spektru čak i ako su neki peak-ovi pomereni u spektru zbog šuma.
+                </p>
+
+                <h4 className="font-semibold mb-3">Jonska CNN</h4>
+                <p className="text-muted-foreground mb-4">
+                  Ova mreža se koristi tokom odabira sledeće amino kiseline u peptidu i ona služi da za mali region spektralnih podataka
+                  izvuče najbitnije bitne informacije. Gleda da li za predviđenu amino kiselinu postoje očekivani fragmenti jona. 
+                  Prilikom svakog koraka predviđanja sledeće amino kiseline Deep Novo generiše teorijski spektar fragmenata uz pomoć prefiksnih masa.
+                  Za svaki jon izvlači se mali prozor iz spektra oko tog jona i na kraju se dobije više različitih ulaza u mrežu.
+                  Ovaj deo modela je bitan u slučaju da su podaci šumoviti ili da neki vrh spektra nedostaje.
+                </p>
+              </div>
+            </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <div>
                 <h3 className="text-xl font-semibold mb-3">Rekurentne neuronske mreže (RNN)</h3>
                 <p className="text-muted-foreground mb-4">
                   Ove mreže su dizajnirane za predviđanje sekvenci, gde izlaz zavisi ne samo od trenutne tačke podataka
-                  (podaci masenog spektra) već i od prethodnih tačaka podataka.
+                  (podaci masenog spektra) već i od prethodnih tačaka podataka. U kontekstu sekvenciranja peptida, 
+                  RNN može naučiti kako jedna aminokiselina utiče na sledeću u sekvenci, što je ključno za tačno predviđanje.
                 </p>
                 <p className="text-muted-foreground">
-                  U kontekstu sekvenciranja peptida, RNN može naučiti kako jedna aminokiselina utiče na sledeću u
-                  sekvenci, što je ključno za tačno predviđanje.
+                  Deep Novo koristi posebnu vrstu RNN-a koja se zove <span className="italic">Long Short-Term Memory</span> (LSTM).
+                  Ključna prednost LSTM mreža je ta što bolje prati duže zavisnosti, konkretno peptidi mogu da budu različitih dužina
+                  a ova mreža pamti i odnose koji su udaljeni, odnosno početak sekvence može da utiče na predviđanje neke kasnije amino kiseline.
+                </p>
+                <p className="text-muted-foreground">
+                  Ova mreža se sastoji od 1 sloja LTSM-a i radi tako što dodaje jednu po jednu amino kiselinu sve dok ne stigne do kraja peptida.
+                  U svakom koraku LTSM mreža gleda:
+                  <ol className="list-disc pl-8 mb-4 space-y-2 text-muted-foreground mt-2">
+                    <li>
+                      <strong>Šta je mreža naučila do sada - trenutno stanje</strong>
+                    </li>
+                    <li>
+                      <strong>Sledeća amino kiseline koja je kandidat</strong>
+                    </li>
+                    <li>
+                      <strong>Svojstva spektra koja su dobijana od konvolucione mreže</strong>
+                    </li>
+                  </ol>
+
+                  Na osnovu ovoga, mreža određuje koja ja verovatnoća da je trenutna amino kiselina zapravo nalazi na datoj poziciji u peptidu.
+                </p>
+                <p className="text-muted-foreground">
+                  Kao izlaz iz ove mreže koristi se <span className="italic">softmax</span> projekcija i ona određuje za svaku amino kiselinu
+                  koja je verovatnoća da se ona nalazi na sledećoj poziciji u sekvenci.
+                  Dodatno, koristi se  <span className="italic">beam search</span>, odnosno ne bira se samo amino kiselina sa najvećom verovatnoćom
+                  nego se čuva više kandidata koji imaju veću verovatnoću. Ovim postupkom se povećava preciznost i gledaju se alternativna rešenja.
+                  Na kraju se sekvence rangiraju po rezultatu koliko se poklapaju sa traženim spektrom i koliko imaju grešaka i bira najbolja moguća.
                 </p>
               </div>
               <div className="flex items-center justify-center">
@@ -266,19 +337,6 @@ export default function DeepNovoPage() {
                     </span>
                   </p>
                 </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              <div className="order-1 lg:order-2">
-                <h3 className="text-xl font-semibold mb-3">Dugo kratkoročno pamćenje (LSTM)</h3>
-                <p className="text-muted-foreground mb-4">
-                  LSTM je vrsta RNN-a koja je posebno dobra u pamćenju dugoročnih zavisnosti u sekvencama. U slučaju
-                  peptida, to znači razumevanje kako jedna aminokiselina utiče na sledeću u sekvenci.
-                </p>
-                <p className="text-muted-foreground">
-                  LSTM jedinice sadrže "ćelije memorije" koje mogu zadržati informacije tokom dugih sekvenci, što je
-                  ključno za razumevanje konteksta u peptidnim sekvencama.
-                </p>
               </div>
             </div>
 
