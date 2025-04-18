@@ -7,13 +7,24 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
-import { PlayCircle, PauseCircle, RotateCcw, ArrowRight, CheckCircle, HelpCircle } from "lucide-react"
+import {
+  PlayCircle,
+  PauseCircle,
+  RotateCcw,
+  ArrowRight,
+  CheckCircle,
+  HelpCircle,
+  ZoomIn,
+  ZoomOut,
+  Move,
+} from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
 
 interface TreeNode {
   node: string
   end: boolean
   candidate: boolean
-  children: TreeNode[]
+  children: string[]
   spectrum?: number[]
   reason?: string
   mass: number
@@ -38,92 +49,47 @@ interface TheoreticalSpectrum {
 }
 
 interface VisualizationResult {
-  tree: TreeNode
+  tree: {
+    [key: string]: TreeNode
+  }
   candidates: TheoreticalSpectrum
   solution: string[]
 }
 
 const NODE_RADIUS = 35
-const TARGET_MASS = 579
 
-const getMockData = (): VisualizationResult => {
-  const tree: TreeNode = {
-    node: "Root",
-    end: false,
-    candidate: false,
-    mass: 0,
-    children: [
-      {
-        node: "A",
-        end: true,
-        candidate: true,
-        reason: "Peptid ima odgovarajuću masu i njegov teorijski spektar odgovara eksperimentalnom spektru.",
-        spectrum: [1, 2, 3, 4, 5],
-        mass: 579,
-        children: [],
-      },
-      {
-        node: "B",
-        end: false,
-        candidate: false,
-        reason: "Peptid nema odgovarajuću masu za dalje grananje.",
-        mass: 200,
-        children: [
-          {
-            node: "C",
-            end: true,
-            candidate: false,
-            reason: "Peptid ima odgovarajuću masu, ali njegov teorijski spektar ne odgovara eksperimentalnom spektru.",
-            mass: 579,
-            children: [],
-          },
-          {
-            node: "D",
-            end: true,
-            candidate: true,
-            reason: "Peptid ima odgovarajuću masu i njegov teorijski spektar odgovara eksperimentalnom spektru.",
-            spectrum: [2, 3, 4, 5, 6],
-            mass: 579,
-            children: [],
-          },
-        ],
-      },
-      {
-        node: "E",
-        end: true,
-        candidate: false,
-        reason: "Peptid ima preveliku masu i ne može biti rešenje.",
-        mass: 600,
-        children: [],
-      },
-    ],
-  }
+const fetchData = async (sequence: string): Promise<{ data: VisualizationResult; targetMass: number }> => {
+  try {
+    const numbers = sequence.split(",").map((num) => Number.parseInt(num.trim(), 10))
+    if (numbers.some(isNaN)) {
+      throw new Error("Nevalidna sekvenca brojeva. Unos treba da bude brojevi odvojeni zarezom.")
+    }
 
-  // Mock spectrum data for candidates
-  const candidates: TheoreticalSpectrum = {
-    A: [
-      { mass: 0, subpeptide: "" },
-      { mass: 71, subpeptide: "A" },
-      { mass: 147, subpeptide: "F" },
-      { mass: 218, subpeptide: "AF" },
-      { mass: 315, subpeptide: "AFP" },
-      { mass: 478, subpeptide: "AFPY" },
-      { mass: 579, subpeptide: "AFPYT" },
-    ],
-    D: [
-      { mass: 0, subpeptide: "" },
-      { mass: 114, subpeptide: "N" },
-      { mass: 171, subpeptide: "G" },
-      { mass: 285, subpeptide: "NG" },
-      { mass: 471, subpeptide: "NGW" },
-      { mass: 579, subpeptide: "NGWS" },
-    ],
-  }
+    for (let i = 1; i < numbers.length; i++) {
+      if (numbers[i] < numbers[i - 1]) {
+        throw new Error("Brojevi moraju biti uneti u rastućem poretku.")
+      }
+    }
 
-  return {
-    tree,
-    candidates,
-    solution: ["A", "D"],
+    const targetMass = Math.max(...numbers)
+
+    const response = await fetch("http://localhost:8000/sequencing/branch_and_bound/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ target_spectrum: numbers }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return { data, targetMass }
+  } catch (error) {
+    console.error("Greška prilikom pozivanja backend-a:", error)
+    throw error
   }
 }
 
@@ -175,13 +141,17 @@ const calculateEdgePoint = (x1: number, y1: number, x2: number, y2: number, radi
 }
 
 const flattenTree = (
-  node: TreeNode,
+  treeMap: { [key: string]: TreeNode },
+  nodeName: string,
   x: number,
   y: number,
   parentX?: number,
   parentY?: number,
   result: VisibleNode[] = [],
 ): VisibleNode[] => {
+  const node = treeMap[nodeName]
+  if (!node) return result
+
   result.push({ node, x, y, parentX, parentY })
 
   const levelHeight = 90
@@ -192,10 +162,13 @@ const flattenTree = (
   const subtreeWidths: number[] = []
   let totalSubtreeWidth = 0
 
-  for (const child of node.children) {
-    const { width } = getTreeDimensions(child)
-    subtreeWidths.push(width)
-    totalSubtreeWidth += width
+  for (const childName of node.children) {
+    const childNode = treeMap[childName]
+    if (childNode) {
+      const { width } = getTreeDimensions(treeMap, childName)
+      subtreeWidths.push(width)
+      totalSubtreeWidth += width
+    }
   }
 
   const siblingSpacing = 140
@@ -204,28 +177,39 @@ const flattenTree = (
   let currentX = x - (totalSubtreeWidth * siblingSpacing) / 2
 
   // Position each child based on its subtree width
-  node.children.forEach((child, index) => {
-    const subtreeWidth = subtreeWidths[index]
-    const childX = currentX + (subtreeWidth * siblingSpacing) / 2
-    const childY = y + levelHeight
+  node.children.forEach((childName, index) => {
+    const childNode = treeMap[childName]
+    if (childNode) {
+      const subtreeWidth = subtreeWidths[index]
+      const childX = currentX + (subtreeWidth * siblingSpacing) / 2
+      const childY = y + levelHeight
 
-    flattenTree(child, childX, childY, x, y, result)
+      flattenTree(treeMap, childName, childX, childY, x, y, result)
 
-    // Move to the next child position
-    currentX += subtreeWidth * siblingSpacing
+      // Move to the next child position
+      currentX += subtreeWidth * siblingSpacing
+    }
   })
 
   return result
 }
 
-const findTargetNodes = (node: TreeNode, result: TreeNode[] = []): TreeNode[] => {
-  if (node.mass === TARGET_MASS && node.end) {
+const findTargetNodes = (
+  treeMap: { [key: string]: TreeNode },
+  nodeName: string,
+  targetMass: number,
+  result: TreeNode[] = [],
+): TreeNode[] => {
+  const node = treeMap[nodeName]
+  if (!node) return result
+
+  if (node.mass === targetMass && node.end) {
     result.push(node)
   }
 
-  node.children.forEach((child) => {
-    findTargetNodes(child, result)
-  })
+  for (const childName of node.children) {
+    findTargetNodes(treeMap, childName, targetMass, result)
+  }
 
   return result
 }
@@ -246,13 +230,13 @@ const getNodeTooltip = (node: TreeNode) => {
   return ""
 }
 
-const getNodeColor = (node: TreeNode, isActive: boolean) => {
+const getNodeColor = (node: TreeNode, isActive: boolean, targetMass: number) => {
   if (isActive) {
     return "rgb(59 130 246)" // Blue-500 for active nodes
   }
 
-  if (node.mass && node.mass > TARGET_MASS) {
-    return "rgb(239 68 68)" // Red-500 for nodes with mass > TARGET_MASS
+  if (node.mass && node.mass > targetMass) {
+    return "rgb(239 68 68)" // Red-500 for nodes with mass > targetMass
   }
 
   if (node.end && !node.candidate) {
@@ -266,25 +250,32 @@ const getNodeColor = (node: TreeNode, isActive: boolean) => {
   return "rgb(209 213 219)" // Gray-300 for non-active nodes
 }
 
-const getTreeDimensions = (node: TreeNode): { width: number; depth: number } => {
-  if (node.children.length === 0) {
+const getTreeDimensions = (
+  treeMap: { [key: string]: TreeNode },
+  nodeName: string,
+): { width: number; depth: number } => {
+  const node = treeMap[nodeName]
+  if (!node || node.children.length === 0) {
     return { width: 1, depth: 1 }
   }
 
   let totalWidth = 0
   let maxDepth = 0
 
-  for (const child of node.children) {
-    const { width, depth } = getTreeDimensions(child)
-    totalWidth += width
-    maxDepth = Math.max(maxDepth, depth)
+  for (const childName of node.children) {
+    const childNode = treeMap[childName]
+    if (childNode) {
+      const { width, depth } = getTreeDimensions(treeMap, childName)
+      totalWidth += width
+      maxDepth = Math.max(maxDepth, depth)
+    }
   }
 
   return { width: totalWidth, depth: maxDepth + 1 }
 }
 
-const calculateSvgDimensions = (tree: TreeNode) => {
-  const { width, depth } = getTreeDimensions(tree)
+const calculateSvgDimensions = (treeMap: { [key: string]: TreeNode }) => {
+  const { width, depth } = getTreeDimensions(treeMap, "Root")
 
   // Base dimensions
   const baseWidth = 1200
@@ -335,6 +326,19 @@ export default function BranchAndBoundPage() {
     viewBox: "-600 -30 1200 600",
   })
   const [controlsEnabled, setControlsEnabled] = useState(false)
+  const [targetMass, setTargetMass] = useState(0)
+
+  const { toast } = useToast()
+  const [zoomLevel, setZoomLevel] = useState(1)
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const [treeBoundaries, setTreeBoundaries] = useState({
+    minX: -600,
+    maxX: 600,
+    minY: -50,
+    maxY: 550,
+  })
 
   const STEP_DURATION = 1000
 
@@ -344,7 +348,7 @@ export default function BranchAndBoundPage() {
         cancelAnimationFrame(animationRef.current)
       }
 
-      const allNodes = flattenTree(visualizationData.tree, 0, 0)
+      const allNodes = flattenTree(visualizationData.tree, "Root", 0, 0)
       setCurrentStep(allNodes.length - 1)
       setLineProgress(100)
       setIsAnimationComplete(true)
@@ -377,10 +381,10 @@ export default function BranchAndBoundPage() {
 
   useEffect(() => {
     if (visualizationData) {
-      const allNodes = flattenTree(visualizationData.tree, 0, 0)
+      const allNodes = flattenTree(visualizationData.tree, "Root", 0, 0)
       setTotalDuration(allNodes.length * STEP_DURATION)
 
-      const targets = findTargetNodes(visualizationData.tree)
+      const targets = findTargetNodes(visualizationData.tree, "Root", targetMass)
       setTargetNodes(targets)
 
       // Find all candidate nodes
@@ -390,12 +394,24 @@ export default function BranchAndBoundPage() {
       // Calculate and set SVG dimensions based on tree structure
       const dimensions = calculateSvgDimensions(visualizationData.tree)
       setSvgDimensions(dimensions)
+
+      // Extract viewBox values to set boundaries
+      const viewBoxMatch = dimensions.viewBox.match(/-?\d+(\.\d+)?/g)
+      if (viewBoxMatch && viewBoxMatch.length >= 4) {
+        const [minX, minY, width, height] = viewBoxMatch.map(Number)
+        setTreeBoundaries({
+          minX,
+          maxX: minX + width,
+          minY,
+          maxY: minY + height,
+        })
+      }
     }
-  }, [visualizationData])
+  }, [visualizationData, targetMass])
 
   useEffect(() => {
     if (visualizationData && isPlaying) {
-      const allNodes = flattenTree(visualizationData.tree, 0, 0)
+      const allNodes = flattenTree(visualizationData.tree, "Root", 0, 0)
 
       const animate = (timestamp: number) => {
         if (!lastTimeRef.current) lastTimeRef.current = timestamp
@@ -445,7 +461,7 @@ export default function BranchAndBoundPage() {
 
   useEffect(() => {
     if (visualizationData) {
-      const allNodes = flattenTree(visualizationData.tree, 0, 0)
+      const allNodes = flattenTree(visualizationData.tree, "Root", 0, 0)
       const currentNodes = allNodes.slice(0, currentStep + 1)
 
       // If animation is complete, don't mark any node as active to allow proper coloring
@@ -477,10 +493,63 @@ export default function BranchAndBoundPage() {
     const newProgress = ((newTime % STEP_DURATION) / STEP_DURATION) * 100
 
     setCurrentTime(newTime)
-    setCurrentStep(Math.min(newStep, flattenTree(visualizationData.tree, 0, 0).length - 1))
+    setCurrentStep(Math.min(newStep, flattenTree(visualizationData.tree, "Root", 0, 0).length - 1))
     setLineProgress(newProgress)
     lastTimeRef.current = 0
   }
+
+  const handleZoomIn = () => {
+    setZoomLevel((prev) => prev * 1.5)
+  }
+
+  const handleZoomOut = () => {
+    setZoomLevel((prev) => Math.max(prev / 1.5, 0.5))
+  }
+
+  const handleResetZoom = () => {
+    setZoomLevel(1)
+    setPanOffset({ x: 0, y: 0 })
+  }
+
+  const handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (zoomLevel > 1) {
+      setIsDragging(true)
+      setDragStart({ x: e.clientX, y: e.clientY })
+    }
+  }
+
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (isDragging && zoomLevel > 1) {
+      const dx = e.clientX - dragStart.x
+      const dy = e.clientY - dragStart.y
+
+      // Calculate the maximum allowed pan offset based on zoom level and tree boundaries
+      const maxPanX = (Math.abs(treeBoundaries.maxX - treeBoundaries.minX) * (zoomLevel - 1)) / (2 * zoomLevel)
+      const maxPanY = (Math.abs(treeBoundaries.maxY - treeBoundaries.minY) * (zoomLevel - 1)) / (2 * zoomLevel)
+
+      // Calculate new offsets with boundary limits
+      const newX = Math.max(Math.min(panOffset.x + dx, maxPanX), -maxPanX)
+      const newY = Math.max(Math.min(panOffset.y + dy, maxPanY), -maxPanY)
+
+      setPanOffset({ x: newX, y: newY })
+      setDragStart({ x: e.clientX, y: e.clientY })
+    }
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      setIsDragging(false)
+    }
+
+    window.addEventListener("mouseup", handleGlobalMouseUp)
+    return () => {
+      window.removeEventListener("mouseup", handleGlobalMouseUp)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -498,10 +567,20 @@ export default function BranchAndBoundPage() {
       setControlsEnabled(true)
 
       // Set visualization data after resetting state
-      setTimeout(() => {
-        const data = getMockData()
-        setVisualizationData(data)
-        setIsPlaying(true)
+      setTimeout(async () => {
+        try {
+          const { data, targetMass: fetchedTargetMass } = await fetchData(sequence)
+          setVisualizationData(data)
+          setTargetMass(fetchedTargetMass)
+          setIsPlaying(true)
+        } catch (error) {
+          console.error("Greška prilikom dohvatanja podataka:", error)
+          toast({
+            title: "Greška",
+            description: error instanceof Error ? error.message : "Nepoznata greška",
+            variant: "destructive",
+          })
+        }
       }, 50)
     } catch (error) {
       console.error("Error:", error)
@@ -769,58 +848,147 @@ export default function BranchAndBoundPage() {
 
           {visualizationData ? (
             <>
-              <svg
-                ref={svgRef}
-                width={svgDimensions.width}
-                height={svgDimensions.height}
-                viewBox={svgDimensions.viewBox}
-                preserveAspectRatio="xMidYMid meet"
-                className="mx-auto"
-              >
-                <g>
-                  {visibleNodes.map((visibleNode, index) => {
-                    const isLastNode = index === visibleNodes.length - 1
-                    const hasTooltip = visibleNode.node.end
+              <div className="relative overflow-hidden" style={{ height: svgDimensions.height }}>
+                <div className="absolute top-2 right-2 flex space-x-2 z-10">
+                  <Button variant="outline" size="icon" onClick={handleZoomIn} title="Zoom In">
+                    <ZoomIn className="h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" size="icon" onClick={handleZoomOut} title="Zoom Out">
+                    <ZoomOut className="h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" size="icon" onClick={handleResetZoom} title="Reset Zoom">
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
+                </div>
+                {zoomLevel > 1 && (
+                  <div className="absolute top-2 left-2 text-sm text-muted-foreground flex items-center z-10 bg-background/80 p-1 rounded">
+                    <Move className="h-4 w-4 mr-1" />
+                    <span>Prevuci za pomeranje</span>
+                  </div>
+                )}
+                <svg
+                  ref={svgRef}
+                  width={svgDimensions.width}
+                  height={svgDimensions.height}
+                  viewBox={svgDimensions.viewBox}
+                  preserveAspectRatio="xMidYMid meet"
+                  className={`mx-auto ${isDragging ? "cursor-grabbing" : zoomLevel > 1 ? "cursor-grab" : "cursor-default"}`}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}
+                  style={{
+                    transform: `scale(${zoomLevel}) translate(${panOffset.x}px, ${panOffset.y}px)`,
+                    transformOrigin: "center",
+                    transition: isDragging ? "none" : "transform 0.2s ease-out",
+                  }}
+                >
+                  <g>
+                    {visibleNodes.map((visibleNode, index) => {
+                      const isLastNode = index === visibleNodes.length - 1
+                      const hasTooltip = visibleNode.node.end
 
-                    if (visibleNode.parentX !== undefined && visibleNode.parentY !== undefined) {
-                      const startPoint = calculateEdgePoint(
-                        visibleNode.parentX,
-                        visibleNode.parentY,
-                        visibleNode.x,
-                        visibleNode.y,
-                        NODE_RADIUS,
-                      )
+                      if (visibleNode.parentX !== undefined && visibleNode.parentY !== undefined) {
+                        const startPoint = calculateEdgePoint(
+                          visibleNode.parentX,
+                          visibleNode.parentY,
+                          visibleNode.x,
+                          visibleNode.y,
+                          NODE_RADIUS,
+                        )
 
-                      const endPoint = calculateEdgePoint(
-                        visibleNode.x,
-                        visibleNode.y,
-                        visibleNode.parentX,
-                        visibleNode.parentY,
-                        NODE_RADIUS,
-                      )
+                        const endPoint = calculateEdgePoint(
+                          visibleNode.x,
+                          visibleNode.y,
+                          visibleNode.parentX,
+                          visibleNode.parentY,
+                          NODE_RADIUS,
+                        )
 
-                      const progress = isAnimationComplete ? 100 : isLastNode ? lineProgress : 100
-                      const currentEndPoint = {
-                        x: startPoint.x + (endPoint.x - startPoint.x) * (progress / 100),
-                        y: startPoint.y + (endPoint.y - startPoint.y) * (progress / 100),
+                        const progress = isAnimationComplete ? 100 : isLastNode ? lineProgress : 100
+                        const currentEndPoint = {
+                          x: startPoint.x + (endPoint.x - startPoint.x) * (progress / 100),
+                          y: startPoint.y + (endPoint.y - startPoint.y) * (progress / 100),
+                        }
+
+                        return (
+                          <g key={`${visibleNode.node.node}-${index}`}>
+                            <line
+                              x1={startPoint.x}
+                              y1={startPoint.y}
+                              x2={currentEndPoint.x}
+                              y2={currentEndPoint.y}
+                              stroke="gray"
+                              strokeWidth="2"
+                              className="transition-all duration-300"
+                            />
+                            <circle
+                              cx={visibleNode.x}
+                              cy={visibleNode.y}
+                              r={NODE_RADIUS}
+                              fill={getNodeColor(visibleNode.node, visibleNode.isActive || false, targetMass)}
+                              className={`transition-colors duration-300 ${hasTooltip ? "cursor-pointer" : ""}`}
+                              onMouseEnter={(e) => hasTooltip && handleNodeMouseEnter(visibleNode.node, e)}
+                              onMouseLeave={handleNodeMouseLeave}
+                            />
+                            <text
+                              x={visibleNode.x}
+                              y={visibleNode.y - 10}
+                              textAnchor="middle"
+                              dominantBaseline="middle"
+                              fill="white"
+                              fontSize="16"
+                              pointerEvents="none"
+                            >
+                              {visibleNode.node.node}
+                            </text>
+                            <text
+                              x={visibleNode.x}
+                              y={visibleNode.y + 10}
+                              textAnchor="middle"
+                              dominantBaseline="middle"
+                              fill="white"
+                              fontSize="14"
+                              pointerEvents="none"
+                            >
+                              {visibleNode.node.mass} Da
+                            </text>
+                            {hasTooltip && (
+                              <circle
+                                cx={visibleNode.x + NODE_RADIUS * 0.9}
+                                cy={visibleNode.y - NODE_RADIUS * 0.9}
+                                r={8}
+                                fill="white"
+                                className="cursor-pointer"
+                                onMouseEnter={(e) => handleNodeMouseEnter(visibleNode.node, e)}
+                                onMouseLeave={handleNodeMouseLeave}
+                              />
+                            )}
+                            {hasTooltip && (
+                              <text
+                                x={visibleNode.x + NODE_RADIUS * 0.9}
+                                y={visibleNode.y - NODE_RADIUS * 0.9}
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                                fill={visibleNode.node.mass > targetMass ? "rgb(239 68 68)" : "rgb(34 197 94)"}
+                                fontSize="12"
+                                fontWeight="bold"
+                                pointerEvents="none"
+                              >
+                                ?
+                              </text>
+                            )}
+                          </g>
+                        )
                       }
 
                       return (
                         <g key={`${visibleNode.node.node}-${index}`}>
-                          <line
-                            x1={startPoint.x}
-                            y1={startPoint.y}
-                            x2={currentEndPoint.x}
-                            y2={currentEndPoint.y}
-                            stroke="gray"
-                            strokeWidth="2"
-                            className="transition-all duration-300"
-                          />
                           <circle
                             cx={visibleNode.x}
                             cy={visibleNode.y}
                             r={NODE_RADIUS}
-                            fill={getNodeColor(visibleNode.node, visibleNode.isActive || false)}
+                            fill={getNodeColor(visibleNode.node, visibleNode.isActive || false, targetMass)}
                             className={`transition-colors duration-300 ${hasTooltip ? "cursor-pointer" : ""}`}
                             onMouseEnter={(e) => hasTooltip && handleNodeMouseEnter(visibleNode.node, e)}
                             onMouseLeave={handleNodeMouseLeave}
@@ -864,7 +1032,7 @@ export default function BranchAndBoundPage() {
                               y={visibleNode.y - NODE_RADIUS * 0.9}
                               textAnchor="middle"
                               dominantBaseline="middle"
-                              fill={visibleNode.node.mass > TARGET_MASS ? "rgb(239 68 68)" : "rgb(34 197 94)"}
+                              fill={visibleNode.node.mass > targetMass ? "rgb(239 68 68)" : "rgb(34 197 94)"}
                               fontSize="12"
                               fontWeight="bold"
                               pointerEvents="none"
@@ -874,75 +1042,14 @@ export default function BranchAndBoundPage() {
                           )}
                         </g>
                       )
-                    }
-
-                    return (
-                      <g key={`${visibleNode.node.node}-${index}`}>
-                        <circle
-                          cx={visibleNode.x}
-                          cy={visibleNode.y}
-                          r={NODE_RADIUS}
-                          fill={getNodeColor(visibleNode.node, visibleNode.isActive || false)}
-                          className={`transition-colors duration-300 ${hasTooltip ? "cursor-pointer" : ""}`}
-                          onMouseEnter={(e) => hasTooltip && handleNodeMouseEnter(visibleNode.node, e)}
-                          onMouseLeave={handleNodeMouseLeave}
-                        />
-                        <text
-                          x={visibleNode.x}
-                          y={visibleNode.y - 10}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                          fill="white"
-                          fontSize="16"
-                          pointerEvents="none"
-                        >
-                          {visibleNode.node.node}
-                        </text>
-                        <text
-                          x={visibleNode.x}
-                          y={visibleNode.y + 10}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                          fill="white"
-                          fontSize="14"
-                          pointerEvents="none"
-                        >
-                          {visibleNode.node.mass} Da
-                        </text>
-                        {hasTooltip && (
-                          <circle
-                            cx={visibleNode.x + NODE_RADIUS * 0.9}
-                            cy={visibleNode.y - NODE_RADIUS * 0.9}
-                            r={8}
-                            fill="white"
-                            className="cursor-pointer"
-                            onMouseEnter={(e) => handleNodeMouseEnter(visibleNode.node, e)}
-                            onMouseLeave={handleNodeMouseLeave}
-                          />
-                        )}
-                        {hasTooltip && (
-                          <text
-                            x={visibleNode.x + NODE_RADIUS * 0.9}
-                            y={visibleNode.y - NODE_RADIUS * 0.9}
-                            textAnchor="middle"
-                            dominantBaseline="middle"
-                            fill={visibleNode.node.mass > TARGET_MASS ? "rgb(239 68 68)" : "rgb(34 197 94)"}
-                            fontSize="12"
-                            fontWeight="bold"
-                            pointerEvents="none"
-                          >
-                            ?
-                          </text>
-                        )}
-                      </g>
-                    )
-                  })}
-                </g>
-              </svg>
+                    })}
+                  </g>
+                </svg>
+              </div>
 
               {isAnimationComplete && visualizationData.candidates && (
                 <div className="mt-8 space-y-6">
-                  <h3 className="text-xl font-semibold mb-4">Kandidati sa masom {TARGET_MASS} Da:</h3>
+                  <h3 className="text-xl font-semibold mb-4">Kandidati sa masom {targetMass} Da:</h3>
 
                   <div className="space-y-6">
                     {Object.entries(visualizationData.candidates).map(([peptide, spectrum], index) => {
@@ -967,7 +1074,7 @@ export default function BranchAndBoundPage() {
                                 )}
                               </h4>
                             </div>
-                            <span className="text-sm text-muted-foreground">Masa: {TARGET_MASS} Da</span>
+                            <span className="text-sm text-muted-foreground">Masa: {targetMass} Da</span>
                           </div>
 
                           <div className="mb-2">
@@ -1012,7 +1119,7 @@ export default function BranchAndBoundPage() {
 
                   <p className="text-sm text-muted-foreground">
                     {visualizationData.solution.length === 1 ? "Ovaj peptid ima" : "Ovi peptidi imaju"} masu od{" "}
-                    {TARGET_MASS} Da i{" "}
+                    {targetMass} Da i{" "}
                     {visualizationData.solution.length === 1
                       ? "njegov teorijski spektar je jednak"
                       : "njihovi teorijski spektri su jednaki"}{" "}
