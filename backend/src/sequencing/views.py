@@ -19,6 +19,7 @@ class BruteForce(View):
         target_peptide_mass = target_spectrum[-1]
         tree = {
             "Root": {
+                "node": "Root",
                 "mass": 0,
                 "children": [],
                 "end": False
@@ -62,6 +63,7 @@ class BranchAndBound(View):
         results = {}
         tree = {
             "Root": {
+                "node": "Root",
                 "mass": 0,
                 "children": [],
                 "end": False,

@@ -91,6 +91,7 @@ def extend_for_tree(peptides, tree, amino_acid_candidates=AMINO_ACID_MASSES.keys
                 new_candidate = peptide + amino_acid
                 extended_peptides.append(new_candidate)
                 tree[new_candidate] = {
+                    "node": new_candidate,
                     "children": [],
                     "end": False
                 }
