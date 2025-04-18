@@ -94,6 +94,10 @@ class BranchAndBound(View):
                 elif peptide_mass < target_peptide_mass:
                     if is_consistent_with_spectrum(peptide, target_spectrum):
                         consistent_peptides.append(peptide)
+                    else:
+                        tree[peptide]["end"] = True
+                        tree[peptide]["candidate"] = False
+                        tree[peptide]["reason"] = "Teorijski spektar peptida nije konzistentan sa zadatim spektrom."
                 else:
                     tree[peptide]["end"] = True
                     tree[peptide]["candidate"] = False
