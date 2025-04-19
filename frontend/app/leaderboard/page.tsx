@@ -2,19 +2,11 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import {
-  ChevronLeft,
-  ChevronRight,
-  Crown,
-  Trophy,
-  Medal,
-  Info,
-  RotateCcw,
-  ArrowRight,
   FlaskConical,
   Gauge,
   Microscope,
@@ -22,7 +14,8 @@ import {
   Timer,
   Zap,
 } from "lucide-react"
-import { ZoomableSpectrum } from "@/components/zoom_spectrum/visualization_controls"
+import { useToast } from "@/hooks/use-toast"
+import { RoundNavigation, renderCandidates } from "@/components/round_navigation"
 
 interface SpectrumItem {
   mass: number
@@ -35,18 +28,20 @@ interface PeptideCandidate {
   spectrum: SpectrumItem[]
   mass: number
   qualified: boolean
+  reason?: string
+  candidate?: boolean
 }
 
 interface Solution {
   peptide: string
   mass: number
-  theoretical_spectrum: SpectrumItem[]
+  spectrum: SpectrumItem[]
   number_of_matches: number
 }
 
 interface VisualizationData {
   leaderboard: PeptideCandidate[][]
-  solution: Solution
+  solution: Solution[]
   N: number
 }
 
@@ -54,8 +49,10 @@ export default function LeaderboardPage() {
   const [sequence, setSequence] = useState("")
   const [visualizationData, setVisualizationData] = useState<VisualizationData | null>(null)
   const [currentRound, setCurrentRound] = useState(0)
-  const [isAnimationComplete, setIsAnimationComplete] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const { toast } = useToast()
+  const [visibleItems, setVisibleItems] = useState(10)
+  const candidatesContainerRef = useRef<HTMLDivElement>(null)
 
   const handlePreviousRound = () => {
     if (currentRound > 0) {
@@ -66,91 +63,113 @@ export default function LeaderboardPage() {
   const handleNextRound = () => {
     if (visualizationData && currentRound < visualizationData.leaderboard.length - 1) {
       setCurrentRound((prev) => prev + 1)
-      if (currentRound === visualizationData.leaderboard.length - 2) {
-        setIsAnimationComplete(true)
-      }
     }
   }
 
   const handleReset = () => {
     setCurrentRound(0)
-    setIsAnimationComplete(false)
+    setVisibleItems(10)
   }
 
   const skipToEnd = () => {
     if (visualizationData) {
       setCurrentRound(visualizationData.leaderboard.length - 1)
-      setIsAnimationComplete(true)
+      setVisibleItems(visualizationData.leaderboard[visualizationData.leaderboard.length - 1].length)
     }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      setCurrentRound(0)
 
-      const mockData: VisualizationData = {
-        leaderboard: [
-          [
-            { peptide: "P", number_of_matches: 2, spectrum: [
-              { mass: 0, subpeptide: "-" }, { mass: 97, subpeptide: "P" }], mass: 97, qualified: true },
-            { peptide: "G", number_of_matches: 1, spectrum: [
-              { mass: 0, subpeptide: "-" }, { mass: 57, subpeptide: "G"} ], mass: 57, qualified: true },
-            { peptide: "A", number_of_matches: 1, spectrum: [ 
-              { mass: 0, subpeptide: "-" }, { mass: 71, subpeptide: "A"} ], mass: 71, qualified: false },
-          ],
-          [
-            { peptide: "PQ", number_of_matches: 3, spectrum: [
-              { mass: 0, subpeptide: "-" }, {mass: 97, subpeptide: "P" }, 
-              { mass: 128, subpeptide: "Q" }, { mass: 225, subpeptide: "PQ" }], mass: 225, qualified: true },
-            { peptide: "GP", number_of_matches: 2, spectrum: [
-              { mass: 0, subpeptide: "-" }, { mass: 57, subpeptide: "G" }, 
-              {mass: 97, subpeptide: "P" }, { mass: 154, subpeptide: "GP" }], mass: 154, qualified: true },
-            { peptide: "PA", number_of_matches: 2, spectrum: [
-              { mass: 0, subpeptide: "-" }, { mass: 71, subpeptide: "A" }, 
-              { mass: 97, subpeptide: "P" }, { mass: 168, subpeptide: "PA" }], mass: 168, qualified: false },
-          ],
-          [
-            {
-              peptide: "PQG",
-              number_of_matches: 4,
-              spectrum: [
-                { mass: 0, subpeptide: "-" }, { mass: 57, subpeptide: "G" }, 
-                {mass: 97, subpeptide: "P" }, { mass: 128, subpeptide: "Q" }, 
-                { mass: 154, subpeptide: "GP" }, { mass: 225, subpeptide: "PQ" }, { mass: 282, subpeptide: "PQG" } ],
-              mass: 282,
-              qualified: true,
-            },
-            {
-              peptide: "GPQ",
-              number_of_matches: 3,
-              spectrum: [
-                { mass: 0, subpeptide: "-" }, { mass: 57, subpeptide: "G" }, 
-                {mass: 97, subpeptide: "P" }, { mass: 128, subpeptide: "Q" }, 
-                { mass: 154, subpeptide: "GP" }, { mass: 225, subpeptide: "PQ" }, { mass: 282, subpeptide: "PQG" } ],
-              mass: 282,
-              qualified: false,
-            },
-          ],
-        ],
-        solution: {
-          peptide: "PQG",
-          mass: 282,
-          theoretical_spectrum: [
-            { mass: 0, subpeptide: "-" }, { mass: 57, subpeptide: "G" }, 
-            {mass: 97, subpeptide: "P" }, { mass: 128, subpeptide: "Q" }, 
-            { mass: 154, subpeptide: "GP" }, { mass: 225, subpeptide: "PQ" }, { mass: 282, subpeptide: "PQG" } ],
-          number_of_matches: 4,
-        },
-        N: 2,
+    if (!sequence.trim()) {
+      toast({
+        title: "Greška",
+        description: "Molimo unesite eksperimentalni spektar.",
+        variant: "destructive",
+      })
+      return
+    }
+
+    try {
+      const parsedSequence = sequence
+        .split(",")
+        .map((s) => Number.parseInt(s.trim()))
+        .filter((n) => !isNaN(n))
+
+      if (parsedSequence.length < 2) {
+        toast({
+          title: "Greška",
+          description: "Spektar mora sadržati najmanje 2 broja.",
+          variant: "destructive",
+        })
+        return
       }
 
-      setVisualizationData(mockData)
-      setIsAnimationComplete(false)
+      for (let i = 1; i < parsedSequence.length; i++) {
+        if (parsedSequence[i] < parsedSequence[i - 1]) {
+          toast({
+            title: "Greška",
+            description: "Brojevi u spektru moraju biti u rastućem redosledu.",
+            variant: "destructive",
+          })
+          return
+        }
+      }
+
+      setCurrentRound(0)
+      setVisibleItems(10)
+
+      const response = await fetch("http://localhost:8000/sequencing/leaderboard/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          target_spectrum: parsedSequence,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Greška pri komunikaciji sa serverom")
+      }
+
+      const data = await response.json()
+      setVisualizationData(data)
     } catch (error) {
       console.error("Error:", error)
+      toast({
+        title: "Greška",
+        description: error instanceof Error ? error.message : "Došlo je do greške pri obradi podataka",
+        variant: "destructive",
+      })
     }
   }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!candidatesContainerRef.current || !visualizationData?.leaderboard?.[currentRound]) return
+
+      const { scrollTop, scrollHeight, clientHeight } = candidatesContainerRef.current
+      if (scrollTop + clientHeight >= scrollHeight - 20) {
+        // Load 10 more items, but don't exceed the total count
+        setVisibleItems((prev) => Math.min(prev + 10, visualizationData.leaderboard[currentRound].length))
+      }
+    }
+
+    const currentRef = candidatesContainerRef.current
+    if (currentRef) {
+      currentRef.addEventListener("scroll", handleScroll)
+    }
+
+    // Reset visible items when round changes
+    setVisibleItems(10)
+
+    return () => {
+      if (currentRef) {
+        currentRef.removeEventListener("scroll", handleScroll)
+      }
+    }
+  }, [currentRound, visualizationData?.leaderboard])
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -259,9 +278,9 @@ export default function LeaderboardPage() {
           <h3 className="text-xl font-semibold mb-4">Kod za Leaderboard algoritam</h3>
           <p className="text-muted-foreground mb-8">
             Algoritam održava listu najboljih kandidata (leaderboard) i u svakoj iteraciji proširuje samo
-            najperspektivnije peptide. Ovo značajno smanjuje prostor pretrage u poređenju sa algoritmom grube sile.
-            Za svaki od peptida koji se generiše određujemo koji je njegov <span className="italic">score</span>, odnosno broj masa linearnog spektra peptida
-            koji je jednak masama u eksperimentalnom spektru.
+            najperspektivnije peptide. Ovo značajno smanjuje prostor pretrage u poređenju sa algoritmom grube sile. Za
+            svaki od peptida koji se generiše određujemo koji je njegov <span className="italic">score</span>, odnosno
+            broj masa linearnog spektra peptida koji je jednak masama u eksperimentalnom spektru.
           </p>
 
           <div className="overflow-x-auto mt-6 mb-8">
@@ -304,12 +323,13 @@ export default function LeaderboardPage() {
 
           <p className="text-muted-foreground mb-8">
             Jedna od glavnih funkcija je <span className="italic">trim</span>. Ulaz u funkciju predstavljaju peptidi
-            koji su kandidati za rešenje, eksperimentalni spektar kao i broj peptida koji ćemo vratiti iz funkcije odnosno
-            najbolji kandidati za potencijalno rešenje. Bitno je izabrati dobro broj kandidata koji prolazi u dalju rundu.
-            U slučaju da je taj broj previše mali rizujemo da previše agresivno odsečemo neke kandidate i da potencijalno
-            izgubimo rešenje. U slučaju da je borj previše veliki čuvaćemo previše kandidata i samim tim povećati vreme izvršavanja
-            algoritma. Generalno, dobra je praksa ako se traže peptidi sa manjom masom da se koristi manji broj kandidata koji nastavlja u sledeću rundu
-             a ako se masa poveća da se samim tim poveća i broj kandidata koji nastavlja u sledeću rundu.
+            koji su kandidati za rešenje, eksperimentalni spektar kao i broj peptida koji ćemo vratiti iz funkcije
+            odnosno najbolji kandidati za potencijalno rešenje. Bitno je izabrati dobro broj kandidata koji prolazi u
+            dalju rundu. U slučaju da je taj broj previše mali rizujemo da previše agresivno odsečemo neke kandidate i
+            da potencijalno izgubimo rešenje. U slučaju da je borj previše veliki čuvaćemo previše kandidata i samim tim
+            povećati vreme izvršavanja algoritma. Generalno, dobra je praksa ako se traže peptidi sa manjom masom da se
+            koristi manji broj kandidata koji nastavlja u sledeću rundu a ako se masa poveća da se samim tim poveća i
+            broj kandidata koji nastavlja u sledeću rundu.
           </p>
 
           <div className="overflow-x-auto mt-6 mb-8">
@@ -352,9 +372,9 @@ export default function LeaderboardPage() {
           </div>
 
           <p className="text-muted-foreground mb-8">
-            Funkcija <span className="italic">cyclic_score</span> računa broj poklapanja teorijskog spektra cikličnog peptida sa eksperimentalnim spektrom.
-            Ova funkcija se koristi u slučaju da je masa peptida jednaka najvećoj teoorijskoj masi jer je u tom slučaju formiran ceo peptid i mogu da se nađu
-            svi podpeptidi.
+            Funkcija <span className="italic">cyclic_score</span> računa broj poklapanja teorijskog spektra cikličnog
+            peptida sa eksperimentalnim spektrom. Ova funkcija se koristi u slučaju da je masa peptida jednaka najvećoj
+            teoorijskoj masi jer je u tom slučaju formiran ceo peptid i mogu da se nađu svi podpeptidi.
           </p>
 
           <div className="overflow-x-auto mt-6 mb-8">
@@ -369,9 +389,10 @@ export default function LeaderboardPage() {
           </div>
 
           <p className="text-muted-foreground mb-8">
-            Funkcija <span className="italic">linear_score</span> računa broj poklapanja teorijskog spektra peptida sa eksperimentalnim spektrom.
-            Ova funkcija se koristi kada se ceo peptid još ne zna i samim tim ne mogu da se kreiraju sve ciklične varijacije jer bi se dobile mase
-            koje se možda ne bi dobile kada se peptid proširi aminokiselinama.
+            Funkcija <span className="italic">linear_score</span> računa broj poklapanja teorijskog spektra peptida sa
+            eksperimentalnim spektrom. Ova funkcija se koristi kada se ceo peptid još ne zna i samim tim ne mogu da se
+            kreiraju sve ciklične varijacije jer bi se dobile mase koje se možda ne bi dobile kada se peptid proširi
+            aminokiselinama.
           </p>
 
           <div className="overflow-x-auto mt-6 mb-8">
@@ -386,7 +407,8 @@ export default function LeaderboardPage() {
           </div>
 
           <p className="text-muted-foreground mb-8">
-            Funkcija <span className="italic">score</span> računa broj poklapanja teorijskog spektra peptida sa eksperimentalnim spektrom.
+            Funkcija <span className="italic">score</span> računa broj poklapanja teorijskog spektra peptida sa
+            eksperimentalnim spektrom.
           </p>
 
           <div className="overflow-x-auto mt-6 mb-8">
@@ -418,7 +440,6 @@ export default function LeaderboardPage() {
               </code>
             </pre>
           </div>
-
         </Card>
       </div>
 
@@ -437,128 +458,24 @@ export default function LeaderboardPage() {
         </form>
       </Card>
 
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex space-x-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handlePreviousRound}
-              disabled={!visualizationData || currentRound === 0}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleNextRound}
-              disabled={!visualizationData || currentRound === (visualizationData?.leaderboard.length ?? 0) - 1}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" onClick={handleReset} disabled={!visualizationData}>
-              <RotateCcw className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" onClick={skipToEnd} disabled={!visualizationData} title="Skip to end">
-              <ArrowRight className="h-4 w-4" />
-            </Button>
+      <div className="space-y-4" ref={containerRef}>
+        {visualizationData ? (
+          <RoundNavigation
+            currentRound={currentRound}
+            totalRounds={visualizationData.leaderboard.length}
+            onPreviousRound={handlePreviousRound}
+            onNextRound={handleNextRound}
+            onReset={handleReset}
+            onSkipToEnd={skipToEnd}
+            infoText={`Maksimalni broj kandidata koji prolazi u sledeću rundu: ${visualizationData.N}`}
+          >
+            {renderCandidates(visualizationData, currentRound, visibleItems, candidatesContainerRef, setVisibleItems)}
+          </RoundNavigation>
+        ) : (
+          <div className="text-center text-muted-foreground">
+            Unesi eksperimentalni spektar i klikni Analiziraj da vidiš vizualizaciju
           </div>
-
-          {visualizationData && (
-            <div className="text-sm text-muted-foreground">
-              Runda {currentRound + 1} od {visualizationData.leaderboard.length}
-            </div>
-          )}
-        </div>
-
-        <div ref={containerRef} className="space-y-8">
-          {visualizationData && visualizationData.leaderboard && visualizationData.leaderboard[currentRound] ? (
-            <>
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-semibold flex items-center">
-                    <Trophy className="h-5 w-5 mr-2 text-yellow-500" />
-                    Runda {currentRound + 1}
-                  </h3>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Info className="h-4 w-4 mr-1" />
-                    Broj kandidata: {visualizationData.N}
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  {visualizationData.leaderboard[currentRound].map((candidate, index) => {
-                    const isLastRound = currentRound === visualizationData.leaderboard.length - 1
-                    const isSolution = candidate.peptide === visualizationData.solution.peptide
-
-                    return (
-                      <div
-                        key={index}
-                        className={`rounded-lg transition-colors duration-300 ${
-                          candidate.qualified
-                            ? "bg-green-50 border border-green-200 dark:bg-green-900/20 dark:border-green-800"
-                            : "bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700"
-                        }`}
-                      >
-                        <div className="p-4 flex items-center justify-between">
-                          <div className="flex items-center">
-                            {isSolution && (
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5 text-green-500 mr-2"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                              </svg>
-                            )}
-                            {index === 0 && !isSolution && <Crown className="h-5 w-5 mr-2 text-yellow-500" />}
-                            {index === 1 && <Medal className="h-5 w-5 mr-2 text-gray-400" />}
-                            {index === 2 && <Medal className="h-5 w-5 mr-2 text-amber-600" />}
-
-                            <span className="font-mono text-lg">{candidate.peptide}</span>
-                            <span className="ml-2 text-sm text-muted-foreground">({candidate.mass} Da)</span>
-
-                            {candidate.qualified && (
-                              <div className="ml-4 text-green-600 text-sm flex items-center">
-                                <ChevronRight className="h-4 w-4" />
-                                {isLastRound ? "Pobednik" : "Prolazi u sledeću rundu"}
-                              </div>
-                            )}
-                          </div>
-                          <span className="text-primary font-semibold">Poklapanja: {candidate.number_of_matches}</span>
-                        </div>
-
-                        <div className="px-4 pb-4">
-                          <p className="text-sm font-medium mb-2">Teorijski spektar:</p>
-                          <ZoomableSpectrum
-                            spectrum={candidate.spectrum}
-                            experimentalSpectrum={visualizationData.solution.theoretical_spectrum.map(
-                              (item) => item.mass,
-                            )}
-                            peptide={candidate.peptide}
-                            qualified={candidate.qualified}
-                            isSolution={isSolution}
-                            height={180}
-                          />
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </Card>
-            </>
-          ) : (
-            <div className="text-center text-muted-foreground">
-              Unesi eksperimentalni spektar i klikni Analiziraj da vidiš vizualizaciju
-            </div>
-          )}
-        </div>
+        )}
       </div>
     </div>
   )

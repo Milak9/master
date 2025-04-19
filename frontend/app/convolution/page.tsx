@@ -17,9 +17,11 @@ import {
   Info,
   PlayCircle,
   PauseCircle,
+  CheckCircle,
 } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
-import { ZoomableSpectrum } from "@/components/zoom_spectrum/visualization_controls"
+import { RoundNavigation, renderCandidates } from "@/components/round_navigation"
+import { useToast } from "@/hooks/use-toast"
 
 interface MatrixCell {
   value: number | null
@@ -38,21 +40,23 @@ interface PeptideCandidate {
   spectrum: SpectrumItem[]
   mass: number
   qualified: boolean
+  reason?: string
+  candidate?: boolean
 }
 
 interface Solution {
   peptide: string
   mass: number
-  theoretical_spectrum: SpectrumItem[]
+  spectrum: SpectrumItem[]
   number_of_matches: number
 }
 
 interface MatrixApiResponse {
   matrix: number[][]
   sequence: number[]
-  amino_acids_in_peptids: Record<string, number>
+  amino_acids_in_peptides: number[][]
   leaderboard: PeptideCandidate[][]
-  solution: Solution
+  solution: Solution[]
   N: number
   M: number
 }
@@ -63,261 +67,57 @@ interface MatrixState {
   sequence: number[]
   isComplete: boolean
   apiMatrix: number[][]
-  amino_acids_in_peptids: Record<string, number>
+  amino_acids_in_peptides: number[][]
   leaderboard: PeptideCandidate[][]
-  solution: Solution
+  solution: Solution[]
   N: number
   M: number
-}
-
-const fetchMatrixData = async (sequence: number[]): Promise<MatrixApiResponse> => {
-  await new Promise((resolve) => setTimeout(resolve, 500))
-
-  const size = sequence.length
-  const matrix: number[][] = Array(size)
-    .fill(null)
-    .map(() => Array(size).fill(null))
-
-  for (let i = 1; i < size; i++) {
-    for (let j = 0; j < i; j++) {
-      matrix[i][j] = Math.abs(sequence[i] - sequence[j])
-    }
-  }
-
-  // Mock data for the matrix visualization
-  const mockAminoAcidsInPeptids: Record<string, number> = {
-    "57": 4,
-    "71": 3,
-    "87": 2,
-    "97": 5,
-    "99": 2,
-    "101": 1,
-    "103": 3,
-    "113": 2,
-    "114": 4,
-    "115": 2,
-    "128": 3,
-    "129": 1,
-    "131": 2,
-    "137": 1,
-    "147": 3,
-    "156": 1,
-    "163": 2,
-    "186": 1,
-  }
-
-  // Mock data for leaderboard
-  const mockLeaderboard: PeptideCandidate[][] = [
-    [
-      {
-        peptide: "NQWK",
-        number_of_matches: 12,
-        spectrum: [
-          { mass: 0, subpeptide: "" },
-          { mass: 114, subpeptide: "N" },
-          { mass: 128, subpeptide: "Q" },
-          { mass: 186, subpeptide: "W" },
-          { mass: 242, subpeptide: "NQ" },
-          { mass: 300, subpeptide: "QW" },
-          { mass: 314, subpeptide: "WK" },
-          { mass: 428, subpeptide: "NQW" },
-          { mass: 442, subpeptide: "QWK" },
-          { mass: 556, subpeptide: "NQWK" },
-        ],
-        mass: 556,
-        qualified: true,
-      },
-      {
-        peptide: "FPAY",
-        number_of_matches: 10,
-        spectrum: [
-          { mass: 0, subpeptide: "" },
-          { mass: 71, subpeptide: "A" },
-          { mass: 97, subpeptide: "P" },
-          { mass: 147, subpeptide: "F" },
-          { mass: 163, subpeptide: "Y" },
-          { mass: 168, subpeptide: "PA" },
-          { mass: 244, subpeptide: "FP" },
-          { mass: 310, subpeptide: "PAY" },
-          { mass: 315, subpeptide: "FPA" },
-          { mass: 478, subpeptide: "FPAY" },
-        ],
-        mass: 478,
-        qualified: true,
-      },
-    ],
-    [
-      {
-        peptide: "NQWKG",
-        number_of_matches: 14,
-        spectrum: [
-          { mass: 0, subpeptide: "" },
-          { mass: 57, subpeptide: "G" },
-          { mass: 114, subpeptide: "N" },
-          { mass: 128, subpeptide: "Q" },
-          { mass: 186, subpeptide: "W" },
-          { mass: 242, subpeptide: "NQ" },
-          { mass: 300, subpeptide: "QW" },
-          { mass: 314, subpeptide: "WK" },
-          { mass: 371, subpeptide: "KG" },
-          { mass: 428, subpeptide: "NQW" },
-          { mass: 442, subpeptide: "QWK" },
-          { mass: 499, subpeptide: "WKG" },
-          { mass: 556, subpeptide: "NQWK" },
-          { mass: 613, subpeptide: "NQWKG" },
-        ],
-        mass: 613,
-        qualified: true,
-      },
-      {
-        peptide: "FPAYT",
-        number_of_matches: 15,
-        spectrum: [
-          { mass: 0, subpeptide: "" },
-          { mass: 71, subpeptide: "A" },
-          { mass: 97, subpeptide: "P" },
-          { mass: 101, subpeptide: "T" },
-          { mass: 147, subpeptide: "F" },
-          { mass: 163, subpeptide: "Y" },
-          { mass: 168, subpeptide: "PA" },
-          { mass: 172, subpeptide: "AT" },
-          { mass: 234, subpeptide: "YT" },
-          { mass: 244, subpeptide: "FP" },
-          { mass: 310, subpeptide: "PAY" },
-          { mass: 315, subpeptide: "FPA" },
-          { mass: 411, subpeptide: "PAYT" },
-          { mass: 478, subpeptide: "FPAY" },
-          { mass: 579, subpeptide: "FPAYT" },
-        ],
-        mass: 579,
-        qualified: true,
-      },
-    ],
-  ]
-
-  // Mock solution
-  const mockSolution: Solution = {
-    peptide: "FPAYT",
-    mass: 579,
-    theoretical_spectrum: [
-      { mass: 0, subpeptide: "" },
-      { mass: 71, subpeptide: "A" },
-      { mass: 97, subpeptide: "P" },
-      { mass: 101, subpeptide: "T" },
-      { mass: 147, subpeptide: "F" },
-      { mass: 163, subpeptide: "Y" },
-      { mass: 168, subpeptide: "PA" },
-      { mass: 172, subpeptide: "AT" },
-      { mass: 234, subpeptide: "YT" },
-      { mass: 244, subpeptide: "FP" },
-      { mass: 310, subpeptide: "PAY" },
-      { mass: 315, subpeptide: "FPA" },
-      { mass: 411, subpeptide: "PAYT" },
-      { mass: 478, subpeptide: "FPAY" },
-      { mass: 579, subpeptide: "FPAYT" },
-    ],
-    number_of_matches: 15,
-  }
-
-  return {
-    matrix,
-    sequence,
-    amino_acids_in_peptids: mockAminoAcidsInPeptids,
-    leaderboard: mockLeaderboard,
-    solution: mockSolution,
-    N: 10,
-    M: 18,
-  }
-}
-
-const initializeMatrix = (apiResponse: MatrixApiResponse): MatrixState => {
-  const size = apiResponse.sequence.length
-  const matrix: MatrixCell[][] = Array(size)
-    .fill(null)
-    .map(() =>
-      Array(size)
-        .fill(null)
-        .map(() => ({
-          value: null,
-          isActive: false,
-          progress: 0,
-        })),
-    )
-
-  return {
-    matrix,
-    currentStep: 0,
-    sequence: apiResponse.sequence,
-    isComplete: false,
-    apiMatrix: apiResponse.matrix,
-    amino_acids_in_peptids: apiResponse.amino_acids_in_peptids,
-    leaderboard: apiResponse.leaderboard,
-    solution: apiResponse.solution,
-    N: apiResponse.N,
-    M: apiResponse.M,
-  }
-}
-
-const updateMatrixState = (state: MatrixState, step: number, progress: number): MatrixState => {
-  const { sequence, apiMatrix } = state
-  const size = sequence.length
-  const newMatrix = Array(size)
-    .fill(null)
-    .map(() =>
-      Array(size)
-        .fill(null)
-        .map(() => ({
-          value: -1,
-          isActive: false,
-          progress: 0,
-        })),
-    )
-
-  let cellCount = 0
-  for (let i = 1; i < size; i++) {
-    for (let j = 0; j < i; j++) {
-      if (cellCount <= step) {
-        newMatrix[i][j] = {
-          value: apiMatrix[i][j],
-          isActive: true,
-          progress: cellCount === step ? progress : 100,
-        }
-      }
-      cellCount++
-    }
-  }
-
-  const totalSteps = (size * (size - 1)) / 2 - 1
-  const isComplete = step >= totalSteps && progress >= 100
-
-  return {
-    ...state,
-    matrix: newMatrix,
-    currentStep: step,
-    isComplete,
-    amino_acids_in_peptids: state.amino_acids_in_peptids,
-    leaderboard: state.leaderboard,
-    solution: state.solution,
-    N: state.N,
-    M: state.M,
-  }
 }
 
 const STEP_DURATION = 1000
 
 export default function ConvolutionPage() {
   const [sequence, setSequence] = useState<string>("")
+  const [parsedSequence, setParsedSequence] = useState<number[]>([])
   const [isPlaying, setIsPlaying] = useState(false)
   const [matrixState, setMatrixState] = useState<MatrixState | null>(null)
   const [currentTime, setCurrentTime] = useState(0)
   const [totalDuration, setTotalDuration] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
-  const [isDownloading, setIsDownloading] = useState(false)
   const [isAnimationComplete, setIsAnimationComplete] = useState(false)
   const [currentRound, setCurrentRound] = useState(0)
+  const [visibleItems, setVisibleItems] = useState(10)
+
+  const candidatesContainerRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef<number>()
   const lastTimeRef = useRef<number>(0)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const { toast } = useToast()
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!candidatesContainerRef.current || !matrixState?.leaderboard?.[currentRound]) return
+
+      const { scrollTop, scrollHeight, clientHeight } = candidatesContainerRef.current
+      if (scrollTop + clientHeight >= scrollHeight - 20) {
+        // Load 10 more items, but don't exceed the total count
+        setVisibleItems((prev) => Math.min(prev + 10, matrixState.leaderboard[currentRound].length))
+      }
+    }
+
+    const currentRef = candidatesContainerRef.current
+    if (currentRef) {
+      currentRef.addEventListener("scroll", handleScroll)
+    }
+
+    // Reset visible items when round changes
+    setVisibleItems(10)
+
+    return () => {
+      if (currentRef) {
+        currentRef.removeEventListener("scroll", handleScroll)
+      }
+    }
+  }, [currentRound, matrixState?.leaderboard])
 
   const handlePreviousRound = () => {
     if (currentRound > 0) {
@@ -347,12 +147,12 @@ export default function ConvolutionPage() {
       const resetState = initializeMatrix({
         matrix: matrixState.apiMatrix,
         sequence: matrixState.sequence,
-        amino_acids_in_peptids: matrixState.amino_acids_in_peptids,
+        amino_acids_in_peptides: matrixState.amino_acids_in_peptides,
         leaderboard: matrixState.leaderboard,
         solution: matrixState.solution,
         N: matrixState.N,
         M: matrixState.M,
-      })
+      }, parsedSequence)
       setMatrixState(resetState)
     }
   }
@@ -414,36 +214,166 @@ export default function ConvolutionPage() {
     }
   }, [matrixState, isPlaying, totalDuration])
 
+  const fetchMatrixData = async (targetSequence: number[]): Promise<MatrixApiResponse> => {
+    const response = await fetch("http://localhost:8000/sequencing/spectral_convolution/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        target_spectrum: targetSequence,
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error("Greška pri komunikaciji sa serverom")
+    }
+
+    return await response.json()
+  }
+
+  const initializeMatrix = (apiResponse: MatrixApiResponse, parsedSequence: number[]): MatrixState => {
+    const size = sequence.length
+    const calculatedMatrix: number[][] = Array(size)
+    .fill(null)
+    .map(() => Array(size).fill(null))
+
+    for (let i = 1; i < size; i++) {
+      for (let j = 0; j < i; j++) {
+        calculatedMatrix[i][j] = Math.abs(parsedSequence[i] - parsedSequence[j])
+      }
+    }
+
+    const matrix: MatrixCell[][] = Array(size)
+    .fill(null)
+    .map(() =>
+      Array(size)
+        .fill(null)
+        .map(() => ({
+          value: null,
+          isActive: false,
+          progress: 0,
+        })),
+    )
+
+    return {
+      matrix,
+      currentStep: 0,
+      sequence: parsedSequence,
+      isComplete: false,
+      apiMatrix: calculatedMatrix,
+      amino_acids_in_peptides: apiResponse.amino_acids_in_peptides,
+      leaderboard: apiResponse.leaderboard,
+      solution: apiResponse.solution,
+      N: apiResponse.N,
+      M: apiResponse.M,
+    }
+  }
+
+  const updateMatrixState = (state: MatrixState, step: number, progress: number): MatrixState => {
+    const { sequence, apiMatrix } = state
+    const size = sequence.length
+    const newMatrix = Array(size)
+      .fill(null)
+      .map(() =>
+        Array(size)
+          .fill(null)
+          .map(() => ({
+            value: -1,
+            isActive: false,
+            progress: 0,
+          })),
+      )
+
+    let cellCount = 0
+    for (let i = 1; i < size; i++) {
+      for (let j = 0; j < i; j++) {
+        if (cellCount <= step) {
+          newMatrix[i][j] = {
+            value: apiMatrix[i][j],
+            isActive: true,
+            progress: cellCount === step ? progress : 100,
+          }
+        }
+        cellCount++
+      }
+    }
+
+    const totalSteps = (size * (size - 1)) / 2 - 1
+    const isComplete = step >= totalSteps && progress >= 100
+
+    return {
+      ...state,
+      matrix: newMatrix,
+      currentStep: step,
+      isComplete,
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const numbers = sequence.split(",").map((num) => Number.parseInt(num.trim()))
-    if (numbers.some(isNaN)) {
-      alert("Unesite validne brojeve razdvojene zarezima")
+
+    if (!sequence.trim()) {
+      toast({
+        title: "Greška",
+        description: "Molimo unesite sekvencu.",
+        variant: "destructive",
+      })
       return
     }
 
     try {
+      const parsedSequence = sequence
+        .split(",")
+        .map((s) => Number.parseInt(s.trim()))
+        .filter((n) => !isNaN(n))
+
+      if (parsedSequence.length < 2) {
+        toast({
+          title: "Greška",
+          description: "Sekvenca mora sadržati najmanje 2 broja.",
+          variant: "destructive",
+        })
+        return
+      }
+
+      for (let i = 1; i < parsedSequence.length; i++) {
+        if (parsedSequence[i] < parsedSequence[i - 1]) {
+          toast({
+            title: "Greška",
+            description: "Brojevi u sekvenci moraju biti u rastućem redosledu.",
+            variant: "destructive",
+          })
+          return
+        }
+      }
+
       setIsLoading(true)
       setIsAnimationComplete(false)
       setCurrentRound(0)
+      setParsedSequence(parsedSequence)
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
       }
 
-      const apiResponse = await fetchMatrixData(numbers)
-      const totalSteps = (numbers.length * (numbers.length - 1)) / 2
+      const apiResponse = await fetchMatrixData(parsedSequence)
+      const totalSteps = (parsedSequence.length * (parsedSequence.length - 1)) / 2
       const newTotalDuration = totalSteps * STEP_DURATION
 
       setTotalDuration(newTotalDuration)
       setCurrentTime(0)
       lastTimeRef.current = 0
 
-      const initialState = initializeMatrix(apiResponse)
+      const initialState = initializeMatrix(apiResponse, parsedSequence)
       setMatrixState(initialState)
       setIsPlaying(true)
     } catch (error) {
       console.error("Error fetching matrix data:", error)
-      alert("Greška pri analizi sekvence. Pokušajte ponovo.")
+      toast({
+        title: "Greška",
+        description: error instanceof Error ? error.message : "Došlo je do greške pri obradi podataka",
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -490,7 +420,8 @@ export default function ConvolutionPage() {
           </li>
           <li>
             <strong>Identifikacija aminokiselina:</strong> Najčešće razlike koje se pojavljuju u spektru verovatno
-            odgovaraju aminokiselinama prisutnim u peptidu. Te aminokiseline se izdvajaju i koriste u <span className="italic">Leaderboard</span> algoritmu.
+            odgovaraju aminokiselinama prisutnim u peptidu. Te aminokiseline se izdvajaju i koriste u{" "}
+            <span className="italic">Leaderboard</span> algoritmu.
           </li>
         </ol>
 
@@ -567,7 +498,6 @@ export default function ConvolutionPage() {
 
       {matrixState && (
         <>
-          {/* Matrix Visualization Section */}
           <div className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">Matrica konvolucije</h2>
 
@@ -670,7 +600,7 @@ export default function ConvolutionPage() {
           {matrixState && isAnimationComplete && (
             <>
               {/* Amino Acids Visualization */}
-              {matrixState.amino_acids_in_peptids && (
+              {matrixState.amino_acids_in_peptides && (
                 <div className="mb-12">
                   <h2 className="text-2xl font-semibold mb-4">Aminokiseline u peptidima</h2>
                   <Card className="p-6">
@@ -682,14 +612,15 @@ export default function ConvolutionPage() {
                       </div>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                      {Object.entries(matrixState.amino_acids_in_peptids).map(([mass, count]) => (
-                        <div key={mass} className="bg-secondary p-4 rounded-lg">
-                          <div className="flex justify-between items-center">
-                            <span className="font-mono text-lg">{mass} Da</span>
-                            <span className="text-lg font-semibold">{count}x</span>
+                      {Array.isArray(matrixState.amino_acids_in_peptides) &&
+                        matrixState.amino_acids_in_peptides.map((item, index) => (
+                          <div key={index} className="bg-secondary p-4 rounded-lg">
+                            <div className="flex justify-between items-center">
+                              <span className="font-mono text-lg">{item[0]} Da</span>
+                              <span className="text-lg font-semibold">{item[1]}x</span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   </Card>
                 </div>
@@ -700,121 +631,17 @@ export default function ConvolutionPage() {
                 <div className="mb-12">
                   <h2 className="text-2xl font-semibold mb-4">Leaderboard algoritam</h2>
 
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="icon" onClick={handlePreviousRound} disabled={currentRound === 0}>
-                        <ChevronLeft className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={handleNextRound}
-                        disabled={currentRound === (matrixState?.leaderboard?.length ?? 0) - 1}
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="icon" onClick={() => setCurrentRound(0)}>
-                        <RotateCcw className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="icon" onClick={skipToEnd} title="Preskoči do kraja">
-                        <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    </div>
-
-                    <div className="text-sm text-muted-foreground">
-                      Runda {currentRound + 1} od {matrixState.leaderboard.length}
-                    </div>
-                  </div>
-
-                  <Card className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-xl font-semibold flex items-center">
-                        <Trophy className="h-5 w-5 mr-2 text-yellow-500" />
-                        Runda {currentRound + 1}
-                      </h3>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Info className="h-4 w-4 mr-1" />
-                        Broj kandidata: {matrixState.N}
-                      </div>
-                    </div>
-
-                    <div className="space-y-6">
-                      {matrixState.leaderboard[currentRound].map((candidate, index) => {
-                        const isLastRound = currentRound === matrixState.leaderboard.length - 1
-
-                        const isSolution =
-                          candidate.peptide === matrixState.solution?.peptide || (isLastRound && candidate.qualified)
-
-                        return (
-                          <div
-                            key={index}
-                            className={`rounded-lg transition-colors duration-300 ${
-                              isSolution
-                                ? "bg-green-50 border border-green-200 dark:bg-green-900/20 dark:border-green-800"
-                                : "bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700"
-                            }`}
-                          >
-                            <div className="p-4 flex items-center justify-between">
-                              <div className="flex items-center">
-                                {isSolution && (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-5 w-5 text-green-500 mr-2"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  >
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                  </svg>
-                                )}
-                                {index === 0 && !isSolution && <Crown className="h-5 w-5 mr-2 text-yellow-500" />}
-                                {index === 1 && !isSolution && <Medal className="h-5 w-5 mr-2 text-gray-400" />}
-                                {index === 2 && !isSolution && <Medal className="h-5 w-5 mr-2 text-amber-600" />}
-
-                                <span className="font-mono text-lg">
-                                  {candidate.peptide}{" "}
-                                  {candidate.peptide === matrixState.solution?.peptide && (
-                                    <span className="text-green-600 text-sm">(Rešenje)</span>
-                                  )}
-                                </span>
-
-                                {candidate.qualified && (
-                                  <div className="ml-4 text-green-600 text-sm flex items-center">
-                                    <ChevronRight className="h-4 w-4" />
-                                    {isLastRound && candidate.qualified ? "Pobednik" : "Prolazi u sledeću rundu"}
-                                  </div>
-                                )}
-                              </div>
-                              <div className="flex items-center">
-                                <span className="text-primary font-semibold mr-4">
-                                  Poklapanja: {candidate.number_of_matches}
-                                </span>
-                                <span className="text-muted-foreground">Masa: {candidate.mass} Da</span>
-                              </div>
-                            </div>
-
-                            <div className="px-4 pb-4">
-                              <p className="text-sm font-medium mb-2">Teorijski spektar:</p>
-                              <ZoomableSpectrum
-                                spectrum={candidate.spectrum}
-                                experimentalSpectrum={matrixState.solution?.theoretical_spectrum.map(
-                                  (item) => item.mass,
-                                )}
-                                peptide={candidate.peptide}
-                                qualified={candidate.qualified}
-                                isSolution={isSolution}
-                                height={180}
-                              />
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </Card>
+                  <RoundNavigation
+                    currentRound={currentRound}
+                    totalRounds={matrixState.leaderboard.length}
+                    onPreviousRound={handlePreviousRound}
+                    onNextRound={handleNextRound}
+                    onReset={handleReset}
+                    onSkipToEnd={skipToEnd}
+                    infoText={`Maksimalni broj kandidata koji prolazi u sledeću rundu: ${matrixState.N}`}
+                  >
+                    {renderCandidates(matrixState, currentRound, visibleItems, candidatesContainerRef, setVisibleItems)} 
+                  </RoundNavigation>
                 </div>
               )}
             </>
@@ -830,4 +657,3 @@ export default function ConvolutionPage() {
     </div>
   )
 }
-

@@ -108,7 +108,6 @@ const renderSpectrum = (spectrum: SpectrumItem[], isSolution: boolean) => {
             className="absolute bottom-10"
             style={{ left: `${position}%`, transform: "translateX(-50%)" }}
           >
-            {/* Subpeptide label above the peak */}
             <div className="text-xs font-mono text-center absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 w-16 overflow-visible whitespace-nowrap">
               {item.subpeptide || "-"}
             </div>
@@ -121,7 +120,6 @@ const renderSpectrum = (spectrum: SpectrumItem[], isSolution: boolean) => {
               }}
             />
 
-            {/* Mass label below the peak */}
             <div className="text-xs text-center absolute top-full mt-1 left-1/2 transform -translate-x-1/2 w-12 overflow-visible whitespace-nowrap">
               {item.mass}
             </div>

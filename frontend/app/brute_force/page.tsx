@@ -118,7 +118,6 @@ const renderSpectrum = (spectrum: SpectrumItem[], isSolution: boolean) => {
               }}
             />
 
-            {/* Mass label below the peak */}
             <div className="text-xs text-center absolute top-full mt-1 left-1/2 transform -translate-x-1/2 w-12 overflow-visible whitespace-nowrap">
               {item.mass}
             </div>
