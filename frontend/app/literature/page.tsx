@@ -21,7 +21,7 @@ export default function LiteraturaPage() {
           <h2 className="text-xl font-semibold mb-4">Algoritmi za sekvenciranje peptida</h2>
           <ul className="space-y-4">
             <li className="border-b pb-4 relative pl-8">
-              <span className="absolute left-0 top-0 font-semibold">[1]</span>
+              <span className="absolute left-0 top-0 font-semibold" id="1">[1]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">Bioinformatics Algorithms: An Active Learning Approach Vol. II</p>
@@ -41,7 +41,7 @@ export default function LiteraturaPage() {
             </li>
 
             <li className="border-b pb-4 relative pl-8">
-              <span className="absolute left-0 top-0 font-semibold">[2]</span>
+              <span className="absolute left-0 top-0 font-semibold" id="2">[2]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">Materijal sa predavanja "Uvod u bioinformatiku"</p>
@@ -65,7 +65,7 @@ export default function LiteraturaPage() {
           <h2 className="text-xl font-semibold mb-4">De Novo tehnike za sekvenciranje peptida</h2>
           <ul className="space-y-4">
             <li className="border-b pb-4 relative pl-8">
-              <span className="absolute left-0 top-0 font-semibold">[3]</span>
+              <span className="absolute left-0 top-0 font-semibold" id="3">[3]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">DeepNovo: De novo peptide sequencing by deep learning</p>
@@ -87,7 +87,7 @@ export default function LiteraturaPage() {
             </li>
 
             <li className="border-b pb-4 relative pl-8">
-              <span className="absolute left-0 top-0 font-semibold">[4]</span>
+              <span className="absolute left-0 top-0 font-semibold" id="4">[4]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">
@@ -113,7 +113,7 @@ export default function LiteraturaPage() {
             </li>
 
             <li className="border-b pb-4 relative pl-8">
-              <span className="absolute left-0 top-0 font-semibold">[5]</span>
+              <span className="absolute left-0 top-0 font-semibold" id="5">[5]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">Novor: Real-Time Peptide de Novo Sequencing Software</p>
@@ -135,7 +135,7 @@ export default function LiteraturaPage() {
             </li>
 
             <li className="border-b pb-4 relative pl-8">
-              <span className="absolute left-0 top-0 font-semibold">[6]</span>
+              <span className="absolute left-0 top-0 font-semibold" id="6">[6]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">
@@ -162,7 +162,7 @@ export default function LiteraturaPage() {
           <h2 className="text-xl font-semibold mb-4">Masena spektrometrija i analiza peptida</h2>
           <ul className="space-y-4">
             <li className="border-b pb-4 relative pl-8">
-              <span className="absolute left-0 top-0 font-semibold">[7]</span>
+              <span className="absolute left-0 top-0 font-semibold" id="7">[7]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">Mass Spectrometer</p>
@@ -186,7 +186,7 @@ export default function LiteraturaPage() {
           <h2 className="text-xl font-semibold mb-4">Dodatno korišćena literatura</h2>
           <ul className="space-y-4">
             <li className="border-b pb-4 relative pl-8">
-              <span className="absolute left-0 top-0 font-semibold">[8]</span>
+              <span className="absolute left-0 top-0 font-semibold" id="8">[8]</span>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-semibold">Codon Chart: Table, Amino Acids & RNA Wheel Explained</p>

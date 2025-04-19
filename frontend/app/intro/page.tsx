@@ -33,7 +33,7 @@ export default function IntroPage() {
                 strane bakterija i kako se oni mogu sintetizovati ili modifikovani za primene u medicini. Antibiotici su
                 često peptidi - kratki proteini odnosno kratak niz aminokiselina, ali mnogo antibiotika, uglavnom
                 neribozomalni peptidi (<span className="italic">non-ribosomal peptides - NRPs</span>), ne prati
-                standardna pravila za sintezu proteina čime se otežava njihovo sekvenciranje.
+                standardna pravila za sintezu proteina čime se otežava njihovo sekvenciranje <Link href="/literature#1" className="text-blue-600 underline hover:text-blue-800">[1]</Link>.
               </p>
 
               <p className="text-muted-foreground mb-6">
@@ -83,7 +83,7 @@ export default function IntroPage() {
                   Slika 2: RNK kodonski točak prikazuje kako se sekvence od tri nukleotida (kodoni) prevode u
                   aminokiseline. Svaki kodon se čita od centra ka spolja, a zeleni trougao označava start kodon (AUG)
                   koji kodira metionin, dok crveni kvadrati označavaju stop kodone (UAA, UAG, UGA) koji određuju kraj
-                  sekvence koja se prevodi u protein.
+                  sekvence koja se prevodi u protein. Preuzeto sa <Link href="/literature#8" className="text-blue-600 underline hover:text-blue-800">[8]</Link>.
                   <span className="text-xs block text-primary-foreground/70 italic mt-1">
                     Kliknite na sliku za uvećani prikaz
                   </span>
@@ -175,7 +175,7 @@ export default function IntroPage() {
           <div className="flex flex-col">
             <div className="prose prose-lg max-w-full">
               <p className="text-muted-foreground mb-6">
-                Maseni spektrometar je moćan alat pomoću koga mogu da se odrede mase molekula, uključujući mase peptida
+                Maseni spektrometar <Link href="/literature#7" className="text-blue-600 underline hover:text-blue-800">[7]</Link> je moćan alat pomoću koga mogu da se odrede mase molekula, uključujući mase peptida
                 i proteina. Omogućava naučnicima da odrede nepoznate komponente, saznaju strukturu molekula i
                 analiziraju kompleksne uzorke. Maseni spektrometar radi tako što mu se da više uzoraka istog peptida a
                 on napravi sve moguće podpeptide datog peptida i odredi njihove mase. U realnosti uzorak se pretvara u

@@ -5,6 +5,7 @@ import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Brain, Database, Microscope, Network, Zap, Code, BarChart, X } from "lucide-react"
+import Link from "next/link"
 
 export default function DeepNovoPage() {
   const [activeTab, setActiveTab] = useState("background")  
@@ -108,9 +109,9 @@ export default function DeepNovoPage() {
               Pored Deep Novo tehnike koja će biti opisana u ovom radu, postoje i još neke tehnike zasnovane na De Novo principu:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-muted-foreground mb-6">
-              <li>PepNovo - koristi modelovanje verovatnoća pomoću grafova</li>
-              <li>PEAKS - koristi direktne aciklične grafove i određuje najbolji rezultat</li>
-              <li>Novor - koristi klasifikatore mašinskog učenja da odredi sekvencu aminokiselina sa najvećom verovatnoćom</li>
+              <li>PEAKS <Link href="/literature#4" className="text-blue-600 underline hover:text-blue-800">[4]</Link> - koristi direktne aciklične grafove i određuje najbolji rezultat</li>
+              <li>Novor <Link href="/literature#5" className="text-blue-600 underline hover:text-blue-800">[5]</Link> - koristi klasifikatore mašinskog učenja da odredi sekvencu aminokiselina sa najvećom verovatnoćom </li>
+              <li>PepNovo <Link href="/literature#6" className="text-blue-600 underline hover:text-blue-800">[6]</Link> - koristi modelovanje verovatnoća pomoću grafova</li>
             </ul>
 
             <p className="text-muted-foreground">
@@ -123,9 +124,9 @@ export default function DeepNovoPage() {
 
         <TabsContent value="deepnovo" className="mt-8">
           <div className="prose prose-lg max-w-none">
-            <h2 className="text-2xl font-semibold mb-4">Šta je DeepNovo?</h2>
+            <h2 className="text-2xl font-semibold mb-4">Šta je Deep Novo?</h2>
             <p className="text-muted-foreground mb-6">
-              DeepNovo je metoda zasnovana na dubokom učenju koja poboljšava sekvenciranje peptida koristeći algoritam
+              Deep Novo <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link> je metoda zasnovana na dubokom učenju koja poboljšava sekvenciranje peptida koristeći algoritam
               za predviđanje sekvenci aminokiselina iz podataka generisanih masenom spektrometrijom.
             </p>
 
@@ -331,7 +332,7 @@ export default function DeepNovoPage() {
                     </div>
                   </button>
                   <p className="text-sm text-muted-foreground text-center">
-                    Slika 1: Arhitektura Deep Novo pristupa
+                    Slika 1: Arhitektura Deep Novo pristupa <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link>
                     <span className="text-xs block text-primary-foreground/70 italic mt-1">
                       Kliknite na sliku za uvećani prikaz
                     </span>
@@ -434,7 +435,7 @@ export default function DeepNovoPage() {
                     </div>
                   </button>
                   <p className="text-sm text-muted-foreground text-center">
-                    Slika 1: Poređenje rezultata Deep Novo algoritma sa drugim algoritmima
+                    Slika 1: Poređenje rezultata Deep Novo algoritma sa drugim algoritmima <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link>
                     <span className="text-xs block text-primary-foreground/70 italic mt-1">
                       Kliknite na sliku za uvećani prikaz
                     </span>

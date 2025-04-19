@@ -19,6 +19,7 @@ import {
   Move,
 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import Link from "next/link"
 
 interface TreeNode {
   node: string
@@ -574,7 +575,7 @@ export default function BranchAndBoundPage() {
 
       <div className="prose prose-lg max-w-none mb-4">
         <p className="text-muted-foreground mb-4">
-          Branch and Bound algoritam je optimizovana verzija algoritma grube sile koja koristi strategiju "podeli pa
+          Branch and Bound algoritam <Link href="/literature#2" className="text-blue-600 underline hover:text-blue-800">[2]</Link> je optimizovana verzija algoritma grube sile koja koristi strategiju "podeli pa
           vladaj" za efikasnije pretraživanje prostora rešenja. Za razliku od algoritma grube sile koji ispituje sve
           moguće kombinacije, Branch and Bound algoritam inteligentno eliminiše delove prostora pretrage koji ne mogu
           sadržati optimalno rešenje.

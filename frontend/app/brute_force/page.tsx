@@ -18,6 +18,7 @@ import {
   Move,
 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import Link from "next/link"
 
 interface TreeNode {
   node: string
@@ -532,7 +533,7 @@ export default function BruteForcePage() {
 
       <div className="prose prose-lg max-w-none mb-8">
         <p className="text-muted-foreground mb-6">
-          Algoritam grube sile (eng. Brute Force) je najjednostavniji pristup rešavanju problema sekvenciranja
+          Algoritam grube sile (eng. Brute Force) <Link href="/literature#2" className="text-blue-600 underline hover:text-blue-800">[2]</Link> je najjednostavniji pristup rešavanju problema sekvenciranja
           antibiotika. Ovaj metod sistematski ispituje sve moguće kombinacije aminokiselina koje bi mogle formirati
           peptid zadate mase. Iako je ovaj pristup garantovano pronalazi tačno rešenje ako ono postoji, njegova
           vremenska složenost je eksponencijalna u odnosu na dužinu sekvence, što ga čini nepraktičnim za duže peptide.

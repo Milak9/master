@@ -22,6 +22,7 @@ import {
 import { Slider } from "@/components/ui/slider"
 import { RoundNavigation, renderCandidates } from "@/components/round_navigation"
 import { useToast } from "@/hooks/use-toast"
+import Link from "next/link"
 
 interface MatrixCell {
   value: number | null
@@ -406,7 +407,7 @@ export default function ConvolutionPage() {
 
       <div className="prose prose-lg max-w-none mb-8">
         <p className="text-muted-foreground mb-6">
-          Spektralna konvolucija je tehnika koja se koristi za identifikaciju aminokiselina koje mogu biti prisutne u
+          Spektralna konvolucija <Link href="/literature#2" className="text-blue-600 underline hover:text-blue-800">[2]</Link> je tehnika koja se koristi za identifikaciju aminokiselina koje mogu biti prisutne u
           peptidu na osnovu eksperimentalnog spektra. Ova metoda analizira razlike između masa u spektru i identifikuje
           one koje odgovaraju masama aminokiselina.
         </p>

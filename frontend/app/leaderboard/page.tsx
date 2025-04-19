@@ -16,6 +16,7 @@ import {
 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { RoundNavigation, renderCandidates } from "@/components/round_navigation"
+import Link from "next/link"
 
 interface SpectrumItem {
   mass: number
@@ -177,7 +178,7 @@ export default function LeaderboardPage() {
 
       <div className="prose prose-lg max-w-none mb-8">
         <p className="text-muted-foreground mb-6">
-          Leaderboard algoritam je optimizovani pristup za sekvenciranje peptida. Za razliku od sekvenciranja grubom
+          Leaderboard algoritam <Link href="/literature#2" className="text-blue-600 underline hover:text-blue-800">[2]</Link> je optimizovani pristup za sekvenciranje peptida. Za razliku od sekvenciranja grubom
           silom koje zahteva tačno poklapanje između teorijskog spektra kandidata i eksperimentalnog spektra, ovaj
           algoritam je dizajniran da radi sa <span className="font-semibold">nedostajućim i lažnim masama</span> tako
           što prati samo najbolje kandidate peptida umesto svih mogućnosti.
