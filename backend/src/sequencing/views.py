@@ -26,6 +26,7 @@ class BruteForce(View):
             }
         }
 
+        solution = []
         while len(peptides) > 0:
             extended_peptides = extend_for_tree(peptides, tree)
 
@@ -39,6 +40,7 @@ class BruteForce(View):
                     calculated_spectrum, spectrum_with_masses = cyclic_spectrum(peptide)
                     if calculated_spectrum == target_spectrum:
                         results[peptide] = spectrum_with_masses
+                        solution.append(peptide)
                 elif peptide_mass < target_peptide_mass:
                     candidates.append(peptide)
                 else:
@@ -48,7 +50,8 @@ class BruteForce(View):
 
         response = {
             "candidates": results,
-            "tree": tree
+            "tree": tree,
+            "solution": solution
         }
         return JsonResponse(response, status=200)
 

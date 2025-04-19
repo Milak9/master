@@ -182,9 +182,13 @@ def trim(peptides, target_spectrum, max_number_of_candidates):
         leaderboard.append(current_candidate)
 
     leaderboard = sorted(leaderboard, reverse=True, key=lambda x: x["number_of_matches"])
+
     if len(peptides) <= max_number_of_candidates:
         leaderboard = [{**item, "qualified": True} for item in leaderboard]
         return peptides, leaderboard
+
+    for i in range(0, max_number_of_candidates):
+        leaderboard[i]["qualified"] = True
 
     for i in range(max_number_of_candidates, len(leaderboard)):
         if leaderboard[i]["number_of_matches"] < leaderboard[max_number_of_candidates - 1]["number_of_matches"]:
@@ -218,20 +222,24 @@ def leaderboard_sequencing(target_spectrum, amino_acid_candidates=AMINO_ACID_MAS
         extended_peptides = extend(peptides, amino_acid_candidates)
 
         consistent_peptides = []
+        potential_candidates = []
         for peptide in extended_peptides:
             peptide_mass = calculate_peptide_mass(peptide)
+            peptide_score, spectrum_with_subpeptides_sorted = cyclic_score(peptide, target_spectrum)
+
+            current_candidate = {
+                "peptide": peptide,
+                "mass": peptide_mass,
+                "number_of_matches": peptide_score,
+                "spectrum": spectrum_with_subpeptides_sorted,
+                "candidate": False,
+                "qualified": False
+            }
 
             if peptide_mass == target_peptide_mass:
-                peptide_score, spectrum_with_subpeptides_sorted = cyclic_score(peptide, target_spectrum)
-
-                current_candidate = {
-                    "peptide": peptide,
-                    "mass": peptide_mass,
-                    "number_of_matches": peptide_score,
-                    "spectrum": spectrum_with_subpeptides_sorted,
-                    "qualified": False
-                }
-
+                current_candidate["candidate"]: True
+                current_candidate["reason"] = "Masa je jednaka traženoj masi, ovaj peptid je kandidat za rešenje."
+                potential_candidates.append(current_candidate)
                 if peptide_score > leader_peptide_score:
                     leader_peptide = [current_candidate]
                     leader_peptide_score = peptide_score
@@ -240,9 +248,13 @@ def leaderboard_sequencing(target_spectrum, amino_acid_candidates=AMINO_ACID_MAS
 
             elif peptide_mass < target_peptide_mass:
                 consistent_peptides.append(peptide)
+            else:
+                current_candidate["reason"] = "Nije rešenje jer je masa veća od tražene mase"
+                potential_candidates.append(current_candidate)
 
         peptides, current_round_peptides = trim(consistent_peptides, target_spectrum, MAX_NUMBER_OF_CANDIDATES)
-        leaderboard[current_round] = current_round_peptides
+        current_round_peptides = current_round_peptides + potential_candidates
+        leaderboard[current_round] = sorted(current_round_peptides, reverse=True, key=lambda x: x["number_of_matches"])
         current_round += 1
 
     response = {
