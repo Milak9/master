@@ -31,7 +31,7 @@ interface VisualizationResult {
     [key: string]: TreeNode
   }
   candidates: TheoreticalSpectrum
-  solution: string
+  solution: string[]
 }
 
 interface VisibleNode {
@@ -191,26 +191,6 @@ const flattenTree = (
   return result
 }
 
-const findTargetNodes = (
-  treeMap: { [key: string]: TreeNode },
-  nodeName: string,
-  targetMass: number,
-  result: TreeNode[] = [],
-): TreeNode[] => {
-  const node = treeMap[nodeName]
-  if (!node) return result
-
-  if (node.mass === targetMass && node.end) {
-    result.push(node)
-  }
-
-  for (const childName of node.children) {
-    findTargetNodes(treeMap, childName, targetMass, result)
-  }
-
-  return result
-}
-
 const getTreeDimensions = (
   treeMap: { [key: string]: TreeNode },
   nodeName: string,
@@ -299,7 +279,6 @@ export default function BruteForcePage() {
   const [totalDuration, setTotalDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [isAnimationComplete, setIsAnimationComplete] = useState(false)
-  const [targetNodes, setTargetNodes] = useState<TreeNode[]>([])
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
   const [targetMass, setTargetMass] = useState(0)
@@ -363,10 +342,6 @@ export default function BruteForcePage() {
     if (visualizationData) {
       const allNodes = flattenTree(visualizationData.tree, "Root", 0, 0)
       setTotalDuration(allNodes.length * STEP_DURATION)
-
-      // Find all target nodes in the tree
-      const targets = findTargetNodes(visualizationData.tree, "Root", targetMass)
-      setTargetNodes(targets)
 
       // Calculate and set SVG dimensions based on tree structure
       const dimensions = calculateSvgDimensions(visualizationData.tree)
@@ -468,7 +443,6 @@ export default function BruteForcePage() {
       setCurrentTime(0)
       lastTimeRef.current = 0
       setIsAnimationComplete(false)
-      setTargetNodes([])
       setControlsEnabled(true)
 
       setTimeout(async () => {
@@ -1065,7 +1039,7 @@ export default function BruteForcePage() {
 
                   <div className="space-y-6">
                     {Object.entries(visualizationData.candidates).map(([peptide, spectrum], index) => {
-                      const isSolution = peptide === visualizationData.solution
+                      const isSolution = visualizationData.solution.includes(peptide)
 
                       return (
                         <div
@@ -1100,24 +1074,42 @@ export default function BruteForcePage() {
                 </div>
               )}
 
-              {isAnimationComplete && visualizationData.solution && (
+              {isAnimationComplete && visualizationData.solution && visualizationData.solution.length > 0 && (
                 <div className="mt-8 p-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
                   <div className="flex items-center mb-4">
                     <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
-                    <h3 className="text-xl font-semibold text-green-700 dark:text-green-300">Pronađeno rešenje</h3>
+                    <h3 className="text-xl font-semibold text-green-700 dark:text-green-300">
+                      {visualizationData.solution.length === 1 ? "Pronađeno rešenje" : "Pronađena rešenja"}
+                    </h3>
                   </div>
 
                   <p className="text-lg mb-2">
-                    Peptid{" "}
-                    <span className="font-mono font-bold text-green-700 dark:text-green-300">
-                      {visualizationData.solution}
-                    </span>{" "}
-                    je identifikovan kao tačno rešenje.
+                    {visualizationData.solution.length === 1 ? (
+                      <>
+                        Peptid{" "}
+                        <span className="font-mono font-bold text-green-700 dark:text-green-300">
+                          {visualizationData.solution[0]}
+                        </span>{" "}
+                        je identifikovan kao tačno rešenje.
+                      </>
+                    ) : (
+                      <>
+                        Peptidi{" "}
+                        <span className="font-mono font-bold text-green-700 dark:text-green-300">
+                          {visualizationData.solution.join(", ")}
+                        </span>{" "}
+                        su identifikovani kao tačna rešenja.
+                      </>
+                    )}
                   </p>
 
                   <p className="text-sm text-muted-foreground">
-                    Ovaj peptid ima masu od {targetMass} Da i njegov teorijski spektar je jednak eksperimentalnom
-                    spektru.
+                    {visualizationData.solution.length === 1 ? "Ovaj peptid ima" : "Ovi peptidi imaju"} masu od{" "}
+                    {targetMass} Da i{" "}
+                    {visualizationData.solution.length === 1
+                      ? "njegov teorijski spektar je jednak"
+                      : "njihovi teorijski spektri su jednaki"}{" "}
+                    eksperimentalnom spektru.
                   </p>
                 </div>
               )}

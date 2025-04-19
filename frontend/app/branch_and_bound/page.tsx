@@ -194,26 +194,6 @@ const flattenTree = (
   return result
 }
 
-const findTargetNodes = (
-  treeMap: { [key: string]: TreeNode },
-  nodeName: string,
-  targetMass: number,
-  result: TreeNode[] = [],
-): TreeNode[] => {
-  const node = treeMap[nodeName]
-  if (!node) return result
-
-  if (node.mass === targetMass && node.end) {
-    result.push(node)
-  }
-
-  for (const childName of node.children) {
-    findTargetNodes(treeMap, childName, targetMass, result)
-  }
-
-  return result
-}
-
 const getNodeTooltip = (node: TreeNode) => {
   if (node.end && node.reason) {
     return node.reason
@@ -312,14 +292,12 @@ export default function BranchAndBoundPage() {
   const [totalDuration, setTotalDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [isAnimationComplete, setIsAnimationComplete] = useState(false)
-  const [targetNodes, setTargetNodes] = useState<TreeNode[]>([])
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
   const svgRef = useRef<SVGSVGElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef<number>()
   const lastTimeRef = useRef<number>(0)
-  const [candidateNodes, setCandidateNodes] = useState<TreeNode[]>([])
   const [svgDimensions, setSvgDimensions] = useState({
     width: "100%",
     height: 400,
@@ -383,13 +361,6 @@ export default function BranchAndBoundPage() {
     if (visualizationData) {
       const allNodes = flattenTree(visualizationData.tree, "Root", 0, 0)
       setTotalDuration(allNodes.length * STEP_DURATION)
-
-      const targets = findTargetNodes(visualizationData.tree, "Root", targetMass)
-      setTargetNodes(targets)
-
-      // Find all candidate nodes
-      const candidates = allNodes.map((vn) => vn.node).filter((node) => node.candidate)
-      setCandidateNodes(candidates)
 
       // Calculate and set SVG dimensions based on tree structure
       const dimensions = calculateSvgDimensions(visualizationData.tree)
@@ -563,7 +534,6 @@ export default function BranchAndBoundPage() {
       setCurrentTime(0)
       lastTimeRef.current = 0
       setIsAnimationComplete(false)
-      setTargetNodes([])
       setControlsEnabled(true)
 
       // Set visualization data after resetting state
