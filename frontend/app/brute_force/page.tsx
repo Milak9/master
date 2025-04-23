@@ -499,15 +499,16 @@ export default function BruteForcePage() {
     }
   }
 
-  const MAX_PAN_OFFSET = 500 // Maximum pan offset in any direction
+  const MAX_PAN_OFFSET_X = 500 // Maximum pan offset in X axis direction
+  const MAX_PAN_OFFSET_Y = 50 // Maximum pan offset in Y axis direction
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     if (isDragging && zoomLevel > 1) {
       const dx = e.clientX - dragStart.x
       const dy = e.clientY - dragStart.y
 
-      const newX = Math.max(Math.min(panOffset.x + dx, MAX_PAN_OFFSET), -MAX_PAN_OFFSET)
-      const newY = Math.max(Math.min(panOffset.y + dy, MAX_PAN_OFFSET), -MAX_PAN_OFFSET)
+      const newX = Math.max(Math.min(panOffset.x + dx, MAX_PAN_OFFSET_X), -MAX_PAN_OFFSET_X)
+      const newY = Math.max(Math.min(panOffset.y + dy, MAX_PAN_OFFSET_Y), -MAX_PAN_OFFSET_Y)
 
       setPanOffset({ x: newX, y: newY })
       setDragStart({ x: e.clientX, y: e.clientY })

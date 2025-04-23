@@ -489,18 +489,15 @@ export default function BranchAndBoundPage() {
     }
   }
 
+  const MAX_PAN_OFFSET_X = 500 // Maximum pan offset in X axis direction
+  const MAX_PAN_OFFSET_Y = 50 // Maximum pan offset in Y axis direction
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     if (isDragging && zoomLevel > 1) {
       const dx = e.clientX - dragStart.x
       const dy = e.clientY - dragStart.y
 
-      // Calculate the maximum allowed pan offset based on zoom level and tree boundaries
-      const maxPanX = (Math.abs(treeBoundaries.maxX - treeBoundaries.minX) * (zoomLevel - 1)) / (2 * zoomLevel)
-      const maxPanY = (Math.abs(treeBoundaries.maxY - treeBoundaries.minY) * (zoomLevel - 1)) / (2 * zoomLevel)
-
-      // Calculate new offsets with boundary limits
-      const newX = Math.max(Math.min(panOffset.x + dx, maxPanX), -maxPanX)
-      const newY = Math.max(Math.min(panOffset.y + dy, maxPanY), -maxPanY)
+      const newX = Math.max(Math.min(panOffset.x + dx, MAX_PAN_OFFSET_X), -MAX_PAN_OFFSET_X)
+      const newY = Math.max(Math.min(panOffset.y + dy, MAX_PAN_OFFSET_Y), -MAX_PAN_OFFSET_Y)
 
       setPanOffset({ x: newX, y: newY })
       setDragStart({ x: e.clientX, y: e.clientY })
