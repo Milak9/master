@@ -442,6 +442,25 @@ export default function LeaderboardPage() {
             </pre>
           </div>
         </Card>
+
+        <p className="text-muted-foreground mb-6">
+          U vizuelizaciji ispod, možete videti kako algoritam kroz runde bira N kandidata koji prolaze u sledeću rundu. Takođe, možete da vidite
+          teorijske spektre kandidata kao i broj elemenata spektra koji su isti kao i u zadatom teorijskom spektru. Teorijski spektri kandidata
+          mogu da se zumiraju da bi se lakše videli podpeptidi sa njihovim masama.<br/>
+          U poslednjoj rundi će biti prikazani peptidi koji predstavljaju najbolje kandidate za rešenje. Može imati više različitih kandidata
+          s obzirom da različite aminokiseline mogu da imaju istu masu.
+        </p>
+        <p className="text-muted-foreground mb-2">
+          Primeri peptida i njihovih teorijskih spektara:
+        </p>
+        <ul className="list-disc pl-6 mb-4 space-y-2 text-muted-foreground">
+          <li>
+            <strong>NQE:</strong> [0, 114, 128, 129, 242, 243, 257, 371]
+          </li>
+          <li>
+            <strong>NQEL:</strong> [0, 113, 114, 128, 129, 227, 240, 242, 257, 355, 356, 370, 370, 484]
+          </li>
+        </ul>
       </div>
 
       <Card className="p-6 mb-8">
@@ -451,8 +470,8 @@ export default function LeaderboardPage() {
             <Input
               value={sequence}
               onChange={(e) => setSequence(e.target.value)}
-              placeholder="npr. 0,97,129,194,226,323,355,452"
-              className="max-w-md"
+              placeholder="npr. 0, 113, 114, 128, 129, 227, 240, 242, 257, 355, 356, 370, 370, 484"
+              className="max-w-lg"
             />
           </div>
           <Button type="submit">Analiziraj</Button>

@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, RotateCcw, Trophy, Crown, Medal, ArrowRight, Info, CheckCircle } from "lucide-react"
+import { ChevronLeft, ChevronRight, RotateCcw, Trophy, Crown, Medal, ArrowRight, Info, CheckCircle, XCircle } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { ZoomableSpectrum } from "@/components/zoom_spectrum/visualization_controls"
 
@@ -39,10 +39,13 @@ export function renderCandidates(
             <Trophy className="h-5 w-5 mr-2 text-yellow-500" />
             Runda {currentRound + 1}
           </h3>
-          <div className="flex items-center text-sm text-muted-foreground">
-            <Info className="h-4 w-4 mr-1" />
-            Broj kandidata: {data.N}
-          </div>
+          {!isLastRound && (
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Info className="h-4 w-4 mr-1" />
+              Maksimalni broj kandidata koji prolazi u sledeću rundu: {data.N}
+            </div>
+            )
+          }
         </div>
 
         {/* Solutions section */}
@@ -50,7 +53,7 @@ export function renderCandidates(
           <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
             <h4 className="text-lg font-semibold mb-2 flex items-center">
               <CheckCircle className="h-5 w-5 mr-2 text-green-600" />
-              Rešenja
+              Ukupno različitih rešenja: {data.solution.length}
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
               {data.solution.map((sol: any, idx: any) => (
@@ -64,6 +67,14 @@ export function renderCandidates(
                 </div>
               ))}
             </div>
+          </div>
+        )}
+        {isLastRound && data.solution.length == 0 && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+            <h4 className="text-lg font-semibold flex items-center">
+              <XCircle className="h-5 w-5 mr-2 text-red-600" />
+              Nisu pronađeni peptidi čiji teorijski spektri odgovaraju traženom.
+            </h4>
           </div>
         )}
 

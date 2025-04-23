@@ -12,6 +12,7 @@ import {
   RotateCcw,
   ArrowRight,
   CheckCircle,
+  XCircle,
   HelpCircle,
   ZoomIn,
   ZoomOut,
@@ -444,6 +445,7 @@ export default function BruteForcePage() {
       lastTimeRef.current = 0
       setIsAnimationComplete(false)
       setControlsEnabled(true)
+      setVisualizationData(null)
 
       setTimeout(async () => {
         try {
@@ -762,7 +764,26 @@ export default function BruteForcePage() {
           </pre>
         </div>
       </Card>
-
+      <p className="text-muted-foreground mb-6">
+        U vizuelizaciji ispod, možete videti kako algoritam gradi stablo pretrage i kako se granama dolazi do listova drveta.
+        Zeleni čvorovi predstavljaju potencijalna rešenja, crveni čvorovi su eliminisani, a plavi
+        čvor je trenutno aktivan u pretrazi. Takođe drvo može da se zumira i pomera da bi lakše mogli da se vide svi čvorovi.
+        Pošto je ovo algoritam grube sile vizuelizacija algoritam traje dugo i ima dosta potencijalnih rešenja,
+        preporučuje se da se unose sekvence manjih peptida da bi moglo lepo da se vidi drvo izvršavanja.<br/>
+        Na kraju će biti prikazani peptidi koji predstavljaju najbolje kandidate za rešenje. Može imati više različitih kandidata
+        s obzirom da različite aminokiseline mogu da imaju istu masu.
+      </p>
+      <p className="text-muted-foreground mb-2">
+        Primeri peptida i njihovih teorijskih spektara:
+      </p>
+      <ul className="list-disc pl-6 mb-4 space-y-2 text-muted-foreground">
+        <li>
+          <strong>G:</strong> [0, 57]
+        </li>
+        <li>
+          <strong>GA:</strong> [0, 57, 71, 128]
+        </li>
+      </ul>
       <Card className="p-6 mb-8">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -770,8 +791,8 @@ export default function BruteForcePage() {
             <Input
               value={sequence}
               onChange={(e) => setSequence(e.target.value)}
-              placeholder="Unesi sekvencu..."
-              className="max-w-md"
+              placeholder="npr. 0, 57"
+              className="max-w-lg"
             />
           </div>
           <div className="space-x-2">
@@ -1033,7 +1054,7 @@ export default function BruteForcePage() {
                 </svg>
               </div>
 
-              {isAnimationComplete && visualizationData.candidates && (
+              {isAnimationComplete && visualizationData.solution && visualizationData.solution.length > 0 && (
                 <div className="mt-8 space-y-6">
                   <h3 className="text-xl font-semibold mb-4">Kandidati sa masom {targetMass} Da:</h3>
 
@@ -1071,46 +1092,54 @@ export default function BruteForcePage() {
                       )
                     })}
                   </div>
+                  <div className="mt-8 p-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                    <div className="flex items-center mb-4">
+                      <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
+                      <h3 className="text-xl font-semibold text-green-700 dark:text-green-300">
+                        {visualizationData.solution.length === 1 ? "Pronađeno rešenje" : "Pronađena rešenja"}
+                      </h3>
+                    </div>
+
+                    <p className="text-lg mb-2">
+                      {visualizationData.solution.length === 1 ? (
+                        <>
+                          Peptid{" "}
+                          <span className="font-mono font-bold text-green-700 dark:text-green-300">
+                            {visualizationData.solution[0]}
+                          </span>{" "}
+                          je identifikovan kao tačno rešenje.
+                        </>
+                      ) : (
+                        <>
+                          Peptidi{" "}
+                          <span className="font-mono font-bold text-green-700 dark:text-green-300">
+                            {visualizationData.solution.join(", ")}
+                          </span>{" "}
+                          su identifikovani kao tačna rešenja.
+                        </>
+                      )}
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      {visualizationData.solution.length === 1 ? "Ovaj peptid ima" : "Ovi peptidi imaju"} masu od{" "}
+                      {targetMass} Da i{" "}
+                      {visualizationData.solution.length === 1
+                        ? "njegov teorijski spektar je jednak"
+                        : "njihovi teorijski spektri su jednaki"}{" "}
+                      eksperimentalnom spektru.
+                    </p>
+                  </div>
                 </div>
               )}
 
-              {isAnimationComplete && visualizationData.solution && visualizationData.solution.length > 0 && (
-                <div className="mt-8 p-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                  <div className="flex items-center mb-4">
-                    <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
-                    <h3 className="text-xl font-semibold text-green-700 dark:text-green-300">
-                      {visualizationData.solution.length === 1 ? "Pronađeno rešenje" : "Pronađena rešenja"}
+              {isAnimationComplete && visualizationData.solution.length == 0 && (
+                <div className="mt-8 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                  <div className="flex items-center">
+                    <XCircle className="h-6 w-6 text-red-500 mr-2" />
+                    <h3 className="text-xl font-semibold text-red-700 dark:text-red-300">
+                      Nisu pronađeni peptidi čiji teorijski spektri odgovaraju traženom.
                     </h3>
                   </div>
-
-                  <p className="text-lg mb-2">
-                    {visualizationData.solution.length === 1 ? (
-                      <>
-                        Peptid{" "}
-                        <span className="font-mono font-bold text-green-700 dark:text-green-300">
-                          {visualizationData.solution[0]}
-                        </span>{" "}
-                        je identifikovan kao tačno rešenje.
-                      </>
-                    ) : (
-                      <>
-                        Peptidi{" "}
-                        <span className="font-mono font-bold text-green-700 dark:text-green-300">
-                          {visualizationData.solution.join(", ")}
-                        </span>{" "}
-                        su identifikovani kao tačna rešenja.
-                      </>
-                    )}
-                  </p>
-
-                  <p className="text-sm text-muted-foreground">
-                    {visualizationData.solution.length === 1 ? "Ovaj peptid ima" : "Ovi peptidi imaju"} masu od{" "}
-                    {targetMass} Da i{" "}
-                    {visualizationData.solution.length === 1
-                      ? "njegov teorijski spektar je jednak"
-                      : "njihovi teorijski spektri su jednaki"}{" "}
-                    eksperimentalnom spektru.
-                  </p>
                 </div>
               )}
             </>
