@@ -120,7 +120,7 @@ export default function LeaderboardPage() {
       setCurrentRound(0)
       setVisibleItems(10)
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_LOCALHOST_URL}/sequencing/leaderboard/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_DEPLOYED_URL}/sequencing/leaderboard/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

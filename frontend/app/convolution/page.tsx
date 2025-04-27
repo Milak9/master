@@ -216,7 +216,7 @@ export default function ConvolutionPage() {
   }, [matrixState, isPlaying, totalDuration])
 
   const fetchMatrixData = async (targetSequence: number[]): Promise<MatrixApiResponse> => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_LOCALHOST_URL}/sequencing/spectral_convolution/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_DEPLOYED_URL}/sequencing/spectral_convolution/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
