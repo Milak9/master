@@ -51,7 +51,7 @@ const fetchData = async (sequence: string): Promise<{ data: VisualizationResult;
 
     const targetMass = Math.max(...numbers)
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_DEPLOYED_URL}/sequencing/branch_and_bound/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_LOCALHOST_URL}/sequencing/branch_and_bound/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
