@@ -72,7 +72,7 @@ const fetchData = async (sequence: string, setTargetMass: (mass: number) => void
     const maxMass = Math.max(...numbers)
     setTargetMass(maxMass)
 
-    const response = await fetch("http://localhost:8000/sequencing/brute_force/", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_LOCALHOST_URL}/sequencing/brute_force/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

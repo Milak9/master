@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   frontend:
-    container_name: fe_app
+    container_name: frontend
     build:
       context: ..
       dockerfile: docker/Dockerfile.frontend
@@ -14,7 +14,7 @@ services:
       - backend
 
   backend:
-    container_name: be_app
+    container_name: backend
     build:
       context: ..
       dockerfile: docker/Dockerfile.backend
@@ -22,3 +22,9 @@ services:
       - "8000:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=configuration.settings
+
+networks:
+  my_network:
+    driver: bridge
+
+name: antibiotic_sequencing
