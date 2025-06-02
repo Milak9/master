@@ -87,7 +87,7 @@ export default function NotFound() {
               href="/deep_novo" 
               className="text-sm px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
             >
-              Deep Novo sekvenciranje
+              DeepNovo sekvenciranje
             </Link>
             <Link 
               href="/literature"

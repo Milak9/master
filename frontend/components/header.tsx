@@ -37,7 +37,7 @@ export function Header() {
                 Spektralna konvolucija
               </Link>
               <Link href="/deep_novo" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
-                Deep Novo sekvenciranje
+                DeepNovo sekvenciranje
               </Link>
               <Link href="/literature" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
                 Literatura
@@ -111,7 +111,7 @@ export function Header() {
                 className="text-sm font-medium py-2 hover:text-primary items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Deep Novo sekvenciranje
+                DeepNovo sekvenciranje
               </Link>
               <Link
                 href="/literature"

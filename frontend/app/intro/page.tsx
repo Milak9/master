@@ -359,7 +359,7 @@ export default function IntroPage() {
           </Card>
 
           <Card className="p-6">
-            <h3 className="text-xl font-semibold mb-3">Deep Novo sekvenciranje</h3>
+            <h3 className="text-xl font-semibold mb-3">DeepNovo sekvenciranje</h3>
             <p className="text-muted-foreground mb-4">
               Metoda zasnovana na dubokom učenju koja omogućava sekvenciranje peptida bez oslanjanja na baze podataka.
             </p>
