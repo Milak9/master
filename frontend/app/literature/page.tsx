@@ -24,7 +24,7 @@ export default function LiteraturaPage() {
               <span className="absolute left-0 top-0 font-semibold" id="1">[1]</span>
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="font-semibold">Bioinformatics Algorithms: An Active Learning Approach Vol. II</p>
+                  <p className="font-semibold">Bioinformatics Algorithms: An Active Learning Approach Vol. I</p>
                   <p className="text-sm text-muted-foreground">Philip Compeau, Pavel Pevzner (2015)</p>
                   <p className="text-sm text-muted-foreground">Chapter 4: How Do We Sequence Antibiotics?, 182-221</p>
                 </div>
