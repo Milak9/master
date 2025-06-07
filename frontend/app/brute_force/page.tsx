@@ -118,6 +118,8 @@ export default function BruteForcePage() {
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const [showOnlySolution, setShowOnlySolution] = useState(false)
+  const [pendingShowOnlySolution, setPendingShowOnlySolution] = useState(false)
 
   const skipToEnd = () => {
     if (visualizationData) {
@@ -156,7 +158,7 @@ export default function BruteForcePage() {
   }
 
   useEffect(() => {
-    if (visualizationData) {
+    if (visualizationData && !showOnlySolution) {
       const allNodes = flattenTree(visualizationData.tree, "Root", 0, 0)
       setTotalDuration(allNodes.length * STEP_DURATION)
 
@@ -164,10 +166,10 @@ export default function BruteForcePage() {
       const dimensions = calculateSvgDimensions(visualizationData.tree)
       setSvgDimensions(dimensions)
     }
-  }, [visualizationData, targetMass])
+  }, [visualizationData, targetMass, showOnlySolution])
 
   useEffect(() => {
-    if (visualizationData && isPlaying) {
+    if (visualizationData && isPlaying && !showOnlySolution) {
       const animate = (timestamp: number) => {
         if (!lastTimeRef.current) lastTimeRef.current = timestamp
         const deltaTime = timestamp - lastTimeRef.current
@@ -207,10 +209,10 @@ export default function BruteForcePage() {
         }
       }
     }
-  }, [visualizationData, isPlaying, currentStep])
+  }, [visualizationData, isPlaying, currentStep, showOnlySolution])
 
   useEffect(() => {
-    if (visualizationData) {
+    if (visualizationData && !showOnlySolution) {
       const allNodes = flattenTree(visualizationData.tree, "Root", 0, 0)
       const currentNodes = allNodes.slice(0, currentStep + 1)
 
@@ -228,10 +230,10 @@ export default function BruteForcePage() {
 
       setCurrentTime(currentStep * STEP_DURATION + (STEP_DURATION * lineProgress) / 100)
     }
-  }, [visualizationData, currentStep, lineProgress, isAnimationComplete])
+  }, [visualizationData, currentStep, lineProgress, isAnimationComplete, showOnlySolution])
 
   const handleTimelineChange = (value: number[]) => {
-    if (!visualizationData) return
+    if (!visualizationData || showOnlySolution) return
 
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current)
@@ -250,6 +252,7 @@ export default function BruteForcePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setShowOnlySolution(pendingShowOnlySolution)
     try {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
@@ -267,7 +270,9 @@ export default function BruteForcePage() {
         try {
           const data = await fetchData(sequence, setTargetMass)
           setVisualizationData(data)
-          setIsPlaying(true)
+          if (!showOnlySolution) {
+            setIsPlaying(true)
+          }
         } catch (error) {
           console.error("Greška prilikom dohvatanja podataka:", error)
           toast({
@@ -585,10 +590,12 @@ export default function BruteForcePage() {
         U vizuelizaciji ispod, možete videti kako algoritam gradi stablo pretrage i kako se granama dolazi do listova drveta.
         Zeleni čvorovi predstavljaju potencijalna rešenja, crveni čvorovi su eliminisani, a plavi
         čvor je trenutno aktivan u pretrazi. Takođe drvo može da se zumira i pomera da bi lakše mogli da se vide svi čvorovi.
-        Pošto je ovo algoritam grube sile vizuelizacija algoritam traje dugo i ima dosta potencijalnih rešenja,
+        Pošto je ovo algoritam grube sile vizuelizacija algoritma traje dugo i ima dosta potencijalnih rešenja,
         preporučuje se da se unose sekvence manjih peptida da bi moglo lepo da se vidi drvo izvršavanja.<br/>
         Na kraju će biti prikazani peptidi koji predstavljaju najbolje kandidate za rešenje. Može imati više različitih kandidata
-        s obzirom da različite aminokiseline mogu da imaju istu masu.
+        s obzirom da različite aminokiseline mogu da imaju istu masu.<br/>
+        Ako želite da ipak unesete neke sekvence koje su duže kliknite na dugme da se prikažu samo rešenja. Zahvaljujući ovoj opciji,
+        neće se prikazati drvo izvršavanja algoritma i samim tim biće omogućeno brzo prikazivanje samih kandidata za traženi spektar.
       </p>
       <p className="text-muted-foreground mb-2">
         Primeri peptida i njihovih teorijskih spektara:
@@ -612,6 +619,18 @@ export default function BruteForcePage() {
               className="max-w-lg"
             />
           </div>
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="pendingShowOnlySolution"
+              checked={pendingShowOnlySolution}
+              onChange={(e) => setPendingShowOnlySolution(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            />
+            <label htmlFor="pendingShowOnlySolution" className="text-sm text-muted-foreground">
+              Prikaži samo rešenje (bez vizuelizacije)
+            </label>
+          </div>
           <div className="space-x-2">
             <Button type="submit">Analiziraj sekvencu</Button>
           </div>
@@ -619,19 +638,21 @@ export default function BruteForcePage() {
       </Card>
 
       <div className="space-y-4">
-        <div className="flex space-x-2">
-          <Button variant="outline" size="icon" onClick={() => setIsPlaying(!isPlaying)} disabled={!controlsEnabled}>
-            {isPlaying ? <PauseCircle className="h-4 w-4" /> : <PlayCircle className="h-4 w-4" />}
-          </Button>
-          <Button variant="outline" size="icon" onClick={handleReset} disabled={!controlsEnabled}>
-            <RotateCcw className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon" onClick={skipToEnd} title="Skip to end" disabled={!controlsEnabled}>
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
+        {!showOnlySolution && (
+          <div className="flex space-x-2">
+            <Button variant="outline" size="icon" onClick={() => setIsPlaying(!isPlaying)} disabled={!controlsEnabled}>
+              {isPlaying ? <PauseCircle className="h-4 w-4" /> : <PlayCircle className="h-4 w-4" />}
+            </Button>
+            <Button variant="outline" size="icon" onClick={handleReset} disabled={!controlsEnabled}>
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" onClick={skipToEnd} title="Skip to end" disabled={!controlsEnabled}>
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
 
-        {visualizationData && (
+        {!showOnlySolution && visualizationData && (
           <div className="space-y-2">
             <Slider
               value={[currentTime]}
@@ -649,10 +670,12 @@ export default function BruteForcePage() {
           </div>
         )}
 
-        <div className="flex items-center mb-2 text-sm text-muted-foreground">
-          <HelpCircle className="h-4 w-4 mr-2" />
-          <span>Pređite mišem preko crvenih ili zelenih čvorova za dodatne informacije</span>
-        </div>
+        {!showOnlySolution && (
+          <div className="flex items-center mb-2 text-sm text-muted-foreground">
+            <HelpCircle className="h-4 w-4 mr-2" />
+            <span>Pređite mišem preko crvenih ili zelenih čvorova za dodatne informacije</span>
+          </div>
+        )}
 
         <TreeVisualizationRenderer
           visualizationData={visualizationData}
@@ -667,6 +690,7 @@ export default function BruteForcePage() {
           isDragging={isDragging}
           activeTooltip={activeTooltip}
           tooltipPosition={tooltipPosition}
+          showOnlySolution={showOnlySolution}
           getNodeColor={getNodeColor}
           handleNodeMouseEnter={handleNodeMouseEnter}
           handleNodeMouseLeave={handleNodeMouseLeave}

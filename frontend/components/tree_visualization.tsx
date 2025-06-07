@@ -22,6 +22,7 @@ interface TreeVisualizationRendererProps {
   isDragging: boolean
   activeTooltip: string | null
   tooltipPosition: { x: number; y: number }
+  showOnlySolution: boolean
   getNodeColor: (node: any, isActive: boolean, targetMass: number) => string
   handleNodeMouseEnter: (node: any, event: React.MouseEvent) => void
   handleNodeMouseLeave: () => void
@@ -46,6 +47,7 @@ export const TreeVisualizationRenderer: React.FC<TreeVisualizationRendererProps>
   isDragging,
   activeTooltip,
   tooltipPosition,
+  showOnlySolution,
   getNodeColor,
   handleNodeMouseEnter,
   handleNodeMouseLeave,
@@ -78,83 +80,146 @@ export const TreeVisualizationRenderer: React.FC<TreeVisualizationRendererProps>
 
       {visualizationData ? (
         <>
-          <div className="relative overflow-hidden" style={{ height: svgDimensions.height }}>
-            <div className="absolute top-2 right-2 flex space-x-2 z-10">
-              <Button variant="outline" size="icon" onClick={handleZoomIn} title="Zoom In">
-                <ZoomIn className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon" onClick={handleZoomOut} title="Zoom Out">
-                <ZoomOut className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon" onClick={handleResetZoom} title="Reset Zoom">
-                <RotateCcw className="h-4 w-4" />
-              </Button>
-            </div>
-            {zoomLevel > 1 && (
-              <div className="absolute top-2 left-2 text-sm text-muted-foreground flex items-center z-10 bg-background/80 p-1 rounded">
-                <Move className="h-4 w-4 mr-1" />
-                <span>Prevuci za pomeranje</span>
+          {!showOnlySolution && (
+            <div className="relative overflow-hidden" style={{ height: svgDimensions.height }}>
+              <div className="absolute top-2 right-2 flex space-x-2 z-10">
+                <Button variant="outline" size="icon" onClick={handleZoomIn} title="Zoom In">
+                  <ZoomIn className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon" onClick={handleZoomOut} title="Zoom Out">
+                  <ZoomOut className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon" onClick={handleResetZoom} title="Reset Zoom">
+                  <RotateCcw className="h-4 w-4" />
+                </Button>
               </div>
-            )}
-            <svg
-              ref={svgRef}
-              width={svgDimensions.width}
-              height={svgDimensions.height}
-              viewBox={svgDimensions.viewBox}
-              preserveAspectRatio="xMidYMid meet"
-              className={`mx-auto ${isDragging ? "cursor-grabbing" : zoomLevel > 1 ? "cursor-grab" : "cursor-default"}`}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-              style={{
-                transform: `scale(${zoomLevel}) translate(${panOffset.x}px, ${panOffset.y}px)`,
-                transformOrigin: "center",
-                transition: isDragging ? "none" : "transform 0.2s ease-out",
-              }}
-            >
-              <g>
-                {visibleNodes.map((visibleNode, index) => {
-                  const isLastNode = index === visibleNodes.length - 1
-                  const hasTooltip =
-                    (visibleNode.node.end !== undefined && visibleNode.node.end) ||
-                    (visibleNode.node.mass !== undefined &&
-                      (visibleNode.node.mass === targetMass || visibleNode.node.mass > targetMass))
+              {zoomLevel > 1 && (
+                <div className="absolute top-2 left-2 text-sm text-muted-foreground flex items-center z-10 bg-background/80 p-1 rounded">
+                  <Move className="h-4 w-4 mr-1" />
+                  <span>Prevuci za pomeranje</span>
+                </div>
+              )}
+              <svg
+                ref={svgRef}
+                width={svgDimensions.width}
+                height={svgDimensions.height}
+                viewBox={svgDimensions.viewBox}
+                preserveAspectRatio="xMidYMid meet"
+                className={`mx-auto ${isDragging ? "cursor-grabbing" : zoomLevel > 1 ? "cursor-grab" : "cursor-default"}`}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                style={{
+                  transform: `scale(${zoomLevel}) translate(${panOffset.x}px, ${panOffset.y}px)`,
+                  transformOrigin: "center",
+                  transition: isDragging ? "none" : "transform 0.2s ease-out",
+                }}
+              >
+                <g>
+                  {visibleNodes.map((visibleNode, index) => {
+                    const isLastNode = index === visibleNodes.length - 1
+                    const hasTooltip =
+                      (visibleNode.node.end !== undefined && visibleNode.node.end) ||
+                      (visibleNode.node.mass !== undefined &&
+                        (visibleNode.node.mass === targetMass || visibleNode.node.mass > targetMass))
 
-                  if (visibleNode.parentX !== undefined && visibleNode.parentY !== undefined) {
-                    const startPoint = calculateEdgePoint(
-                      visibleNode.parentX,
-                      visibleNode.parentY,
-                      visibleNode.x,
-                      visibleNode.y,
-                      NODE_RADIUS,
-                    )
+                    if (visibleNode.parentX !== undefined && visibleNode.parentY !== undefined) {
+                      const startPoint = calculateEdgePoint(
+                        visibleNode.parentX,
+                        visibleNode.parentY,
+                        visibleNode.x,
+                        visibleNode.y,
+                        NODE_RADIUS,
+                      )
 
-                    const endPoint = calculateEdgePoint(
-                      visibleNode.x,
-                      visibleNode.y,
-                      visibleNode.parentX,
-                      visibleNode.parentY,
-                      NODE_RADIUS,
-                    )
+                      const endPoint = calculateEdgePoint(
+                        visibleNode.x,
+                        visibleNode.y,
+                        visibleNode.parentX,
+                        visibleNode.parentY,
+                        NODE_RADIUS,
+                      )
 
-                    const progress = isAnimationComplete ? 100 : isLastNode ? lineProgress : 100
-                    const currentEndPoint = {
-                      x: startPoint.x + (endPoint.x - startPoint.x) * (progress / 100),
-                      y: startPoint.y + (endPoint.y - startPoint.y) * (progress / 100),
+                      const progress = isAnimationComplete ? 100 : isLastNode ? lineProgress : 100
+                      const currentEndPoint = {
+                        x: startPoint.x + (endPoint.x - startPoint.x) * (progress / 100),
+                        y: startPoint.y + (endPoint.y - startPoint.y) * (progress / 100),
+                      }
+
+                      return (
+                        <g key={`${visibleNode.node.node}-${index}`}>
+                          <line
+                            x1={startPoint.x}
+                            y1={startPoint.y}
+                            x2={currentEndPoint.x}
+                            y2={currentEndPoint.y}
+                            stroke="gray"
+                            strokeWidth="2"
+                            className="transition-all duration-300"
+                          />
+                          <circle
+                            cx={visibleNode.x}
+                            cy={visibleNode.y}
+                            r={NODE_RADIUS}
+                            fill={getNodeColor(visibleNode.node, visibleNode.isActive || false, targetMass)}
+                            className={`transition-colors duration-300 ${hasTooltip ? "cursor-pointer" : ""}`}
+                            onMouseEnter={(e) => hasTooltip && handleNodeMouseEnter(visibleNode.node, e)}
+                            onMouseLeave={handleNodeMouseLeave}
+                          />
+                          <text
+                            x={visibleNode.x}
+                            y={visibleNode.y - 10}
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                            fill="white"
+                            fontSize="16"
+                            pointerEvents="none"
+                          >
+                            {visibleNode.node.node}
+                          </text>
+                          <text
+                            x={visibleNode.x}
+                            y={visibleNode.y + 10}
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                            fill="white"
+                            fontSize="14"
+                            pointerEvents="none"
+                          >
+                            {visibleNode.node.mass} Da
+                          </text>
+                          {hasTooltip && (
+                            <circle
+                              cx={visibleNode.x + NODE_RADIUS * 0.9}
+                              cy={visibleNode.y - NODE_RADIUS * 0.9}
+                              r={8}
+                              fill="white"
+                              className="cursor-pointer"
+                              onMouseEnter={(e) => handleNodeMouseEnter(visibleNode.node, e)}
+                              onMouseLeave={handleNodeMouseLeave}
+                            />
+                          )}
+                          {hasTooltip && (
+                            <text
+                              x={visibleNode.x + NODE_RADIUS * 0.9}
+                              y={visibleNode.y - NODE_RADIUS * 0.9}
+                              textAnchor="middle"
+                              dominantBaseline="middle"
+                              fill={visibleNode.node.mass > targetMass ? "rgb(239 68 68)" : "rgb(34 197 94)"}
+                              fontSize="12"
+                              fontWeight="bold"
+                              pointerEvents="none"
+                            >
+                              ?
+                            </text>
+                          )}
+                        </g>
+                      )
                     }
 
                     return (
                       <g key={`${visibleNode.node.node}-${index}`}>
-                        <line
-                          x1={startPoint.x}
-                          y1={startPoint.y}
-                          x2={currentEndPoint.x}
-                          y2={currentEndPoint.y}
-                          stroke="gray"
-                          strokeWidth="2"
-                          className="transition-all duration-300"
-                        />
                         <circle
                           cx={visibleNode.x}
                           cy={visibleNode.y}
@@ -213,74 +278,13 @@ export const TreeVisualizationRenderer: React.FC<TreeVisualizationRendererProps>
                         )}
                       </g>
                     )
-                  }
+                  })}
+                </g>
+              </svg>
+            </div>
+          )}
 
-                  return (
-                    <g key={`${visibleNode.node.node}-${index}`}>
-                      <circle
-                        cx={visibleNode.x}
-                        cy={visibleNode.y}
-                        r={NODE_RADIUS}
-                        fill={getNodeColor(visibleNode.node, visibleNode.isActive || false, targetMass)}
-                        className={`transition-colors duration-300 ${hasTooltip ? "cursor-pointer" : ""}`}
-                        onMouseEnter={(e) => hasTooltip && handleNodeMouseEnter(visibleNode.node, e)}
-                        onMouseLeave={handleNodeMouseLeave}
-                      />
-                      <text
-                        x={visibleNode.x}
-                        y={visibleNode.y - 10}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fill="white"
-                        fontSize="16"
-                        pointerEvents="none"
-                      >
-                        {visibleNode.node.node}
-                      </text>
-                      <text
-                        x={visibleNode.x}
-                        y={visibleNode.y + 10}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fill="white"
-                        fontSize="14"
-                        pointerEvents="none"
-                      >
-                        {visibleNode.node.mass} Da
-                      </text>
-                      {hasTooltip && (
-                        <circle
-                          cx={visibleNode.x + NODE_RADIUS * 0.9}
-                          cy={visibleNode.y - NODE_RADIUS * 0.9}
-                          r={8}
-                          fill="white"
-                          className="cursor-pointer"
-                          onMouseEnter={(e) => handleNodeMouseEnter(visibleNode.node, e)}
-                          onMouseLeave={handleNodeMouseLeave}
-                        />
-                      )}
-                      {hasTooltip && (
-                        <text
-                          x={visibleNode.x + NODE_RADIUS * 0.9}
-                          y={visibleNode.y - NODE_RADIUS * 0.9}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                          fill={visibleNode.node.mass > targetMass ? "rgb(239 68 68)" : "rgb(34 197 94)"}
-                          fontSize="12"
-                          fontWeight="bold"
-                          pointerEvents="none"
-                        >
-                          ?
-                        </text>
-                      )}
-                    </g>
-                  )
-                })}
-              </g>
-            </svg>
-          </div>
-
-          {isAnimationComplete && visualizationData.solution && visualizationData.solution.length > 0 && (
+          {(isAnimationComplete || showOnlySolution) && visualizationData.solution && visualizationData.solution.length > 0 && (
             <div className="mt-8 space-y-6">
               <h3 className="text-xl font-semibold mb-4">Kandidati sa masom {targetMass} Da:</h3>
 
@@ -378,7 +382,7 @@ export const TreeVisualizationRenderer: React.FC<TreeVisualizationRendererProps>
             </div>
           )}
 
-          {isAnimationComplete &&
+          {(isAnimationComplete || showOnlySolution) &&
             (!visualizationData.solution ||
               (Array.isArray(visualizationData.solution) && visualizationData.solution.length === 0)) && (
               <div className="mt-8 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">

@@ -140,6 +140,8 @@ export default function BranchAndBoundPage() {
     minY: -50,
     maxY: 550,
   })
+  const [showOnlySolution, setShowOnlySolution] = useState(false)
+  const [pendingShowOnlySolution, setPendingShowOnlySolution] = useState(false)
 
   const STEP_DURATION = 1000
 
@@ -180,7 +182,7 @@ export default function BranchAndBoundPage() {
   }
 
   useEffect(() => {
-    if (visualizationData) {
+    if (visualizationData && !showOnlySolution) {
       const allNodes = flattenTree(visualizationData.tree, "Root", 0, 0)
       setTotalDuration(allNodes.length * STEP_DURATION)
 
@@ -200,10 +202,10 @@ export default function BranchAndBoundPage() {
         })
       }
     }
-  }, [visualizationData, targetMass])
+  }, [visualizationData, targetMass, showOnlySolution])
 
   useEffect(() => {
-    if (visualizationData && isPlaying) {
+    if (visualizationData && isPlaying && !showOnlySolution) {
       const allNodes = flattenTree(visualizationData.tree, "Root", 0, 0)
 
       const animate = (timestamp: number) => {
@@ -250,10 +252,10 @@ export default function BranchAndBoundPage() {
         }
       }
     }
-  }, [visualizationData, isPlaying, currentStep, isAnimationComplete])
+  }, [visualizationData, isPlaying, currentStep, isAnimationComplete, showOnlySolution])
 
   useEffect(() => {
-    if (visualizationData) {
+    if (visualizationData && !showOnlySolution) {
       const allNodes = flattenTree(visualizationData.tree, "Root", 0, 0)
       const currentNodes = allNodes.slice(0, currentStep + 1)
 
@@ -271,10 +273,10 @@ export default function BranchAndBoundPage() {
 
       setCurrentTime(currentStep * STEP_DURATION + (STEP_DURATION * lineProgress) / 100)
     }
-  }, [visualizationData, currentStep, lineProgress, isAnimationComplete])
+  }, [visualizationData, currentStep, lineProgress, isAnimationComplete, showOnlySolution])
 
   const handleTimelineChange = (value: number[]) => {
-    if (!visualizationData) return
+    if (!visualizationData || showOnlySolution) return
 
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current)
@@ -343,6 +345,7 @@ export default function BranchAndBoundPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setShowOnlySolution(pendingShowOnlySolution)
     try {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
@@ -362,7 +365,9 @@ export default function BranchAndBoundPage() {
           const { data, targetMass: fetchedTargetMass } = await fetchData(sequence)
           setVisualizationData(data)
           setTargetMass(fetchedTargetMass)
-          setIsPlaying(true)
+          if (!showOnlySolution) {
+            setIsPlaying(true)
+          }
         } catch (error) {
           console.error("Greška prilikom dohvatanja podataka:", error)
           toast({
@@ -566,7 +571,9 @@ export default function BranchAndBoundPage() {
           Zeleni čvorovi predstavljaju potencijalna rešenja, crveni čvorovi su eliminisani, a plavi
           čvor je trenutno aktivan u pretrazi. Takođe drvo može da se zumira i pomera da bi lakše mogli da se vide svi čvorovi.<br/>
           Na kraju će biti prikazani peptidi koji predstavljaju najbolje kandidate za rešenje. Može imati više različitih kandidata
-          s obzirom da različite aminokiseline mogu da imaju istu masu.
+          s obzirom da različite aminokiseline mogu da imaju istu masu.<br/>
+          Ako želite da unesete neke sekvence koje su duže kliknite na dugme da se prikažu samo rešenja. Zahvaljujući ovoj opciji,
+          neće se prikazati drvo izvršavanja algoritma i samim tim biće omogućeno brzo prikazivanje samih kandidata za traženi spektar.
         </p>
         <p className="text-muted-foreground mb-2">
           Primeri peptida i njihovih teorijskih spektara:
@@ -592,6 +599,18 @@ export default function BranchAndBoundPage() {
               className="max-w-lg"
             />
           </div>
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="pendingShowOnlySolution"
+              checked={pendingShowOnlySolution}
+              onChange={(e) => setPendingShowOnlySolution(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            />
+            <label htmlFor="pendingShowOnlySolution" className="text-sm text-muted-foreground">
+              Prikaži samo rešenje (bez vizuelizacije)
+            </label>
+          </div>
           <div className="space-x-2">
             <Button type="submit">Analiziraj sekvencu</Button>
           </div>
@@ -599,19 +618,21 @@ export default function BranchAndBoundPage() {
       </Card>
 
       <div className="space-y-4">
-        <div className="flex space-x-2">
-          <Button variant="outline" size="icon" onClick={() => setIsPlaying(!isPlaying)} disabled={!controlsEnabled}>
-            {isPlaying ? <PauseCircle className="h-4 w-4" /> : <PlayCircle className="h-4 w-4" />}
-          </Button>
-          <Button variant="outline" size="icon" onClick={handleReset} disabled={!controlsEnabled}>
-            <RotateCcw className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon" onClick={skipToEnd} title="Skip to end" disabled={!controlsEnabled}>
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
+        {!showOnlySolution && (
+          <div className="flex space-x-2">
+            <Button variant="outline" size="icon" onClick={() => setIsPlaying(!isPlaying)} disabled={!controlsEnabled}>
+              {isPlaying ? <PauseCircle className="h-4 w-4" /> : <PlayCircle className="h-4 w-4" />}
+            </Button>
+            <Button variant="outline" size="icon" onClick={handleReset} disabled={!controlsEnabled}>
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" onClick={skipToEnd} title="Skip to end" disabled={!controlsEnabled}>
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
 
-        {visualizationData && (
+        {visualizationData && !showOnlySolution && (
           <div className="space-y-2">
             <Slider
               value={[currentTime]}
@@ -629,10 +650,12 @@ export default function BranchAndBoundPage() {
           </div>
         )}
 
-        <div className="flex items-center mb-2 text-sm text-muted-foreground">
-          <HelpCircle className="h-4 w-4 mr-2" />
-          <span>Pređite mišem preko crvenih ili zelenih čvorova za dodatne informacije</span>
-        </div>
+        {!showOnlySolution && (
+          <div className="flex items-center mb-2 text-sm text-muted-foreground">
+            <HelpCircle className="h-4 w-4 mr-2" />
+            <span>Pređite mišem preko crvenih ili zelenih čvorova za dodatne informacije</span>
+          </div>
+        )}
 
         <TreeVisualizationRenderer
           visualizationData={visualizationData}
@@ -647,6 +670,7 @@ export default function BranchAndBoundPage() {
           isDragging={isDragging}
           activeTooltip={activeTooltip}
           tooltipPosition={tooltipPosition}
+          showOnlySolution={showOnlySolution}
           getNodeColor={getNodeColor}
           handleNodeMouseEnter={handleNodeMouseEnter}
           handleNodeMouseLeave={handleNodeMouseLeave}
