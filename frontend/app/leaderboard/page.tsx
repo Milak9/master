@@ -54,6 +54,8 @@ export default function LeaderboardPage() {
   const { toast } = useToast()
   const [visibleItems, setVisibleItems] = useState(10)
   const candidatesContainerRef = useRef<HTMLDivElement>(null)
+  const [showOnlySolution, setShowOnlySolution] = useState(false)
+  const [pendingShowOnlySolution, setPendingShowOnlySolution] = useState(false)
 
   const handlePreviousRound = () => {
     if (currentRound > 0) {
@@ -81,6 +83,7 @@ export default function LeaderboardPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setShowOnlySolution(pendingShowOnlySolution)
 
     if (!sequence.trim()) {
       toast({
@@ -448,7 +451,8 @@ export default function LeaderboardPage() {
           teorijske spektre kandidata kao i broj elemenata spektra koji su isti kao i u zadatom teorijskom spektru. Teorijski spektri kandidata
           mogu da se zumiraju da bi se lakše videli podpeptidi sa njihovim masama.<br/>
           U poslednjoj rundi će biti prikazani peptidi koji predstavljaju najbolje kandidate za rešenje. Može imati više različitih kandidata
-          s obzirom da različite aminokiseline mogu da imaju istu masu.
+          s obzirom da različite aminokiseline mogu da imaju istu masu.<br/>
+          Dodatno, ako ne želite da vidite runde koje su se desile potrebno je da označite opciju da se prikažu samo rešenja.
         </p>
         <p className="text-muted-foreground mb-2">
           Primeri peptida i njihovih teorijskih spektara:
@@ -474,6 +478,18 @@ export default function LeaderboardPage() {
               className="max-w-lg"
             />
           </div>
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="pendingShowOnlySolution"
+              checked={pendingShowOnlySolution}
+              onChange={(e) => setPendingShowOnlySolution(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            />
+            <label htmlFor="pendingShowOnlySolution" className="text-sm text-muted-foreground">
+              Prikaži samo rešenje (bez vizuelizacije)
+            </label>
+          </div>
           <Button type="submit">Analiziraj</Button>
         </form>
       </Card>
@@ -481,6 +497,7 @@ export default function LeaderboardPage() {
       <div className="space-y-4" ref={containerRef}>
         {visualizationData ? (
           <RoundNavigation
+            showOnlySolution={showOnlySolution}
             currentRound={currentRound}
             totalRounds={visualizationData.leaderboard.length}
             onPreviousRound={handlePreviousRound}
@@ -489,7 +506,7 @@ export default function LeaderboardPage() {
             onSkipToEnd={skipToEnd}
             infoText={`Maksimalni broj kandidata koji prolazi u sledeću rundu: ${visualizationData.N}`}
           >
-            {renderCandidates(visualizationData, currentRound, visibleItems, candidatesContainerRef, setVisibleItems)}
+            {renderCandidates(visualizationData, currentRound, visibleItems, candidatesContainerRef, setVisibleItems, showOnlySolution)}
           </RoundNavigation>
         ) : (
           <div className="text-center text-muted-foreground">

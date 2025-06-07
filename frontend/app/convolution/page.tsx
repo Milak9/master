@@ -88,11 +88,14 @@ export default function ConvolutionPage() {
   const [isAnimationComplete, setIsAnimationComplete] = useState(false)
   const [currentRound, setCurrentRound] = useState(0)
   const [visibleItems, setVisibleItems] = useState(10)
+  const [apiResponse, setApiResponse] = useState<MatrixApiResponse | null>(null)
 
   const candidatesContainerRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef<number>()
   const lastTimeRef = useRef<number>(0)
   const { toast } = useToast()
+  const [showOnlySolution, setShowOnlySolution] = useState(false)
+  const [pendingShowOnlySolution, setPendingShowOnlySolution] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -143,19 +146,15 @@ export default function ConvolutionPage() {
     setCurrentTime(0)
     lastTimeRef.current = 0
     setIsAnimationComplete(false)
-    setCurrentRound(0)
     if (matrixState) {
-      const resetState = initializeMatrix({
-        matrix: matrixState.apiMatrix,
-        sequence: matrixState.sequence,
-        amino_acids_in_peptides: matrixState.amino_acids_in_peptides,
-        leaderboard: matrixState.leaderboard,
-        solution: matrixState.solution,
-        N: matrixState.N,
-        M: matrixState.M,
-      }, parsedSequence)
+      const resetState = initializeMatrix(apiResponse as MatrixApiResponse, parsedSequence)
       setMatrixState(resetState)
     }
+  }
+
+  const handleResetLeaderboard = () => {
+    setCurrentRound(0)
+    setVisibleItems(10)
   }
 
   const skipToEnd = () => {
@@ -166,7 +165,7 @@ export default function ConvolutionPage() {
   }
 
   useEffect(() => {
-    if (matrixState && isPlaying && !matrixState.isComplete) {
+    if (matrixState && isPlaying && !matrixState.isComplete && !showOnlySolution) {
       const animate = (timestamp: number) => {
         if (!lastTimeRef.current) {
           lastTimeRef.current = timestamp
@@ -213,7 +212,7 @@ export default function ConvolutionPage() {
         }
       }
     }
-  }, [matrixState, isPlaying, totalDuration])
+  }, [matrixState, isPlaying, totalDuration, showOnlySolution])
 
   const fetchMatrixData = async (targetSequence: number[]): Promise<MatrixApiResponse> => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_LOCALHOST_URL}/sequencing/spectral_convolution/`, {
@@ -234,7 +233,7 @@ export default function ConvolutionPage() {
   }
 
   const initializeMatrix = (apiResponse: MatrixApiResponse, parsedSequence: number[]): MatrixState => {
-    const size = sequence.length
+    const size = parsedSequence.length
     const calculatedMatrix: number[][] = Array(size)
     .fill(null)
     .map(() => Array(size).fill(null))
@@ -313,7 +312,8 @@ export default function ConvolutionPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
+    setShowOnlySolution(pendingShowOnlySolution)
+  
     if (!sequence.trim()) {
       toast({
         title: "Greška",
@@ -357,7 +357,9 @@ export default function ConvolutionPage() {
         cancelAnimationFrame(animationRef.current)
       }
 
-      const apiResponse = await fetchMatrixData(parsedSequence)
+      const response = await fetchMatrixData(parsedSequence)
+      setApiResponse(response)
+
       const totalSteps = (parsedSequence.length * (parsedSequence.length - 1)) / 2
       const newTotalDuration = totalSteps * STEP_DURATION
 
@@ -365,7 +367,7 @@ export default function ConvolutionPage() {
       setCurrentTime(0)
       lastTimeRef.current = 0
 
-      const initialState = initializeMatrix(apiResponse, parsedSequence)
+      const initialState = initializeMatrix(response, parsedSequence)
       setMatrixState(initialState)
       setIsPlaying(true)
     } catch (error) {
@@ -381,7 +383,7 @@ export default function ConvolutionPage() {
   }
 
   const handleTimelineChange = (value: number[]) => {
-    if (!matrixState) return
+    if (!matrixState || showOnlySolution) return
 
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current)
@@ -484,7 +486,8 @@ export default function ConvolutionPage() {
         teorijske spektre kandidata kao i broj elemenata spektra koji su isti kao i u zadatom teorijskom spektru. Teorijski spektri kandidata
         mogu da se zumiraju da bi se lakše videli podpeptidi sa njihovim masama.<br/>
         U poslednjoj rundi će biti prikazani peptidi koji predstavljaju najbolje kandidate za rešenje. Može imati više različitih kandidata
-        s obzirom da različite aminokiseline mogu da imaju istu masu.
+        s obzirom da različite aminokiseline mogu da imaju istu masu.<br/>
+        Dodatno, ako ne želite da vidite pravljenje matrice konvolucije kao ni runde koje su se desile potrebno je da označite opciju da se prikažu samo rešenja.
       </p>
       <p className="text-muted-foreground mb-2">
         Primeri peptida i njihovih teorijskih spektara:
@@ -510,6 +513,18 @@ export default function ConvolutionPage() {
               disabled={isLoading}
             />
           </div>
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="pendingShowOnlySolution"
+              checked={pendingShowOnlySolution}
+              onChange={(e) => setPendingShowOnlySolution(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            />
+            <label htmlFor="pendingShowOnlySolution" className="text-sm text-muted-foreground">
+              Prikaži samo rešenje (bez vizuelizacije)
+            </label>
+          </div>
           <div className="space-x-2">
             <Button type="submit" disabled={isLoading}>
               {isLoading ? "Analiziranje..." : "Analiziraj sekvencu"}
@@ -520,109 +535,111 @@ export default function ConvolutionPage() {
 
       {matrixState && (
         <>
-          <div className="mb-12">
-            <h2 className="text-2xl font-semibold mb-4">Matrica konvolucije</h2>
+          {!showOnlySolution && matrixState && (
+            <div className="mb-12">
+              <h2 className="text-2xl font-semibold mb-4">Matrica konvolucije</h2>
 
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  disabled={!matrixState || isLoading}
-                >
-                  {isPlaying ? <PauseCircle className="h-4 w-4" /> : <PlayCircle className="h-4 w-4" />}
-                </Button>
-                <Button variant="outline" size="icon" onClick={handleReset} disabled={!matrixState || isLoading}>
-                  <RotateCcw className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => {
-                    if (matrixState) {
-                      const totalSteps = (matrixState.sequence.length * (matrixState.sequence.length - 1)) / 2 - 1
-                      setCurrentTime(totalDuration)
-                      setMatrixState((prevState) => {
-                        if (!prevState) return null
-                        return updateMatrixState(prevState, totalSteps, 100)
-                      })
-                      setIsAnimationComplete(true)
-                      setIsPlaying(false)
-                    }
-                  }}
-                  disabled={!matrixState || isLoading}
-                  title="Skip to end"
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            {matrixState && (
-              <div className="space-y-2 mb-6">
-                <Slider
-                  value={[currentTime]}
-                  max={totalDuration}
-                  step={1}
-                  onValueChange={handleTimelineChange}
-                  className="w-full"
-                  disabled={isLoading}
-                />
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>0:00</span>
-                  <span>
-                    {Math.floor(totalDuration / 1000)}:
-                    {String(Math.floor((totalDuration % 1000) / 10)).padStart(2, "0")}
-                  </span>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex space-x-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setIsPlaying(!isPlaying)}
+                    disabled={!matrixState || isLoading}
+                  >
+                    {isPlaying ? <PauseCircle className="h-4 w-4" /> : <PlayCircle className="h-4 w-4" />}
+                  </Button>
+                  <Button variant="outline" size="icon" onClick={handleReset} disabled={!matrixState || isLoading}>
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      if (matrixState) {
+                        const totalSteps = (matrixState.sequence.length * (matrixState.sequence.length - 1)) / 2 - 1
+                        setCurrentTime(totalDuration)
+                        setMatrixState((prevState) => {
+                          if (!prevState) return null
+                          return updateMatrixState(prevState, totalSteps, 100)
+                        })
+                        setIsAnimationComplete(true)
+                        setIsPlaying(false)
+                      }
+                    }}
+                    disabled={!matrixState || isLoading}
+                    title="Skip to end"
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
-            )}
 
-            <Card className="p-6">
-              <div className="w-full overflow-x-auto">
-                <table className="min-w-full border-collapse">
-                  <thead>
-                    <tr>
-                      <th className="border p-4"></th>
-                      {matrixState.sequence.slice(0, -1).map((num, i) => (
-                        <th key={i} className="border p-4">
-                          {num}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {matrixState.matrix.map((row, rowIndex) => (
-                      <tr key={rowIndex}>
-                        <th className="border p-4">{matrixState.sequence[rowIndex]}</th>
-                        {row.slice(0, -1).map((cell, colIndex) => (
-                          <td
-                            key={colIndex}
-                            className="border p-4 text-center relative"
-                            style={{
-                              background: cell.isActive ? `rgba(59, 130, 246, ${cell.progress / 100})` : undefined,
-                              color: cell.isActive ? "white" : undefined,
-                              opacity: cell.value !== null ? 1 : 0,
-                              transition: "background 0.3s ease-in-out, opacity 0.3s ease-in-out",
-                            }}
-                          >
-                            {cell.value !== null && cell.value !== -1 && rowIndex > colIndex ? cell.value : ""}
-                          </td>
+              {matrixState && (
+                <div className="space-y-2 mb-6">
+                  <Slider
+                    value={[currentTime]}
+                    max={totalDuration}
+                    step={1}
+                    onValueChange={handleTimelineChange}
+                    className="w-full"
+                    disabled={isLoading}
+                  />
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>0:00</span>
+                    <span>
+                      {Math.floor(totalDuration / 1000)}:
+                      {String(Math.floor((totalDuration % 1000) / 10)).padStart(2, "0")}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              <Card className="p-6">
+                <div className="w-full overflow-x-auto">
+                  <table className="min-w-full border-collapse">
+                    <thead>
+                      <tr>
+                        <th className="border p-4"></th>
+                        {matrixState.sequence.slice(0, -1).map((num, i) => (
+                          <th key={i} className="border p-4">
+                            {num}
+                          </th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
-          </div>
+                    </thead>
+                    <tbody>
+                      {matrixState.matrix.map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                          <th className="border p-4">{matrixState.sequence[rowIndex]}</th>
+                          {row.slice(0, -1).map((cell, colIndex) => (
+                            <td
+                              key={colIndex}
+                              className="border p-4 text-center relative"
+                              style={{
+                                background: cell.isActive ? `rgba(59, 130, 246, ${cell.progress / 100})` : undefined,
+                                color: cell.isActive ? "white" : undefined,
+                                opacity: cell.value !== null ? 1 : 0,
+                                transition: "background 0.3s ease-in-out, opacity 0.3s ease-in-out",
+                              }}
+                            >
+                              {cell.value !== null && cell.value !== -1 && rowIndex > colIndex ? cell.value : ""}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            </div>
+          )}
 
           {/* Only show the following sections after matrix animation is complete */}
-          {matrixState && isAnimationComplete && (
+          {(matrixState && (isAnimationComplete || showOnlySolution)) && (
             <>
               {/* Amino Acids Visualization */}
-              {matrixState.amino_acids_in_peptides && (
+              {!showOnlySolution && matrixState.amino_acids_in_peptides && (
                 <div className="mb-12">
                   <h2 className="text-2xl font-semibold mb-4">Aminokiseline u peptidima</h2>
                   <Card className="p-6">
@@ -654,15 +671,16 @@ export default function ConvolutionPage() {
                   <h2 className="text-2xl font-semibold mb-4">Leaderboard algoritam</h2>
 
                   <RoundNavigation
+                    showOnlySolution={showOnlySolution}
                     currentRound={currentRound}
                     totalRounds={matrixState.leaderboard.length}
                     onPreviousRound={handlePreviousRound}
                     onNextRound={handleNextRound}
-                    onReset={handleReset}
+                    onReset={handleResetLeaderboard}
                     onSkipToEnd={skipToEnd}
                     infoText={`Maksimalni broj kandidata koji prolazi u sledeću rundu: ${matrixState.N}`}
                   >
-                    {renderCandidates(matrixState, currentRound, visibleItems, candidatesContainerRef, setVisibleItems)} 
+                    {renderCandidates(matrixState, currentRound, visibleItems, candidatesContainerRef, setVisibleItems, showOnlySolution)} 
                   </RoundNavigation>
                 </div>
               )}
