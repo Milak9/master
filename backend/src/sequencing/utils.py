@@ -1,5 +1,5 @@
 from .consts import AMINO_ACID_MASSES, AMINO_ACID_BASED_ON_MASSES, MAX_NUMBER_OF_CANDIDATES
-
+from .common_functions import calculate_peptide_mass, score, extend
 
 def linear_spectrum(peptide):
     n = len(peptide)
@@ -71,17 +71,6 @@ def cyclic_spectrum(peptide):
     return spectrum, spectrum_with_subpeptides_sorted
 
 
-def extend(peptides, amino_acid_candidates=AMINO_ACID_MASSES.keys()):
-    extended_peptides = []
-
-    for peptide in peptides:
-        for amino_acid in amino_acid_candidates:
-            if amino_acid != "":
-                extended_peptides.append(peptide + amino_acid)
-
-    return extended_peptides
-
-
 def extend_for_tree(peptides, tree, amino_acid_candidates=AMINO_ACID_MASSES.keys()):
     extended_peptides = []
 
@@ -101,15 +90,6 @@ def extend_for_tree(peptides, tree, amino_acid_candidates=AMINO_ACID_MASSES.keys
                     tree[peptide]["children"].append(new_candidate)
 
     return extended_peptides
-
-
-def calculate_peptide_mass(peptide):
-    total_mass = 0
-
-    for aa in peptide:
-        total_mass += AMINO_ACID_MASSES[aa]
-
-    return total_mass
 
 
 def is_consistent_with_spectrum(peptide, target_spectrum):
@@ -133,27 +113,6 @@ def is_consistent_with_spectrum(peptide, target_spectrum):
         return False
     else:
         return True
-
-
-def score(peptide_spectrum, target_spectrum):
-    total_score = 0
-
-    i = 0
-    j = 0
-    n = len(peptide_spectrum)
-    m = len(target_spectrum)
-
-    while i < n and j < m:
-        if peptide_spectrum[i] == target_spectrum[j]:
-            i += 1
-            j += 1
-            total_score += 1
-        elif peptide_spectrum[i] > target_spectrum[j]:
-            j += 1
-        else:
-            i += 1
-
-    return total_score
 
 
 def linear_score(peptide, target_spectrum):
@@ -196,15 +155,6 @@ def trim(peptides, target_spectrum, max_number_of_candidates):
 
     trimmed_leaderboard = leaderboard[:i]
     return [el["peptide"] for el in trimmed_leaderboard], leaderboard
-
-
-def prepare_amino_acids_that_are_candidates(top_masses):
-    candidates = ['']
-    for element in top_masses:
-        if element in AMINO_ACID_BASED_ON_MASSES:
-            candidates = candidates + AMINO_ACID_BASED_ON_MASSES[element]
-
-    return candidates
 
 
 def leaderboard_sequencing(target_spectrum, amino_acid_candidates=AMINO_ACID_MASSES.keys()):

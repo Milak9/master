@@ -5,7 +5,11 @@ from django.views.generic.base import View
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .utils import (calculate_peptide_mass, cyclic_spectrum, is_consistent_with_spectrum, extend_for_tree,
-                    leaderboard_sequencing, prepare_amino_acids_that_are_candidates)
+                    leaderboard_sequencing)
+from .utils_for_timed_execution import (brute_force_sequencing, branch_and_bound_sequencing,
+                                        leaderboard_sequencing_without_additional_data, convolution_sequencing)
+from .common_functions import prepare_amino_acids_that_are_candidates
+import timeit
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -170,4 +174,49 @@ class SpectralConvolution(View):
             "M": cls.NUMBER_OF_LARGEST_ELEMENTS
         }
 
+        return JsonResponse(response, status=200)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TimedExecutions(View):
+    NUMBER_OF_LARGEST_ELEMENTS = 20
+
+    @classmethod
+    def post(cls, request):
+        target_spectrum = loads(request.body).get("target_spectrum")
+
+        # BRUTE FORCE
+        start_brute_force = timeit.default_timer()
+        brute_force = brute_force_sequencing(target_spectrum)
+        end_brute_force = timeit.default_timer()
+        elapsed_time_brute_force = end_brute_force - start_brute_force
+        brute_force["execution_time"] = f"{elapsed_time_brute_force:.4f}"
+
+        # BRANCH AND BOUND
+        start_branch_and_bound = timeit.default_timer()
+        branch_and_bound = branch_and_bound_sequencing(target_spectrum)
+        end_branch_and_bound = timeit.default_timer()
+        elapsed_time_branch_and_bound = end_branch_and_bound - start_branch_and_bound
+        branch_and_bound["execution_time"] = f"{elapsed_time_branch_and_bound:.4f}"
+
+        # LEADERBOARD
+        start_leaderboard = timeit.default_timer()
+        leaderboard = leaderboard_sequencing_without_additional_data(target_spectrum)
+        end_leaderboard = timeit.default_timer()
+        elapsed_time_leaderboard = end_leaderboard - start_leaderboard
+        leaderboard["execution_time"] = f"{elapsed_time_leaderboard:.4f}"
+
+        # CONVOLUTION
+        start_convolution = timeit.default_timer()
+        convolution = convolution_sequencing(target_spectrum, cls.NUMBER_OF_LARGEST_ELEMENTS)
+        end_convolution = timeit.default_timer()
+        elapsed_time_convolution = end_convolution - start_convolution
+        convolution["execution_time"] = f"{elapsed_time_convolution:.4f}"
+
+        response = {
+            "brute_force": brute_force,
+            "bnb": branch_and_bound,
+            "leaderboard": leaderboard,
+            "convolution": convolution
+        }
         return JsonResponse(response, status=200)
