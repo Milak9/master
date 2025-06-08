@@ -8,16 +8,10 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import {
   RotateCcw,
-  ChevronLeft,
-  ChevronRight,
   ArrowRight,
-  Trophy,
-  Crown,
-  Medal,
   Info,
   PlayCircle,
   PauseCircle,
-  CheckCircle,
 } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
 import { RoundNavigation, renderCandidates } from "@/components/round_navigation"

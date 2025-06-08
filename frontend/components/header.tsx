@@ -39,6 +39,9 @@ export function Header() {
               <Link href="/deep_novo" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
                 DeepNovo sekvenciranje
               </Link>
+              <Link href="/comparison" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
+                Poređenje algoritama
+              </Link>
               <Link href="/literature" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
                 Literatura
               </Link>
@@ -112,6 +115,13 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 DeepNovo sekvenciranje
+              </Link>
+              <Link
+                href="/comparison"
+                className="text-sm font-medium py-2 hover:text-primary items-center"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Poređenje algoritama
               </Link>
               <Link
                 href="/literature"
