@@ -230,7 +230,7 @@ export default function DeepNovoPage() {
               Srce DeepNovo pristupa je njegov model dubokog učenja (slika 1), koji se sastoji od:
               <ul className="list-disc pl-8 mb-4 space-y-2 text-muted-foreground mt-2">
                 <li>
-                  <strong>Konvolucione neuronske mreže (CNN)</strong>
+                  <strong>Konvolutivne neuronske mreže (CNN)</strong>
                 </li>
                 <li>
                   <strong>Rekurentne neuronske mreže (RNN)</strong>
@@ -240,7 +240,7 @@ export default function DeepNovoPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-8">
               <div className="order-1 lg:order-2">
-                <h3 className="text-xl font-semibold mb-3">Konvolucione neuronske mreže (CNN)</h3>
+                <h3 className="text-xl font-semibold mb-3">Konvolutivne neuronske mreže (CNN)</h3>
                 <p className="text-muted-foreground mb-4">
                   CNN je tip dubokog učenja koji se koristi da otkrije značajne šablone koji se pojavljuju
                   u ulaznim podacima. Veoma je efikasna mreža i koristi tehniku <span className="italic">sliding window</span>
@@ -299,7 +299,7 @@ export default function DeepNovoPage() {
                       <strong>Sledeća aminokiseline koja je kandidat</strong>
                     </li>
                     <li>
-                      <strong>Svojstva spektra koja su dobijana od konvolucione mreže</strong>
+                      <strong>Svojstva spektra koja su dobijana od konvolutivne mreže</strong>
                     </li>
                   </ol>
 
