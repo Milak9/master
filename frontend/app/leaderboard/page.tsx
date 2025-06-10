@@ -124,6 +124,7 @@ export default function LeaderboardPage() {
 
       setCurrentRound(0)
       setVisibleItems(10)
+      setIsLoading(true)
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_LOCALHOST_URL}/sequencing/leaderboard/`, {
         method: "POST",
