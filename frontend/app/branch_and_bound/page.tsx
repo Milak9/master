@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
-import { PlayCircle, PauseCircle, RotateCcw, ArrowRight, HelpCircle } from "lucide-react"
+import { PlayCircle, PauseCircle, RotateCcw, ArrowRight, HelpCircle, Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
 import {
@@ -142,6 +142,7 @@ export default function BranchAndBoundPage() {
   })
   const [showOnlySolution, setShowOnlySolution] = useState(false)
   const [pendingShowOnlySolution, setPendingShowOnlySolution] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const STEP_DURATION = 1000
 
@@ -358,25 +359,25 @@ export default function BranchAndBoundPage() {
       setIsAnimationComplete(false)
       setControlsEnabled(true)
       setVisualizationData(null)
+      setIsLoading(true)
 
-      // Set visualization data after resetting state
-      setTimeout(async () => {
-        try {
-          const { data, targetMass: fetchedTargetMass } = await fetchData(sequence)
-          setVisualizationData(data)
-          setTargetMass(fetchedTargetMass)
-          if (!showOnlySolution) {
-            setIsPlaying(true)
-          }
-        } catch (error) {
-          console.error("Greška prilikom dohvatanja podataka:", error)
-          toast({
-            title: "Greška",
-            description: error instanceof Error ? error.message : "Nepoznata greška",
-            variant: "destructive",
-          })
+      try {
+        const { data, targetMass: fetchedTargetMass } = await fetchData(sequence)
+        setVisualizationData(data)
+        setTargetMass(fetchedTargetMass)
+        if (!showOnlySolution) {
+          setIsPlaying(true)
         }
-      }, 50)
+      } catch (error) {
+        console.error("Greška prilikom dohvatanja podataka:", error)
+        toast({
+          title: "Greška",
+          description: error instanceof Error ? error.message : "Nepoznata greška",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoading(false)
+      }
     } catch (error) {
       console.error("Error:", error)
     }
@@ -597,6 +598,7 @@ export default function BranchAndBoundPage() {
               onChange={(e) => setSequence(e.target.value)}
               placeholder="npr. 0, 57, 71, 128"
               className="max-w-lg"
+              disabled={isLoading}
             />
           </div>
           <div className="flex items-center space-x-2">
@@ -606,19 +608,29 @@ export default function BranchAndBoundPage() {
               checked={pendingShowOnlySolution}
               onChange={(e) => setPendingShowOnlySolution(e.target.checked)}
               className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+              disabled={isLoading}
             />
             <label htmlFor="pendingShowOnlySolution" className="text-sm text-muted-foreground">
               Prikaži samo rešenje (bez vizuelizacije)
             </label>
           </div>
           <div className="space-x-2">
-            <Button type="submit">Analiziraj sekvencu</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sekvenca se procesira...
+                </>
+              ) : (
+                "Analiziraj sekvencu"
+              )}
+            </Button>
           </div>
         </form>
       </Card>
 
       <div className="space-y-4">
-        {!showOnlySolution && (
+        {visualizationData && !showOnlySolution && !isLoading && (
           <div className="flex space-x-2">
             <Button variant="outline" size="icon" onClick={() => setIsPlaying(!isPlaying)} disabled={!controlsEnabled}>
               {isPlaying ? <PauseCircle className="h-4 w-4" /> : <PlayCircle className="h-4 w-4" />}
@@ -632,7 +644,7 @@ export default function BranchAndBoundPage() {
           </div>
         )}
 
-        {visualizationData && !showOnlySolution && (
+        {visualizationData && !isLoading && !showOnlySolution && (
           <div className="space-y-2">
             <Slider
               value={[currentTime]}
@@ -650,7 +662,7 @@ export default function BranchAndBoundPage() {
           </div>
         )}
 
-        {!showOnlySolution && (
+        {visualizationData && !isLoading && !showOnlySolution && (
           <div className="flex items-center mb-2 text-sm text-muted-foreground">
             <HelpCircle className="h-4 w-4 mr-2" />
             <span>Pređite mišem preko crvenih ili zelenih čvorova za dodatne informacije</span>
@@ -668,6 +680,7 @@ export default function BranchAndBoundPage() {
           zoomLevel={zoomLevel}
           panOffset={panOffset}
           isDragging={isDragging}
+          isLoading={isLoading}
           activeTooltip={activeTooltip}
           tooltipPosition={tooltipPosition}
           showOnlySolution={showOnlySolution}

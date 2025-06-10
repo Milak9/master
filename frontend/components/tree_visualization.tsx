@@ -2,8 +2,9 @@
 
 import type React from "react"
 import { useRef } from "react"
+import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ZoomIn, ZoomOut, RotateCcw, Move, CheckCircle, XCircle } from "lucide-react"
+import { ZoomIn, ZoomOut, RotateCcw, Move, CheckCircle, XCircle, Loader2 } from "lucide-react"
 
 interface TreeVisualizationRendererProps {
   visualizationData: any
@@ -20,6 +21,7 @@ interface TreeVisualizationRendererProps {
   zoomLevel: number
   panOffset: { x: number; y: number }
   isDragging: boolean
+  isLoading: boolean
   activeTooltip: string | null
   tooltipPosition: { x: number; y: number }
   showOnlySolution: boolean
@@ -45,6 +47,7 @@ export const TreeVisualizationRenderer: React.FC<TreeVisualizationRendererProps>
   zoomLevel,
   panOffset,
   isDragging,
+  isLoading,
   activeTooltip,
   tooltipPosition,
   showOnlySolution,
@@ -78,7 +81,25 @@ export const TreeVisualizationRenderer: React.FC<TreeVisualizationRendererProps>
         </div>
       )}
 
-      {visualizationData ? (
+      {/* Spinner */}
+      {isLoading && (
+        <div className="mb-8">
+          <Card className="p-8">
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-2">Obrađuje se zahtev...</h3>
+                <p className="text-muted-foreground">
+                  Molimo sačekajte dok se algoritam izvršava. Ovo može potrajati nekoliko sekundi do nekoliko minuta u
+                  zavisnosti od složenosti sekvence.
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {visualizationData && (
         <>
           {!showOnlySolution && (
             <div className="relative overflow-hidden" style={{ height: svgDimensions.height }}>
@@ -395,7 +416,9 @@ export const TreeVisualizationRenderer: React.FC<TreeVisualizationRendererProps>
               </div>
             )}
         </>
-      ) : (
+      )}
+  
+      {!visualizationData && !isLoading &&(
         <div className="text-center text-muted-foreground">
           Unesi sekvencu i klikni analiziraj da bi video algoritam
         </div>

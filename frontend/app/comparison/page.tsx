@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
-import { CheckCircle, XCircle } from "lucide-react"
+import { CheckCircle, XCircle, Loader2 } from "lucide-react"
 
 interface BasicSolution {
   execution_time: string
@@ -42,6 +42,7 @@ export default function Comparison() {
   const [sequence, setSequence] = useState("")
   const [targetMass, setTargetMass] = useState(0)
   const [visualizationData, setVisualizationData] = useState<VisualizationData | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -106,6 +107,8 @@ export default function Comparison() {
         description: error instanceof Error ? error.message : "Došlo je do greške pri obradi podataka",
         variant: "destructive",
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -142,11 +145,39 @@ export default function Comparison() {
             onChange={(e) => setSequence(e.target.value)}
             placeholder="npr. 0, 113, 114, 128, 129, 227, 240, 242, 257, 355, 356, 370, 370, 484"
             className="max-w-lg"
+            disabled={isLoading}
             />
           </div>
-          <Button type="submit">Analiziraj</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sekvenca se procesira...
+              </>
+            ) : (
+              "Analiziraj sekvencu"
+            )}
+          </Button>
         </form>
       </Card>
+
+      {/* Spinner */}
+      {isLoading && (
+        <div className="mb-8">
+          <Card className="p-8">
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-2">Obrađuje se zahtev...</h3>
+                <p className="text-muted-foreground">
+                  Molimo sačekajte dok se algoritam izvršava. Ovo može potrajati nekoliko sekundi do nekoliko minuta u
+                  zavisnosti od složenosti sekvence.
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* Execution Time Comparison Table */}
       {visualizationData && (

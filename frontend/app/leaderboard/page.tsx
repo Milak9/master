@@ -13,6 +13,7 @@ import {
   Scale,
   Timer,
   Zap,
+  Loader2
 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { RoundNavigation, renderCandidates } from "@/components/round_navigation"
@@ -56,6 +57,7 @@ export default function LeaderboardPage() {
   const candidatesContainerRef = useRef<HTMLDivElement>(null)
   const [showOnlySolution, setShowOnlySolution] = useState(false)
   const [pendingShowOnlySolution, setPendingShowOnlySolution] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handlePreviousRound = () => {
     if (currentRound > 0) {
@@ -146,6 +148,8 @@ export default function LeaderboardPage() {
         description: error instanceof Error ? error.message : "Došlo je do greške pri obradi podataka",
         variant: "destructive",
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -476,6 +480,7 @@ export default function LeaderboardPage() {
               onChange={(e) => setSequence(e.target.value)}
               placeholder="npr. 0, 113, 114, 128, 129, 227, 240, 242, 257, 355, 356, 370, 370, 484"
               className="max-w-lg"
+              disabled={isLoading}
             />
           </div>
           <div className="flex items-center space-x-2">
@@ -485,17 +490,44 @@ export default function LeaderboardPage() {
               checked={pendingShowOnlySolution}
               onChange={(e) => setPendingShowOnlySolution(e.target.checked)}
               className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+              disabled={isLoading}
             />
             <label htmlFor="pendingShowOnlySolution" className="text-sm text-muted-foreground">
               Prikaži samo rešenje (bez vizuelizacije)
             </label>
           </div>
-          <Button type="submit">Analiziraj</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sekvenca se procesira...
+                </>
+              ) : (
+                "Analiziraj sekvencu"
+              )}
+            </Button>
         </form>
       </Card>
 
       <div className="space-y-4" ref={containerRef}>
-        {visualizationData ? (
+        {/* Spinner */}
+        {isLoading && (
+          <div className="mb-8">
+            <Card className="p-8">
+              <div className="flex flex-col items-center justify-center space-y-4">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold mb-2">Obrađuje se zahtev...</h3>
+                  <p className="text-muted-foreground">
+                    Molimo sačekajte dok se algoritam izvršava. Ovo može potrajati nekoliko sekundi do nekoliko minuta u
+                    zavisnosti od složenosti sekvence.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+        {visualizationData && (
           <RoundNavigation
             showOnlySolution={showOnlySolution}
             currentRound={currentRound}
@@ -508,7 +540,8 @@ export default function LeaderboardPage() {
           >
             {renderCandidates(visualizationData, currentRound, visibleItems, candidatesContainerRef, setVisibleItems, showOnlySolution)}
           </RoundNavigation>
-        ) : (
+        )} 
+        {!visualizationData && !isLoading &&(
           <div className="text-center text-muted-foreground">
             Unesi eksperimentalni spektar i klikni Analiziraj da vidiš vizualizaciju
           </div>

@@ -12,6 +12,7 @@ import {
   Info,
   PlayCircle,
   PauseCircle,
+  Loader2
 } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
 import { RoundNavigation, renderCandidates } from "@/components/round_navigation"
@@ -514,6 +515,7 @@ export default function ConvolutionPage() {
               checked={pendingShowOnlySolution}
               onChange={(e) => setPendingShowOnlySolution(e.target.checked)}
               className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+              disabled={isLoading}
             />
             <label htmlFor="pendingShowOnlySolution" className="text-sm text-muted-foreground">
               Prikaži samo rešenje (bez vizuelizacije)
@@ -521,7 +523,14 @@ export default function ConvolutionPage() {
           </div>
           <div className="space-x-2">
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Analiziranje..." : "Analiziraj sekvencu"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sekvenca se procesira...
+                </>
+              ) : (
+                "Analiziraj sekvencu"
+              )}
             </Button>
           </div>
         </form>
@@ -683,7 +692,25 @@ export default function ConvolutionPage() {
         </>
       )}
 
-      {!matrixState && (
+      {/* Spinner */}
+      {isLoading && (
+        <div className="mb-8">
+          <Card className="p-8">
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-2">Obrađuje se zahtev...</h3>
+                <p className="text-muted-foreground">
+                  Molimo sačekajte dok se algoritam izvršava. Ovo može potrajati nekoliko sekundi do nekoliko minuta u
+                  zavisnosti od složenosti sekvence.
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {!matrixState && !isLoading && (
         <div className="text-center text-muted-foreground p-12 bg-card rounded-lg">
           Unesi sekvencu i klikni Analiziraj da bi video vizualizaciju
         </div>
