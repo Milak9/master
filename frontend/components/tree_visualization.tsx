@@ -6,6 +6,24 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ZoomIn, ZoomOut, RotateCcw, Move, CheckCircle, XCircle, Loader2 } from "lucide-react"
 
+export interface TreeNode {
+  node: string
+  end: boolean
+  candidate: boolean
+  children: string[]
+  spectrum?: number[]
+  reason?: string
+  mass: number
+}
+
+export interface VisualizationResult {
+  tree: {
+    [key: string]: TreeNode
+  }
+  candidates: TheoreticalSpectrum
+  solution: string[]
+}
+
 interface TreeVisualizationRendererProps {
   visualizationData: any
   visibleNodes: any[]
@@ -34,6 +52,7 @@ interface TreeVisualizationRendererProps {
   handleMouseDown: (e: React.MouseEvent<SVGSVGElement>) => void
   handleMouseMove: (e: React.MouseEvent<SVGSVGElement>) => void
   handleMouseUp: () => void
+  svgRef?: React.RefObject<SVGSVGElement>
 }
 
 export const TreeVisualizationRenderer: React.FC<TreeVisualizationRendererProps> = ({
@@ -60,9 +79,11 @@ export const TreeVisualizationRenderer: React.FC<TreeVisualizationRendererProps>
   handleMouseDown,
   handleMouseMove,
   handleMouseUp,
+  svgRef
 }) => {
-  const svgRef = useRef<SVGSVGElement>(null)
+  const internalSvgRef = useRef<SVGSVGElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const activeSvgRef = svgRef || internalSvgRef
 
   return (
     <div ref={containerRef} className="bg-card rounded-lg p-6 min-h-[300px] overflow-auto relative">
@@ -121,7 +142,7 @@ export const TreeVisualizationRenderer: React.FC<TreeVisualizationRendererProps>
                 </div>
               )}
               <svg
-                ref={svgRef}
+                ref={activeSvgRef}
                 width={svgDimensions.width}
                 height={svgDimensions.height}
                 viewBox={svgDimensions.viewBox}
@@ -605,3 +626,73 @@ export const renderSpectrum = (spectrum: SpectrumItem[], isSolution: boolean) =>
     </div>
   )
 }
+
+type ToastData = {
+  title: string;
+  description: string;
+  variant: "success" | "destructive";
+};
+
+export const downloadSVG = (visualizationData: VisualizationResult | null, svgRef: React.RefObject<SVGSVGElement>, svgDimensions: {
+    width: string
+    height: number
+    viewBox: string
+  }, algorithm: string): ToastData => {
+    if (!visualizationData || !svgRef.current) {
+      return {
+        title: "Greška",
+        description: "Nema podataka za preuzimanje ili SVG nije dostupan.",
+        variant: "destructive",
+      }
+    }
+
+    try {
+      const svgElement = svgRef.current.cloneNode(true) as SVGSVGElement
+      svgElement.style.transform = ""
+
+      const exportSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+      exportSvg.setAttribute("width", "800")
+      exportSvg.setAttribute("height", "600")
+      exportSvg.setAttribute("viewBox", svgDimensions.viewBox)
+      exportSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg")
+
+      while (svgElement.firstChild) {
+        exportSvg.appendChild(svgElement.firstChild)
+      }
+
+      const style = document.createElementNS("http://www.w3.org/2000/svg", "style")
+      style.textContent = `
+        text { font-family: Arial, sans-serif; }
+        .tooltip { display: none; }
+      `
+      exportSvg.insertBefore(style, exportSvg.firstChild)
+
+      const serializer = new XMLSerializer()
+      const svgString = serializer.serializeToString(exportSvg)
+
+      const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" })
+      const url = URL.createObjectURL(blob)
+
+      const link = document.createElement("a")
+      link.href = url
+      link.download = `${algorithm}-tree-export.svg`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      URL.revokeObjectURL(url)
+
+      return {
+        title: "Uspešno",
+        description: "SVG fajl je preuzet.",
+        variant: "success",
+      }
+    } catch (error) {
+      console.error("Error downloading SVG:", error)
+      return {
+        title: "Greška",
+        description: "Došlo je do greške prilikom preuzimanja SVG fajla.",
+        variant: "destructive",
+      }
+    }
+  }

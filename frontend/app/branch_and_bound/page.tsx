@@ -7,34 +7,18 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
-import { PlayCircle, PauseCircle, RotateCcw, ArrowRight, HelpCircle, Loader2 } from "lucide-react"
+import { PlayCircle, PauseCircle, RotateCcw, ArrowRight, HelpCircle, Loader2, Download } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
 import {
-  type TheoreticalSpectrum,
   type VisibleNode,
   calculateSvgDimensions,
   flattenTree,
   TreeVisualizationRenderer,
+  VisualizationResult,
+  TreeNode,
+  downloadSVG
 } from "@/components/tree_visualization"
-
-interface TreeNode {
-  node: string
-  end: boolean
-  candidate: boolean
-  children: string[]
-  spectrum?: number[]
-  reason?: string
-  mass: number
-}
-
-interface VisualizationResult {
-  tree: {
-    [key: string]: TreeNode
-  }
-  candidates: TheoreticalSpectrum
-  solution: string[]
-}
 
 const fetchData = async (sequence: string): Promise<{ data: VisualizationResult; targetMass: number }> => {
   try {
@@ -143,6 +127,7 @@ export default function BranchAndBoundPage() {
   const [showOnlySolution, setShowOnlySolution] = useState(false)
   const [pendingShowOnlySolution, setPendingShowOnlySolution] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const svgRef = useRef<SVGSVGElement>(null)
 
   const STEP_DURATION = 1000
 
@@ -275,6 +260,11 @@ export default function BranchAndBoundPage() {
       setCurrentTime(currentStep * STEP_DURATION + (STEP_DURATION * lineProgress) / 100)
     }
   }, [visualizationData, currentStep, lineProgress, isAnimationComplete, showOnlySolution])
+
+  const triggerDownloadSVG = (() => {
+    const toastMessage = downloadSVG(visualizationData, svgRef, svgDimensions, "branch-and-bound")
+    toast(toastMessage)
+  })
 
   const handleTimelineChange = (value: number[]) => {
     if (!visualizationData || showOnlySolution) return
@@ -641,6 +631,15 @@ export default function BranchAndBoundPage() {
             <Button variant="outline" size="icon" onClick={skipToEnd} title="Skip to end" disabled={!controlsEnabled}>
               <ArrowRight className="h-4 w-4" />
             </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={triggerDownloadSVG}
+              title="Preuzmi SVG"
+              disabled={!isAnimationComplete}
+            >
+              <Download className="h-4 w-4" />
+            </Button>
           </div>
         )}
 
@@ -693,6 +692,7 @@ export default function BranchAndBoundPage() {
           handleMouseDown={handleMouseDown}
           handleMouseMove={handleMouseMove}
           handleMouseUp={handleMouseUp}
+          svgRef={svgRef}
         />
       </div>
     </div>
