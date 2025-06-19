@@ -9,6 +9,7 @@
 \usepackage{amsmath}
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{multirow}
+\usepackage[table]{xcolor}
 
 \maxtocdepth{subsection}
 \maxsecnumdepth{subsection}
@@ -19,7 +20,7 @@
 \naslov{Sekvenciranje antibiotika - Elektronska lekcija}
 \godina{2025}
 
-\mentor{dr Jovana \textsc{Kovačević}, vandredni profesor\\ Univerzitet u Beogradu, Matematički fakultet}
+\mentor{dr Jovana \textsc{Kovačević}, vanredni profesor\\ Univerzitet u Beogradu, Matematički fakultet}
 
 \komisijaA{dr Mirjana \textsc{Maljković Ružičić}, docent\\ Univerzitet u Beogradu, Matematički fakultet}
 
@@ -29,7 +30,7 @@
 
 % Apstrakt na srpskom jeziku (u odabranom pismu)
 \apstr{%
-Ovaj rad predstavlja elektronsku lekciju posvećenu sekvenciranju antibiotika, sa fokusom na interaktivno upoznavanje sa različitim algoritamskim pristupima. Lekcija obuhvata teorijsko objašnjenje i vizuelizaciju algoritama kao što su gruba sila, \emph{Branch and Bound}, \emph{Leaderboard} algoritam, spektralna konvolucija i \emph{DeepNovo} sekvenciranje. Korisnicima je omogućeno da prate izvršavanje algoritama korak po korak, sa opcijama pauziranja i ponavljanja, čime se olakšava razumevanje kompleksnih procesa sekvenciranja. Ova interaktivna platforma može služiti kao edukativni alat za studente i predavače u oblasti bioinformatike.
+Ovaj rad predstavlja elektronsku lekciju posvećenu sekvenciranju antibiotika, sa fokusom na interaktivno upoznavanje sa različitim algoritamskim pristupima. Lekcija obuhvata teorijsko objašnjenje i vizuelizaciju sledećih algoritama za sekvenciranje proteina: gruba sila, \emph{Branch and Bound}, \emph{Leaderboard}, spektralna konvolucija i \emph{DeepNovo} sekvenciranje. Korisnicima je omogućeno da prate izvršavanje algoritama korak po korak, sa opcijama pauziranja i ponavljanja, čime se olakšava razumevanje kompleksnih procesa sekvenciranja. Ova interaktivna platforma može služiti kao edukativni alat za studente i predavače u oblasti bioinformatike.
 }
 
 % Ključne reči na srpskom jeziku (u odabranom pismu)
@@ -56,27 +57,26 @@ Ovaj rad predstavlja elektronsku lekciju posvećenu sekvenciranju antibiotika, s
 % ------------------------------------------------------------------------------
 \chapter{Uvod}
 % ------------------------------------------------------------------------------
-Sekvenciranje predstavlja proces određivanja preciznog redosleda gradivnih jedinica bioloških molekula. Najpoznatiji oblik je sekvenciranje DNK, kojim se utvrđuje niz nukleotida u genomu organizma. Međutim, osim genoma, moguće je sekvencirati i proteine, pri čemu se određuje redosled aminokiselina koji čini njihovu primarnu strukturu. Takav postupak naziva se sekvenciranje proteina.
+Sekvenciranje bioloških molekula predstavlja proces određivanja preciznog redosleda gradivnih jedinica od kojih su sastavljeni. Tako, na primer, govorimo o sekvenciranju DNK, kojim se utvrđuje niz nukleotida u genomu organizma. Međutim, osim genoma, moguće je sekvencirati i proteine, pri čemu se određuje redosled aminokiselina koji čini njihovu primarnu strukturu. Takav postupak naziva se sekvenciranje proteina.
 
-Za razliku od tehnike sekvenciranja genoma, koja koristi univerzalni genetski kod kao osnovu, određivanje strukture proteina zahteva eksperimentalne metode, najčešće masenu spektrometriju. U prirodi postoji 20 standardnih aminokiselina (slika \ref{fig:aminokiseline}) koje se kombinuju u različitim sekvencama kako bi formirale veliki broj funkcionalnih proteina. U kontekstu antibiotika, specifičan redosled aminokiselina je od presudnog značaja jer direktno utiče na:
+Iako se sekvenciranje genoma i sekvenciranje proteina oslanja na eksperimentalne tehnike, genom se, zahvaljujući univerzalnom genetskom kodu, može relativno jednostavno odrediti, dok se struktura proteina ne može direktno predvideti iz genetske informacije i zahteva dodatne metode, poput masene spektrometrije. U prirodi postoji 20 standardnih aminokiselina (slika \ref{fig:aminokiseline}) koje se kombinuju u različitim sekvencama kako bi formirale proteine. U kontekstu antibiotika, specifičan redosled aminokiselina je od presudnog značaja jer direktno utiče na:
 
 \begin{itemize}
     \item Trodimenzionalnu strukturu molekula
     \item Biološku aktivnost i mehanizam dejstva
 \end{itemize}
 
-Mnogi savremeni antibiotici su peptidnog porekla, što znači da su zapravo kratki lanci aminokiselina, tj. mali proteini. Antibiotici predstavljaju hemijska jedinjenja koja uništavaju mikroorganizme ili inhibiraju njihov rast, čime imaju ključnu ulogu u borbi protiv infekcija. Zbog njihove biološke važnosti i sve izraženijeg problema antimikrobne rezistencije, sekvenciranje antibiotika predstavlja značajnu oblast istraživanja u savremenoj bioinformatici i farmaceutskoj industriji. Ovaj rad će se fokusirati upravo na proces sekvenciranja peptidnih antibiotika.
-
+Mnogi savremeni antibiotici predstavljaju peptide, što znači da su zapravo kratki lanci aminokiselina, tj. mali proteini. Antibiotici predstavljaju hemijska jedinjenja koja uništavaju mikroorganizme ili inhibiraju njihov rast, čime imaju ključnu ulogu u borbi protiv infekcija. Zbog njihove biološke važnosti i sve izraženijeg problema antimikrobne rezistencije, sekvenciranje antibiotika predstavlja značajnu oblast istraživanja u savremenoj bioinformatici i farmaceutskoj industriji. Zbog toga, ovaj rad će se fokusirati upravo na proces sekvenciranja antibiotika.
 
 \begin{figure}[h]
   \centering
   \includesvg[width=0.8\textwidth]{images/amino-acids-table.svg}
-  \caption{Tabela masa aminokiselina izraženih u daltonima (Da)}
+  \caption{Esencijalne aminokiseline sa svojim masama izraženim u daltonima (Da)}
   \label{fig:aminokiseline}
 \end{figure}
 
 \section{Cilj rada}
-U ovom radu biće predstavljena interaktivna elektronska platforma namenjena prikazu algoritamskih pristupa za sekvenciranje antibiotika, sa fokusom na njihovu vizuelizaciju u realnom vremenu. Platforma korisnicima omogućava da istraže principe i rad savremenih algoritama kroz interaktivne simulacije, čime se olakšava razumevanje kompleksnih bioinformatičkih koncepata.
+U ovom radu implementirana je interaktivna elektronska platforma namenjena prikazu algoritamskih pristupa za sekvenciranje antibiotika, sa fokusom na njihovu vizuelizaciju u realnom vremenu. Platforma korisnicima omogućava da se istraže principi i rad savremenih algoritama kroz interaktivne simulacije, čime se olakšava razumevanje kompleksnih bioinformatičkih koncepata.
 
 Glavni ciljevi ovog rada su:
 \begin{itemize}
@@ -84,18 +84,17 @@ Glavni ciljevi ovog rada su:
     \item Razviti interaktivnu edukativnu platformu za vizuelizaciju sekvenciranja
 \end{itemize}
 
-Rad je posebno koristan studentima bioinformatike i molekularne biologije pružajući im alat za bolje razumevanje osnovnih principa masene spektrometrije i algoritama za rekonstrukciju peptidnih sekvenci.
+Rad je posebno koristan studentima bioinformatike i molekularne biologije kao alat za bolje razumevanje algoritama za rekonstrukciju peptidnih sekvenci.
 
 % ------------------------------------------------------------------------------
 \chapter{Teorijske osnove}
 % ------------------------------------------------------------------------------
 
 \section{Centralna dogma molekularne biologije}
-Proces sekvenciranja antibiotika je fundamentalan u razumevanju kako su ovi molekuli proizvedeni od strane bakterija i kako se oni mogu sintetizovati ili modifikovani za primene u medicini. Antibiotici su često peptidi ali mnogo antibiotika, uglavnom neribozomalni peptidi (\emph{non-ribosomal peptides - NRPs}), ne prati standardna pravila za sintezu proteina čime se otežava njihovo sekvenciranje \cite{online_lecture, online_book}.
+Proces sekvenciranja antibiotika je fundamentalan u razumevanju kako su ovi molekuli proizvedeni od strane bakterija i kako se oni mogu sintetisati ili modifikovati za primene u medicini. Antibiotici su često peptidi, pri čemu veliki broj pripada neribozomalnim peptidima (\emph{non-ribosomal peptides - NRPs}), koji ne prate standardna pravila za sintezu proteina čime se otežava njihovo sekvenciranje \cite{online_lecture, online_book}.
 
-DNK sadrži recept za kreiranje proteina. Odnosno, sastoji se od gena koji mogu biti uključeni i tada će se na osnovu njih kreirati proteini ili isključeni kada se oni neće koristiti za kreiranje proteina. Ovaj proces uključivanja i isključivanja gena naziva se genska ekspresija i zavisi od toga da li je potrebno da se određeni protein kreira ili ne (na primer, fotosinteza kod biljaka koja se obavlja samo preko dana).
-
-Tradicionalno, proteini prate Centralnu Dogmu Molekularne biologije, koja kaže da se DNK prvo prepisuje u RNK (slika \ref{fig:transkripcija}), a zatim se RNK prevodi u protein. Proces prevođenja DNK u RNK naziva se transkripcija i on podrazumeva da enzim RNK polimeraza očitava jedan lanac DNK i na osnovu njega sintetiše jedan, komplementaran RNK lanac, pri čemu se nukleotid timin (T) zamenjuje uracilom (U). Na slici \ref{fig:transkripcija} se može se primetiti da se DNK sastoji od 2 lanca koja su komplementarna. Enzim RNK polimeraza se kači na početak gena i kreće kroz gene gde razdvaja lanac i stvara prostor za prepisivanje DNK u RNK čime se dobija RNK.
+DNK sadrži recept za kreiranje proteina. Naime, DNK se sastoji od gena koji mogu biti uključeni i tada će se na osnovu njih kreirati proteini ili isključeni kada se oni neće koristiti za kreiranje proteina. Ovaj proces uključivanja i isključivanja gena naziva se genska ekspresija i zavisi od toga da li je potrebno da se određeni protein kreira ili ne (na primer, fotosinteza kod biljaka koja se obavlja samo preko dana).
+Najveći broj proteina nastaje kroz proces koji se zove centralna dogma molekularne biologije, koja kaže da se DNK prvo prepisuje u RNK (slika \ref{fig:transkripcija}), a zatim se RNK prevodi u protein. Proces prevođenja DNK u RNK naziva se transkripcija i on podrazumeva da enzim RNK polimeraza očitava jedan lanac DNK i na osnovu njega sintetiše jedan, komplementaran RNK lanac, pri čemu se nukleotid timin (T) zamenjuje uracilom (U). Na slici \ref{fig:transkripcija} se može se primetiti da se DNK sastoji od 2 lanca koja su komplementarna. Enzim RNK polimeraza se zakači na DNK lanac ka početku gena, zatim se kreće duž gena čime razdvaja dva lanca DNK i tako stvara prostor za prepisivanje DNK čime se dobija novi molekul RNK.
 
 \begin{figure}[h]
   \centering
@@ -104,7 +103,7 @@ Tradicionalno, proteini prate Centralnu Dogmu Molekularne biologije, koja kaže 
   \label{fig:transkripcija}
 \end{figure}
 
-Prilikom prevođenja RNK u protein potrebno je na osnovu nukleotida odrediti koja je aminokiselina u pitanju. Za ovaj proces je zadužena organela ribozom, koja omogućava pravilno očitavanje informacija sa RNK. Budući da je potrebno uniformno tumačiti nukleotidnu sekvencu, koristi se niz od tri uzastopna nukleotida, poznat kao kodon. Upotrebom kodona dužine tri nukleotida dobija se ukupno 64 različite sekvence, koje se mapiraju na 20 različitih aminokiselina. Da je korišćen niz od samo dva nukleotida, bilo bi moguće formirati svega 16 kombinacija, što ne bi bilo dovoljno da se pokriju sve aminokiseline neophodne za sintezu proteina. Na slici \ref{fig:codon-wheel} može se videti kako se kodoni prevode u odgovarajuće aminokiseline. Postoje start i stop kodoni koji određuju početak odnosno kraj sekvence koja se prevodi u protein.
+Prilikom prevođenja RNK u protein potrebno je na osnovu nukleotida odrediti koja je aminokiselina u pitanju. Za ovaj proces je zadužena organela ribozom, koja omogućava očitavanje informacija koju nosi RNK prema unapred utvrđenom pravilu koje se naziva genetski kod. Budući da je potrebno uniformno tumačiti nukleotidnu sekvencu, koristi se niz od tri uzastopna nukleotida, poznat kao kodon. Upotrebom kodona dužine tri nukleotida dobija se ukupno 64 različite sekvence, koje se mapiraju na 20 različitih aminokiselina. Da je korišćen niz od samo dva nukleotida, bilo bi moguće formirati svega 16 kombinacija, što ne bi bilo dovoljno da se pokriju sve aminokiseline neophodne za sintezu proteina. Na slici \ref{fig:codon-wheel} može se videti kako se kodoni prevode u odgovarajuće aminokiseline. Postoje start i stop kodoni koji određuju početak odnosno kraj sekvence koja se prevodi u protein.
 
 \begin{figure}[H]
   \centering
@@ -115,7 +114,7 @@ Prilikom prevođenja RNK u protein potrebno je na osnovu nukleotida odrediti koj
 
 
 \section{Odstupanje od centralne dogme}
-Tirocidin B1 je cikličan peptid dužine 10 (slika \ref{fig:tirocidin}), što znači da su prva i poslednja aminokiselina povezane i da samim tim postoji 10 njegovih različitih linearnih reprezentacija, tabela \ref{tab:linear_representations}. Prateći centralnu dogmu i zaključka da se 1 kodon prevodi u 1 aminokiselinu, naučnici su očekivali da pronađu 10 kodona odnosno 30 nukleotida u genomu bakterije \emph{Bacillus brevis} od koje nastaje ovaj antibiotik. Da bi se ovaj postupak obavio, potrebno je proveriti više hiljada 30-grama koji mogu da počnu bilo gde u genomu, što može delovati kao dugotrajan zadatak, ali uz moderne računare, ovaj proces se obavlja efikasno. Analiziranjem genoma utvrđeno je da ne postoji 30-gram koji se kodira u neki od 10 različitih reprenzatacija traženog antibiotika.
+Tirocidin B1 je cikličan peptid dužine 10 (slika \ref{fig:tirocidin}), što znači da su prva i poslednja aminokiselina povezane i da samim tim postoji 10 njegovih različitih linearnih reprezentacija (tabela \ref{tab:linear_representations}). Prateći centralnu dogmu i činjenicu da se 1 kodon prevodi u 1 aminokiselinu, bilo je za očekivati da je moguće pronaći 10 kodona odnosno 30 nukleotida u genomu bakterije \emph{Bacillus brevis} od koje nastaje ovaj antibiotik. Da bi se ovaj postupak obavio, potrebno je proveriti više hiljada 30-grama koji mogu da počnu bilo gde u genomu, što može delovati kao dugotrajan zadatak, ali uz moderne računare je ostvariv u prihvatljivom vremenu. Analiziranjem genoma utvrđeno je da ne postoji 30-gram koji se kodira u neki od 10 različitih reprenzatacija traženog antibiotika.
 
 \begin{table}[h]
 \centering
@@ -123,16 +122,16 @@ Tirocidin B1 je cikličan peptid dužine 10 (slika \ref{fig:tirocidin}), što zn
 \toprule
 \# & Linearna sekvenca \\
 \midrule
-1 & Lys – Leu – Phe – Pro - Trp - Phe – Asn – Gln – Tyr – Val \\
-2 & Leu – Phe – Pro – Trp – Phe – Asn – Gln – Tyr – Val – Lys \\
-3 & Phe – Pro – Trp – Phe – Asn – Gln – Tyr – Val – Lys – Leu \\
-4 & Pro – Trp – Phe – Asn – Gln – Tyr – Val – Lys – Leu – Phe \\
-5 & Trp – Phe – Asn – Gln – Tyr – Val – Lys – Leu – Phe – Pro \\
-6 & Phe – Asn – Gln – Tyr – Val – Lys – Leu – Phe – Pro – Trp \\
-7 & Asn – Gln – Tyr – Val – Lys – Leu – Phe – Pro – Trp – Phe \\
-8 & Gln – Tyr – Val – Lys – Leu – Phe – Pro – Trp – Phe – Asn \\
-9 & Tyr – Val – Lys – Leu – Phe – Pro – Trp – Phe – Asn – Gln \\
-10 & Val – Lys – Leu – Phe – Pro – Trp – Phe – Asn – Gln – Tyr \\
+1 & \textcolor{red}{Lys} – \textcolor{blue}{Leu} – \textcolor{orange}{Phe} – \textcolor{violet}{Pro} – \textcolor{teal}{Trp} – \textcolor{orange}{Phe} – \textcolor{magenta}{Asn} – \textcolor{brown}{Gln} – \textcolor{cyan}{Tyr} – \textcolor{green!70!black}{Val} \\
+2 & \textcolor{blue}{Leu} – \textcolor{orange}{Phe} – \textcolor{violet}{Pro} – \textcolor{teal}{Trp} – \textcolor{orange}{Phe} – \textcolor{magenta}{Asn} – \textcolor{brown}{Gln} – \textcolor{cyan}{Tyr} – \textcolor{green!70!black}{Val} – \textcolor{red}{Lys} \\
+3 & \textcolor{orange}{Phe} – \textcolor{violet}{Pro} – \textcolor{teal}{Trp} – \textcolor{orange}{Phe} – \textcolor{magenta}{Asn} – \textcolor{brown}{Gln} – \textcolor{cyan}{Tyr} – \textcolor{green!70!black}{Val} – \textcolor{red}{Lys} – \textcolor{blue}{Leu} \\
+4 & \textcolor{violet}{Pro} – \textcolor{teal}{Trp} – \textcolor{orange}{Phe} – \textcolor{magenta}{Asn} – \textcolor{brown}{Gln} – \textcolor{cyan}{Tyr} – \textcolor{green!70!black}{Val} – \textcolor{red}{Lys} – \textcolor{blue}{Leu} – \textcolor{orange}{Phe} \\
+5 & \textcolor{teal}{Trp} – \textcolor{orange}{Phe} – \textcolor{magenta}{Asn} – \textcolor{brown}{Gln} – \textcolor{cyan}{Tyr} – \textcolor{green!70!black}{Val} – \textcolor{red}{Lys} – \textcolor{blue}{Leu} – \textcolor{orange}{Phe} – \textcolor{violet}{Pro} \\
+6 & \textcolor{orange}{Phe} – \textcolor{magenta}{Asn} – \textcolor{brown}{Gln} – \textcolor{cyan}{Tyr} – \textcolor{green!70!black}{Val} – \textcolor{red}{Lys} – \textcolor{blue}{Leu} – \textcolor{orange}{Phe} – \textcolor{violet}{Pro} – \textcolor{teal}{Trp} \\
+7 & \textcolor{magenta}{Asn} – \textcolor{brown}{Gln} – \textcolor{cyan}{Tyr} – \textcolor{green!70!black}{Val} – \textcolor{red}{Lys} – \textcolor{blue}{Leu} – \textcolor{orange}{Phe} – \textcolor{violet}{Pro} – \textcolor{teal}{Trp} – \textcolor{orange}{Phe} \\
+8 & \textcolor{brown}{Gln} – \textcolor{cyan}{Tyr} – \textcolor{green!70!black}{Val} – \textcolor{red}{Lys} – \textcolor{blue}{Leu} – \textcolor{orange}{Phe} – \textcolor{violet}{Pro} – \textcolor{teal}{Trp} – \textcolor{orange}{Phe} – \textcolor{magenta}{Asn} \\
+9 & \textcolor{cyan}{Tyr} – \textcolor{green!70!black}{Val} – \textcolor{red}{Lys} – \textcolor{blue}{Leu} – \textcolor{orange}{Phe} – \textcolor{violet}{Pro} – \textcolor{teal}{Trp} – \textcolor{orange}{Phe} – \textcolor{magenta}{Asn} – \textcolor{brown}{Gln} \\
+10 & \textcolor{green!70!black}{Val} – \textcolor{red}{Lys} – \textcolor{blue}{Leu} – \textcolor{orange}{Phe} – \textcolor{violet}{Pro} – \textcolor{teal}{Trp} – \textcolor{orange}{Phe} – \textcolor{magenta}{Asn} – \textcolor{brown}{Gln} – \textcolor{cyan}{Tyr} \\
 \bottomrule
 \end{tabular}
 \caption{Deset različitih linearnih reprezentacija tirocidina B1}
@@ -146,32 +145,32 @@ Tirocidin B1 je cikličan peptid dužine 10 (slika \ref{fig:tirocidin}), što zn
   \label{fig:tirocidin}
 \end{figure}
 
-Dokazano je da Tirocidin B1 ne prati centralnu dogmu molekularne biologije i da postoje posebni enzimi koji su zaduženi za njihovo sintentisanje. Oni se zovu \emph{NRP} sintetaze. Ovi enzimi sadrže komplikovane module, koji govore koje aminokiseline učestvuju u sastavu proteina. U slučaju Tirocidina B1, enzim sadrži 10 modula i svaki od modula kodira 1 aminokiselinu čime je određena struktura antibiotika.
+Na ovaj način je pokazano da Tirocidin B1 ne prati centralnu dogmu molekularne biologije i da ovaj peptid nastaje kroz drugačiji proces, uz pomoć posebnih enzima koji su zaduženi za njihovo sintentisanje. Oni se zovu \emph{NRP} sintetaze. Ovi enzimi se sastoje od kompleksnih molekulskih jedinica, takozvanih modula, gde svaki modul odgovara jednoj aminokiselini koja učestvuje u sastavu proteina. U slučaju Tirocidina B1, enzim sadrži 10 modula i svaki od modula kodira 1 aminokiselinu čime je određena struktura antibiotika.
 
 Samim tim, pošto struktura proteina nije određena na osnovu genoma bakterije, metode za sekvencioniranje DNK ovde nisu od pomoći i potrebno je sekvencirati direktno sam peptid.
 
 \section{Maseni spektrometar}
-Maseni spektrometar je moćan alat pomoću koga mogu da se odrede mase molekula, uključujući mase peptida i proteina. Omogućava naučnicima da odrede nepoznate komponente, saznaju strukturu molekula i analiziraju kompleksne uzorke. Maseni spektrometar radi tako što mu se da više uzoraka istog peptida a on napravi sve moguće podpeptide datog peptida i odredi njihove mase. U realnosti uzorak se pretvara u naelektrisane jone da bi na njih mogli da utiču električno i magnetno polje. Potom se joni dele na osnovu odnosa njihove mase i naelektrisanja i kao takvi se mere njihove vrednosti \cite{spectrometer}.
+Maseni spektrometar je mašina za merenje masa molekula, uključujući mase peptida i proteina. Alat funkcioniše na principu analize više uzoraka istog peptida, tako što date uzorke deli na sve moguće potpeptide, nakon čega se određuju mase potpeptida. U realnosti uzorak se pretvara u naelektrisane jone da bi na njih mogli da utiču električno i magnetno polje. Potom se joni dele na osnovu odnosa mase i naelektrisanja, a njihove vrednosti se zatim precizno mere \cite{spectrometer}.
 
 Masa se meri u daltonima (Da), pri čemu je 1 Da približno jednak masi protona/neutrona. Samim tim masa molekula je jednaka sumi masa protona/neutrona koji čine taj molekul. Mase aminokiselina su poznate i prikazane su na Slici \ref{fig:aminokiseline}. Može se primetiti da neke aminokiseline imaju istu masu, tako da 20 različitih aminokiselina ima 18 različitih masa.
 
-Samim tim na osnovu poznatih masa aminokiselina možemo da odredimo da je masa tirocidina:
+Samim tim na osnovu poznatih masa aminokiselina možemo da odredimo masu celog peptida. Na primer, masa tirocidina se može izračunati na sledeći način:
 \begin{verbatim}
  V    K     L     F     P    W     F     N     Q     Y     
 99 + 128 + 113 + 147 + 97 + 186 + 147 + 114 + 128 + 163 = 1322
 \end{verbatim}
 
 \section{Teorijski spektar peptida}
-Teorijski spektar peptida predstavlja mase svih mogućih podpeptida, uključujući 0 i masu celog peptida. Na osnovu peptida možemo lako da odredimo teorijski spektar ali na osnovu spektra ne možemo lako da odredimo koji je peptid u pitanju.
+Teorijski spektar peptida predstavlja mase svih mogućih potpeptida, uključujući 0 i masu celog peptida. Na osnovu peptida možemo lako da odredimo teorijski spektar ali na osnovu spektra ne možemo lako da odredimo koji je peptid u pitanju.
 
-Problem sekvenciranja ciklopeptida samim tim se svodi na problem kako rekonstruisati ciklični peptid na osnovu njegovog teorijskog spektra. U nastavku će biti prikazani nekoliko različitih algoritama.
+Problem sekvenciranja ciklopeptida samim tim se svodi na problem kako rekonstruisati ciklični peptid na osnovu njegovog teorijskog spektra. U nastavku će biti prikazano nekoliko različitih algoritama za sekvenciranje peptida.
 
-Kao ulaz u svaki od ovih algoritama očekuje se eksperimentalni spektar, odnosno spektar koji je dobijen uz pomoć masenog spektrometra za neki peptid. Na Slici \ref{fig:spektar} su prikazane mase svih podpeptida peptida \textbf{NQEL} koje se dobijaju uz pomoć masenog spektrometra, kao i masa praznog peptida i celog peptida, takođe je prikazan i teorijski spektar.
+Kao ulaz u svaki od ovih algoritama očekuje se eksperimentalni spektar, odnosno spektar koji je dobijen uz pomoć masenog spektrometra za neki peptid. Na slici \ref{fig:spektar} su prikazane mase svih potpeptida peptida \textbf{NQEL} koje se dobijaju uz pomoć masenog spektrometra, kao i masa praznog peptida i celog peptida, takođe je prikazan i teorijski spektar.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.9\textwidth]{images/peptide-theoretical-spectrum.png}
-  \caption{Teorijski spektar peptida \textbf{NQEL} koji prikazuje sve moguće podpeptide, njihove mase i njegov teorijski spektar}
+  \caption{Teorijski spektar peptida \textbf{NQEL} koji prikazuje sve moguće potpeptide, njihove mase i njegov teorijski spektar}
   \label{fig:spektar}
 \end{figure}
 
@@ -267,7 +266,7 @@ Na osnovu prethodnog teksta definiše se pseudokod za algoritam grube sile koji 
   \item \textbf{CikličniSpektar(peptid)} – za peptid koji je potencijalno rešenje generiše se ciklični spektar koji se poredi sa zadatim eksperimentalnim spektrom.
 \end{itemize}
 
-\section{Branch and Bound}
+\section{\emph{Branch and Bound}}
 \emph{Branch and Bound} algoritam \cite{online_lecture, online_book} je optimizovana verzija algoritma grube sile koja koristi strategiju „podeli pa vladaj“ za efikasnije pretraživanje prostora rešenja. Za razliku od algoritma grube sile koji ispituje sve moguće kombinacije, \emph{Branch and Bound} algoritam inteligentno eliminiše delove prostora pretrage koji ne mogu sadržati optimalno rešenje.
 
 U kontekstu sekvenciranja peptida, algoritam funkcioniše na sledeći način:
@@ -425,7 +424,7 @@ Ispituje sve kombinacije i odbacuje samo kada ukupna masa premaši traženu masu
     \item Ukupno evaluacija: 3 (prvi nivo) + 6 (drugi nivo) = 9 čvorova
 \end{itemize}
 
-\subsection{Algoritam Branch and Bound}
+\subsection{Algoritam \emph{Branch and Bound}}
 Odbacuje grane gde bilo koji deo sekvence nema masu koja postoji u eksperimentalnom spektru:
 
 \begin{center}
@@ -486,7 +485,7 @@ Odbacuje grane gde bilo koji deo sekvence nema masu koja postoji u eksperimental
 Algoritam grananja i ograničavanja značajno smanjuje prostor pretrage eliminacijom neperspektivnih grana već u ranim fazama, dok gruba sila mora da ispita sve kombinacije.
 Na ovom primeru može se primetiti kako se odmah odbacuje cela \textbf{C} grana i svi njeni potomci. U ovom slučaju smanjuje se prostor pretrage za samo dva čvora, ali u stvarnosti postoji 20 aminokiselina i odsecanje čvorova i njihovih potomaka u samom startu predstavlja ogromno ubrzanje i poboljšanje u odnosu na algoritam grube sile.
 
-\section{Leaderboard algoritam}
+\section{\emph{Leaderboard} algoritam}
 \emph{Leaderboard} algoritam \cite{online_lecture, online_book} predstavlja optimizovani pristup za sekvenciranje peptida. Za razliku od sekvenciranja grubom silom koje zahteva tačno poklapanje između teorijskog spektra kandidata i eksperimentalnog spektra, ovaj algoritam je dizajniran da radi sa nedostajućim i lažnim masama tako što prati samo najbolje kandidate peptida umesto svih mogućnosti.
 \emph{Leaderboard} algoritam održava listu najboljih kandidata tokom pretrage. U svakoj iteraciji, algoritam proširuje sekvence sa svim mogućim aminokiselinama i zadržava one kandidate čiji linearni spektar ima najveći broj poklapanja sa zadatim eksperimentalnim spektrom.
 Određuje se linearni spektar kandidata zato što peptidi još nisu do kraja formirani tako da se još ne zna kako bi oni izgledali ciklično.
@@ -548,7 +547,7 @@ Algoritam \ref{alg:leaderboard} prikazuje pseudokod \emph{Leaderboard} algoritma
 \textbf{Objašnjenje pomoćnih funkcija:}
 \begin{itemize}
     \item \textbf{Trim(kandidati, eksperimentalniSpektar, N)} – Jedna od glavnih funkcija. Ulaz u funkciju predstavljaju peptidi koji su kandidati za rešenje, eksperimentalni spektar kao i broj peptida koji ćemo vratiti iz funkcije odnosno najbolji kandidati za potencijalno rešenje. Bitno je izabrati dobro broj kandidata koji prolazi u dalju rundu. U slučaju da je taj broj previše mali rizujemo da previše agresivno odsečemo neke kandidate i da potencijalno izgubimo rešenje. U slučaju da je broj previše veliki čuvaćemo previše kandidata i samim tim povećati vreme izvršavanja algoritma. Generalno, dobra je praksa ako se traže peptidi sa manjom masom da se koristi manji broj kandidata koji nastavlja u sledeću rundu a ako se masa poveća da se samim tim poveća i broj kandidata koji nastavlja u sledeću rundu. Funkcija \textbf{Trim} koristi funkciju \textbf{linearScore} koja računa broj poklapanja teorijskog spektra peptida sa eksperimentalnim spektrom. Ova funkcija se koristi kada se ceo peptid još ne zna i samim tim ne mogu da se kreiraju sve ciklične varijacije jer bi se dobile mase koje se možda ne bi dobile kada se peptid proširi aminokiselinama. Na kraju \textbf{Trim} kandidati se sortiraju opadujuće po linearnom skoru i u sledeću rundu prolaze prvih \textbf{N} kandidata kao i svi kandidati koji imaju isti razultat kao kandidat na poziciji N. Na ovaj način osiguravamo da sa sigurnošću svi dobri kandidati prođu u sledeću rundu.
-    \item \textbf{CikličniScore(peptid, eksperimentalniSpektar)} – Računa broj poklapanja teorijskog spektra cikličnog peptida sa eksperimentalnim spektrom. Ova funkcija se koristi u slučaju da je masa peptida jednaka najvećoj teoorijskoj masi jer je u tom slučaju formiran ceo peptid i mogu da se nađu svi podpeptidi.
+    \item \textbf{CikličniScore(peptid, eksperimentalniSpektar)} – Računa broj poklapanja teorijskog spektra cikličnog peptida sa eksperimentalnim spektrom. Ova funkcija se koristi u slučaju da je masa peptida jednaka najvećoj teoorijskoj masi jer je u tom slučaju formiran ceo peptid i mogu da se nađu svi potpeptidi.
 \end{itemize}
 
 \section{Spektralna konvolucija}
@@ -642,7 +641,7 @@ Na osnovu tabele \ref{tab:convolution_matrix} možemo da vidimo koje su to mase 
 Na osnovu tabele \ref{fig:aminokiseline} možemo da vidimo da masa 114 odgovara aminokiselini sa skraćenicom \textbf{N}, da masa 128 odgovara \textbf{K} i \textbf{Q} aminokiselinama a da masa 129 odgovara aminokiselini \textbf{E}.
 Rešenja zadatog teorijskog spektra su peptidi \textbf{NQE} i \textbf{NKE} i njihove ciklične kombinacije. Možemo da primetimo da smo u samom startu suzili izbor aminokiselina sa 20 na samo 3 koje predstavljaju rešenje, čime smo mnogo ubrzali proces pronalaska peptida.
 
-\section{DeepNovo}
+\section{\emph{DeepNovo}}
 
 Trenutne tehnike za sekvenciranje peptida (poput pretraživanja baze podataka i \emph{de novo} sekvenciranja) mogu imati poteškoća u radu sa novim, složenim ili nepotpunim podacima \cite{deepnovo}. Pristup pretraživanja baze podataka oslanja se na poređenje eksperimentalnih podataka sa bazom podataka poznatih proteinskih sekvenci, ali neki od problema u ovom pristupu su sledeći:
 
@@ -662,7 +661,7 @@ Pristup \emph{de novo} sekvenciranja pokušava izgraditi sekvencu peptida iz po�
 \item Teškoće u razlikovanju izobaričnih aminokiselina (aminokiseline sa istom ili vrlo sličnom masom)
 \end{itemize}
 
-\subsection{Tehnike zasnovane na De Novo sekvenciranju}
+\subsection{Tehnike zasnovane na \emph{De Novo} sekvenciranju}
 Pored \textbf{DeepNovo} tehnike koja će biti opisana u ovom radu, postoje i još neke tehnike zasnovane na \emph{De Novo} principu:
 
 \begin{itemize}
@@ -783,7 +782,7 @@ Pokretanje aplikacije može da se odradi na nekoliko načina:
     \item \textbf{Google Cloud Run (GCR)} \cite{gcr} - ova aplikacija je dostupna za korišćenje preko \emph{Google Cloud Run} platforme, pa će se samim tim objasniti i kako odraditi \emph{deploy} aplikacije na \textbf{GCR}
 \end{itemize}
 
-\subsection{Docker Compose konfiguracija}
+\subsection{\emph{Docker Compose} konfiguracija}
 Za potrebe što lakšeg pokretanja aplikacije korišćen je \emph{open source} alat \emph{Docker} i \emph{Docker Compose}. \emph{Docker Compose} nam pruža jednostavan način da aplikaciju pokrenemo sa svim definisanim bibliotekama, promenljivama okruženja bez potrebe da se bilo šta dodatno namesti. Ovo je posebno bitno u slučaju kada se aplikacija sastoji iz više komponenti pa je potrebno da se pokrene više kontejnera kao što je ovde slučaj.
 Unutar \textbf{docker} foldera nalaze \emph{docker} i \emph{docker-compose fajlovi}.
 
@@ -849,7 +848,7 @@ Da bi se direktno pokrenuo \emph{Backend} aplikacije potrebno je imati instalira
 Pokretanjem ovih komandi kreiraćemo virtuelno okruženje u kom će se instalirati sve zavisnosti ove aplikacije. Za praćenje verzije korišćenih biblioteka korišćen je \emph{Pipfile} i zato mora da se instalira i \emph{pipenv}.
 Nakon pokretanja serverskom delu aplikacije mogu se slati zahtevi na adresu \emph{http://localhost:8000}.
 
-\subsection{Google Cloud Run implementacija}
+\subsection{\emph{Google Cloud Run} implementacija}
 Aplikacija je trenutno \emph{deploy}-ovana na Google Cloud Run i može joj se pristupiti preko \emph{https://antibiotic-sequencing-304513663933.us-central1.run.app/}.
 Koristi se besplatna verzija koja se ne naplaćuje a pored toga \emph{Google Cloud Run} pruža sledeće pogodnosti:
 
@@ -1006,7 +1005,7 @@ Na kraju će se za svaki peptid koji je kandidat da bude rešenje prikazati i nj
 \label{fig:brute_force_3}
 \end{figure}
 
-\subsection{Branch and Bound}
+\subsection{\emph{Branch and Bound}}
 Stranica za algoritam \emph{Branch and Bound}, na slici \ref{fig:branch_and_bound}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
 \begin{figure}[h]
 \centering
@@ -1017,7 +1016,7 @@ Stranica za algoritam \emph{Branch and Bound}, na slici \ref{fig:branch_and_boun
 
 Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i može da se odabere da se vidi vizuelizacija ovog algoritma ili samo rešenje. Ovaj algoritam je veoma sličan algoritmu grube sile, tako da je i vizuelizacija i elementi koji čine tu vizuelizaciju potpuno ista. Jedina razlika je što je ovaj algoritam dosta brži i može da ranije odseče kandidate koji nisu rešenje tako da eksperimentalni spektar koji može da se unese je duži. Dodatno, pošto u ovom algoritmu postoji više razloga zašto je neki čvor odsečen tako će i poruke koje se prikazuju kada se mišem prevuče preko nekog čvora biti drugačije. Ovde je takođe po okončanju animacije moguće skinuti igrađeno drvo u \emph{SVG} formatu.
 
-\subsection{Leaderboard}
+\subsection{\emph{Leaderboard}}
 Stranica za algoritam \emph{Leaderboard}, na slici \ref{fig:leaderboard_1}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
 \begin{figure}[H]
 \centering
@@ -1070,7 +1069,7 @@ Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar
 \label{fig:convolution_3}
 \end{figure}
 
-\subsection{DeepNovo}
+\subsection{\emph{DeepNovo}}
 Stranica za \emph{DeepNovo} sekvenciranje, na slici \ref{fig:deepnovo_1}, sadrži \emph{tab}-ove koji pružaju uvid u detalje kao što su:
 \begin{itemize}
     \item \textbf{Pozadina} - koji su trenutni problemi sekvenciranja
