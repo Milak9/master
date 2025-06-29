@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
-import { CheckCircle, XCircle, Loader2 } from "lucide-react"
+import { CheckCircle, XCircle, Loader2, ChevronDown } from "lucide-react"
 
 interface BasicSolution {
   execution_time: string
@@ -84,6 +84,7 @@ export default function Comparison() {
       }
 
       setTargetMass(Math.max(...parsedSequence))
+      setIsLoading(true)
       const response = await fetch(`${process.env.NEXT_PUBLIC_LOCALHOST_URL}/sequencing/timed_executions/`, {
         method: "POST",
         headers: {
@@ -110,6 +111,53 @@ export default function Comparison() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+  }
+
+  const renderSolutionPreview = (algorithmType: string, solutions: any) => {
+    if (!solutions || (Array.isArray(solutions) && solutions.length === 0)) {
+      return <span className="text-muted-foreground text-sm">Nema rešenja</span>
+    }
+
+    let solutionsToShow: string[] = []
+
+    if (algorithmType === "brute_force" || algorithmType === "bnb") {
+      solutionsToShow = Array.isArray(solutions) ? solutions.slice(0, 4) : [solutions]
+    } else if (algorithmType === "leaderboard" || algorithmType === "convolution") {
+      solutionsToShow = solutions.slice(0, 4).map((sol: LeaderboardSolution) => sol.peptide)
+    }
+
+    const totalCount = Array.isArray(solutions) ? solutions.length : 1
+    const hasMore = totalCount > 4
+
+    return (
+      <div className="space-y-2">
+        <div className="flex flex-wrap gap-1">
+          {solutionsToShow.map((solution, idx) => (
+            <span key={idx} className="inline-block bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-xs font-mono">
+              {solution}
+            </span>
+          ))}
+        </div>
+        {hasMore && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => scrollToSection(`${algorithmType}-section`)}
+            className="text-xs h-6"
+          >
+            <ChevronDown className="h-3 w-3 mr-1" />
+            Prikaži sve ({totalCount})
+          </Button>
+        )}
+      </div>
+    )
   }
 
   return (
@@ -191,6 +239,7 @@ export default function Comparison() {
                     <th className="border p-4 text-left font-semibold">Algoritam</th>
                     <th className="border p-4 text-left font-semibold">Vreme izvršavanja (u sekundama)</th>
                     <th className="border p-4 text-left font-semibold">Broj pronađenih rešenja</th>
+                    <th className="border p-4 text-left font-semibold">Pregled rešenja</th>
                     <th className="border p-4 text-left font-semibold">Status</th>
                   </tr>
                 </thead>
@@ -200,6 +249,9 @@ export default function Comparison() {
                     <td className="border p-4 font-mono">{visualizationData.brute_force.execution_time}</td>
                     <td className="border p-4">
                       {visualizationData.brute_force.solution ? visualizationData.brute_force.solution.length : 0}
+                    </td>
+                    <td className="border p-4 max-w-xs">
+                      {renderSolutionPreview("brute_force", visualizationData.brute_force.solution)}
                     </td>
                     <td className="border p-4">
                       {visualizationData.brute_force.solution && visualizationData.brute_force.solution.length > 0 ? (
@@ -221,6 +273,9 @@ export default function Comparison() {
                     <td className="border p-4">
                       {visualizationData.bnb.solution ? visualizationData.bnb.solution.length : 0}
                     </td>
+                    <td className="border p-4 max-w-xs">
+                      {renderSolutionPreview("bnb", visualizationData.bnb.solution)}
+                    </td>
                     <td className="border p-4">
                       {visualizationData.bnb.solution && visualizationData.bnb.solution.length > 0 ? (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
@@ -241,6 +296,9 @@ export default function Comparison() {
                     <td className="border p-4">
                       {visualizationData.leaderboard.solution ? visualizationData.leaderboard.solution.length : 0}
                     </td>
+                    <td className="border p-4 max-w-xs">
+                      {renderSolutionPreview("leaderboard", visualizationData.leaderboard.solution)}
+                    </td>
                     <td className="border p-4">
                       {visualizationData.leaderboard.solution && visualizationData.leaderboard.solution.length > 0 ? (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
@@ -260,6 +318,9 @@ export default function Comparison() {
                     <td className="border p-4 font-mono">{visualizationData.convolution.execution_time}</td>
                     <td className="border p-4">
                       {visualizationData.convolution.solution ? visualizationData.convolution.solution.length : 0}
+                    </td>
+                    <td className="border p-4 max-w-xs">
+                      {renderSolutionPreview("convolution", visualizationData.convolution.solution)}
                     </td>
                     <td className="border p-4">
                       {visualizationData.convolution.solution && visualizationData.convolution.solution.length > 0 ? (
@@ -337,7 +398,7 @@ export default function Comparison() {
 
       {/* Brute Force algorithm */}
       {visualizationData && visualizationData.brute_force.solution && visualizationData.brute_force.solution.length > 0 && (
-        <div className="mb-12">
+        <div id="brute_force-section" className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">Brute Force algoritam</h2>
 
           <div className="mt-8 p-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
@@ -401,7 +462,7 @@ export default function Comparison() {
       )}
 
       {visualizationData && (!visualizationData.brute_force.solution || (Array.isArray(visualizationData.brute_force.solution) && visualizationData.brute_force.solution.length === 0)) && (
-          <div className="mb-12">
+          <div id="brute_force-section" className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">Brute Force algoritam</h2>
             <div className="mt-8 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
               <div className="flex items-center">
@@ -416,7 +477,7 @@ export default function Comparison() {
 
       {/* Branch and Bound algorithm */}
       {visualizationData && visualizationData.bnb.solution && visualizationData.bnb.solution.length > 0 && (
-        <div className="mb-12">
+        <div id="bnb-section" className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">Branch and Bound algoritam</h2>
 
           <div className="mt-8 p-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
@@ -480,7 +541,7 @@ export default function Comparison() {
       )}
 
       {visualizationData && (!visualizationData.bnb.solution || (Array.isArray(visualizationData.bnb.solution) && visualizationData.bnb.solution.length === 0)) && (
-          <div className="mb-12">
+          <div id="bnb-section" className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">Branch and Bound algoritam</h2>
             <div className="mt-8 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
               <div className="flex items-center">
@@ -495,7 +556,7 @@ export default function Comparison() {
 
       {/* Leaderboard algorithm */}
       {visualizationData && visualizationData.leaderboard.solution && (
-        <div className="mb-12">
+        <div id="leaderboard-section" className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">Leaderboard algoriam</h2>
           {visualizationData.leaderboard.solution.length > 0 && (
             <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
@@ -530,7 +591,7 @@ export default function Comparison() {
 
       {/* Spectral Convolution algorithm */}
       {visualizationData && visualizationData.convolution.solution && (
-        <div className="mb-12">
+        <div id="convolution-section" className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">Spektralna konvolucija</h2>
           {visualizationData.convolution.solution.length > 0 && (
             <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
