@@ -39,7 +39,7 @@ export default function DeepNovoPage() {
       <Tabs defaultValue="background" value={activeTab} onValueChange={setActiveTab} className="w-full mb-12">
         <TabsList className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 w-full gap-2 sm:gap-0 mb-6">
           <TabsTrigger value="background" className="w-full justify-start sm:justify-center">
-            Pozadina
+            Pregled situacije
           </TabsTrigger>
           <TabsTrigger value="deepnovo" className="w-full justify-start sm:justify-center">
             DeepNovo

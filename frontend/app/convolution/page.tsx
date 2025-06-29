@@ -479,7 +479,7 @@ export default function ConvolutionPage() {
         prikazuje M najčešćih masa koje se pojavljuju u matrici. Nakon toga nad smanjenim brojem kandidata se primenjuje{" "}
         <span className="italic">Leaderboard</span> algoritam i kroz runde se bira N kandidata koji prolaze u sledeću rundu. Takođe, možete da vidite
         teorijske spektre kandidata kao i broj elemenata spektra koji su isti kao i u zadatom teorijskom spektru. Teorijski spektri kandidata
-        mogu da se zumiraju da bi se lakše videli podpeptidi sa njihovim masama.<br/>
+        mogu da se zumiraju da bi se lakše videli potpeptidi sa njihovim masama.<br/>
         U poslednjoj rundi će biti prikazani peptidi koji predstavljaju najbolje kandidate za rešenje. Može imati više različitih kandidata
         s obzirom da različite aminokiseline mogu da imaju istu masu.<br/>
         Dodatno, ako ne želite da vidite pravljenje matrice konvolucije kao ni runde koje su se desile potrebno je da označite opciju da se prikažu samo rešenja.

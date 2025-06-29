@@ -383,7 +383,7 @@ export default function LeaderboardPage() {
           <p className="text-muted-foreground mb-8">
             Funkcija <span className="italic">cyclic_score</span> računa broj poklapanja teorijskog spektra cikličnog
             peptida sa eksperimentalnim spektrom. Ova funkcija se koristi u slučaju da je masa peptida jednaka najvećoj
-            teoorijskoj masi jer je u tom slučaju formiran ceo peptid i mogu da se nađu svi podpeptidi.
+            teoorijskoj masi jer je u tom slučaju formiran ceo peptid i mogu da se nađu svi potpeptidi.
           </p>
 
           <div className="overflow-x-auto mt-6 mb-8">
@@ -454,7 +454,7 @@ export default function LeaderboardPage() {
         <p className="text-muted-foreground mb-6">
           U vizuelizaciji ispod, možete videti kako algoritam kroz runde bira N kandidata koji prolaze u sledeću rundu. Takođe, možete da vidite
           teorijske spektre kandidata kao i broj elemenata spektra koji su isti kao i u zadatom teorijskom spektru. Teorijski spektri kandidata
-          mogu da se zumiraju da bi se lakše videli podpeptidi sa njihovim masama.<br/>
+          mogu da se zumiraju da bi se lakše videli potpeptidi sa njihovim masama.<br/>
           U poslednjoj rundi će biti prikazani peptidi koji predstavljaju najbolje kandidate za rešenje. Može imati više različitih kandidata
           s obzirom da različite aminokiseline mogu da imaju istu masu.<br/>
           Dodatno, ako ne želite da vidite runde koje su se desile potrebno je da označite opciju da se prikažu samo rešenja.

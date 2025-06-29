@@ -530,11 +530,11 @@ export default function BruteForcePage() {
         <p className="text-muted-foreground mb-8">
           Funkcija <span className="italic">cyclic_spectrum</span> računa teorijski cikličan spektar datog peptida.
           Razlika u odnosu na linear spektar je što ova funkcija uzima u obzir to da peptidi (npr. tirocidin) mogu biti
-          ciklični i samim tim treba uvrstiti mase podpeptida koji počinju na krajnjim pozicijama peptida a završavaju
+          ciklični i samim tim treba uvrstiti mase potpeptida koji počinju na krajnjim pozicijama peptida a završavaju
           se na početnim pozicijama.
           <br />
-          Funkcija prvo na osnovu prefiksnih masa računa mase podpeptida i masu celog peptida. Potom prolazi kroz sam
-          peptid i računa parcijalne mase, odnosno na osnovu prefiksnih masa (mase podpeptida) i njihovim međusobnim
+          Funkcija prvo na osnovu prefiksnih masa računa mase potpeptida i masu celog peptida. Potom prolazi kroz sam
+          peptid i računa parcijalne mase, odnosno na osnovu prefiksnih masa (mase potpeptida) i njihovim međusobnim
           oduzimanjem dobija masu fragmenta u okviru peptida. Zbog uslova
         </p>
         <div className="overflow-x-auto mt-6 mb-8">
@@ -546,7 +546,7 @@ export default function BruteForcePage() {
           </pre>
         </div>
         <p className="text-muted-foreground mb-8">
-          osigurava da dodaje i mase cikličnih podpeptida, odnosno od mase celog peptida oduzeće masu nekog unutrašnjeg
+          osigurava da dodaje i mase cikličnih potpeptida, odnosno od mase celog peptida oduzeće masu nekog unutrašnjeg
           peptida čime će dobiti masu <span className="italic">spoljašnjeg</span> peptida.
         </p>
 
@@ -571,7 +571,7 @@ export default function BruteForcePage() {
           fragment_mass = prefix_mass[j] - prefix_mass[i]
           spectrum.append(fragment_mass)
 
-          # Uslov za proveru da li se dodaje masa podpeptida koji obuhvata kraj i početak peptida
+          # Uslov za proveru da li se dodaje masa potpeptida koji obuhvata kraj i početak peptida
           if i > 0 and j < n:
               spectrum.append(peptide_mass - fragment_mass)
 

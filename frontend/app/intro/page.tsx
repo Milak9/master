@@ -178,7 +178,7 @@ export default function IntroPage() {
                 Maseni spektrometar <Link href="/literature#7" className="text-blue-600 underline hover:text-blue-800">[7]</Link> je moćan alat pomoću koga mogu da se odrede mase molekula, uključujući mase peptida
                 i proteina. Omogućava naučnicima da odrede nepoznate komponente, saznaju strukturu molekula i
                 analiziraju kompleksne uzorke. Maseni spektrometar radi tako što mu se da više uzoraka istog peptida a
-                on napravi sve moguće podpeptide datog peptida i odredi njihove mase. U realnosti uzorak se pretvara u
+                on napravi sve moguće potpeptide datog peptida i odredi njihove mase. U realnosti uzorak se pretvara u
                 naelektrisane jone da bi na njih mogli da utiču električno i magnetno polje. Potom se joni dele na
                 osnovu odnosa njihove mase i naelektrisanja i kao takvi se mere njihove vrednosti.
               </p>
@@ -239,7 +239,7 @@ export default function IntroPage() {
           <div className="flex flex-col">
             <div className="prose prose-lg max-w-full">
               <p className="text-muted-foreground mb-6">
-                Teorijski spektar peptida predstavlja mase svih mogućih podpeptida, uključujući 0 i masu celog peptida.
+                Teorijski spektar peptida predstavlja mase svih mogućih potpeptida, uključujući 0 i masu celog peptida.
                 Na osnovu peptida možemo lako da odredimo teorijski spektar ali na osnovu spektra ne možemo lako da
                 odredimo koji je peptid u pitanju.
               </p>
@@ -252,7 +252,7 @@ export default function IntroPage() {
               <p className="text-muted-foreground mb-6">
                 Kao ulaz u svaki od ovih algoritama očekuje se eksperimentalni spektar, odnosno spektar koji je dobijen uz pomoć
                 masenog spektrometra za neki peptid.
-                Na slici 5 su prikazane mase svih podpeptida peptida NQEL koje se dobijaju uz pomoć
+                Na slici 5 su prikazane mase svih potpeptida peptida NQEL koje se dobijaju uz pomoć
                 masenog spektrometra, kao i masa praznog peptida i celog peptida, takođe je prikazan i teorijski spektar.
               </p>
             </div>
@@ -266,7 +266,7 @@ export default function IntroPage() {
             >
               <Image
                 src="/images/peptide-theoretical-spectrum.svg"
-                alt="Teorijski spektar peptida kao i svi njegovi podpeptidi"
+                alt="Teorijski spektar peptida kao i svi njegovi potpeptidi"
                 fill
                 style={{ objectFit: "contain" }}
                 priority
@@ -276,7 +276,7 @@ export default function IntroPage() {
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
-              Slika 5: Teorijski spektar peptida NQEL koji prikazuje sve moguće podpeptide, njihove mase i njegov teorijski spektar.
+              Slika 5: Teorijski spektar peptida NQEL koji prikazuje sve moguće potpeptide, njihove mase i njegov teorijski spektar.
               <span className="text-xs block text-primary-foreground/70 italic mt-1">
                 Kliknite na sliku za uvećani prikaz
               </span>
