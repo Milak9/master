@@ -25,7 +25,7 @@ export function Header() {
                 Uvod
               </Link>
               <Link href="/brute_force" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
-                Algoritam grube sile
+                Pristup grubom silom
               </Link>
               <Link href="/branch_and_bound" className="text-sm font-medium transition-colors hover:text-primary flex items-center">
                 Branch & Bound
@@ -86,7 +86,7 @@ export function Header() {
                 className="text-sm font-medium py-2 hover:text-primary items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Algoritam grube sile
+                Pristup grubom silom
               </Link>
               <Link
                 href="/branch_and_bound"

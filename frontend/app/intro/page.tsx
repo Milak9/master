@@ -310,7 +310,7 @@ export default function IntroPage() {
         <h2 className="text-2xl font-semibold mb-6">Dostupni algoritmi</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="p-6">
-            <h3 className="text-xl font-semibold mb-3">Algoritam grube sile</h3>
+            <h3 className="text-xl font-semibold mb-3">Pristup grubom silom</h3>
             <p className="text-muted-foreground mb-4">
               Direktan pristup gde se isprobavaju sve moguće kombinacije da bi se našlo optimalno rešenje.
             </p>

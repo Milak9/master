@@ -392,8 +392,8 @@ export default function BranchAndBoundPage() {
 
       <div className="prose prose-lg max-w-none mb-4">
         <p className="text-muted-foreground mb-4">
-          Branch and Bound algoritam <Link href="/literature#2" className="text-blue-600 underline hover:text-blue-800">[2]</Link> je optimizovana verzija algoritma grube sile koja koristi strategiju "podeli pa
-          vladaj" za efikasnije pretraživanje prostora rešenja. Za razliku od algoritma grube sile koji ispituje sve
+          Branch and Bound algoritam <Link href="/literature#2" className="text-blue-600 underline hover:text-blue-800">[2]</Link> je optimizovana verzija pristupa grubom silom koja koristi strategiju "podeli pa
+          vladaj" za efikasnije pretraživanje prostora rešenja. Za razliku od pristupa grubom silom koji ispituje sve
           moguće kombinacije, Branch and Bound algoritam inteligentno eliminiše delove prostora pretrage koji ne mogu
           sadržati optimalno rešenje.
         </p>
@@ -419,13 +419,13 @@ export default function BranchAndBoundPage() {
         </ul>
 
         <p className="text-muted-foreground mb-4">
-          Prednosti Branch and Bound algoritma u odnosu na algoritam grube sile su značajne:
+          Prednosti Branch and Bound algoritma u odnosu na pristup grubom silom su značajne:
         </p>
 
         <div className="bg-card rounded-lg p-6 mb-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Algoritam grube sile</h3>
+              <h3 className="text-lg font-semibold">Pristup grubom silom</h3>
               <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                 <li>Istražuje sve moguće kombinacije</li>
                 <li>Eksponencijalna vremenska složenost</li>
@@ -453,7 +453,7 @@ export default function BranchAndBoundPage() {
           <h3 className="text-xl font-semibold mb-4">Kod za Branch and Bound algoritam</h3>
           <p className="text-muted-foreground mb-8">
             Algoritam na ulazu očekuje eksperimentalni spektar uređen rastuće koji uključuje 0 i masu celog peptida koji
-            se sekvencira. Za razliku od algoritma grube sile, Branch and Bound algoritam koristi dodatne provere da bi
+            se sekvencira. Za razliku od pristupa grubom silom, Branch and Bound algoritam koristi dodatne provere da bi
             eliminisao neperspektivne grane što ranije.
           </p>
 
@@ -489,7 +489,7 @@ export default function BranchAndBoundPage() {
           </div>
 
           <p className="text-muted-foreground mb-8">
-            Ključna razlika u odnosu na algoritam grube sile je funkcija{" "}
+            Ključna razlika u odnosu na pristup grubom silom je funkcija{" "}
             <span className="italic">is_consistent_with_spectrum</span> koja proverava da li je trenutni peptid
             konzistentan sa ciljnim spektrom:
           </p>

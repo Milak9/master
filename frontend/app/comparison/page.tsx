@@ -166,7 +166,7 @@ export default function Comparison() {
 
       <div className="prose prose-lg max-w-none mb-8">
         <p className="text-muted-foreground mb-6">
-        Na ovoj stranici prikazaćemo razliku u brzini izvršavanja između algoritma grube sile, <span className="italic">Branch and Bound</span>, 
+        Na ovoj stranici prikazaćemo razliku u brzini izvršavanja između grube sile, <span className="italic">Branch and Bound</span>, 
         {" "}<span className="italic">Leaderboard</span> i algoritma spektralne konvolucije.
         Biće kreirana tabela u kojoj se može videti poređenja u brzina a ispod tabele će se prikazati i rešenja koje je dao svaki od algoritama.
         </p>
@@ -245,7 +245,7 @@ export default function Comparison() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="border p-4 font-medium">Algoritam grube sile</td>
+                    <td className="border p-4 font-medium">Pristup grubom silom</td>
                     <td className="border p-4 font-mono">{visualizationData.brute_force.execution_time}</td>
                     <td className="border p-4">
                       {visualizationData.brute_force.solution ? visualizationData.brute_force.solution.length : 0}
@@ -348,7 +348,7 @@ export default function Comparison() {
                   <p className="text-muted-foreground">
                     {(() => {
                       const times = [
-                        { name: "Algoritam grube sile", time: visualizationData.brute_force.execution_time },
+                        { name: "Pristup grubom silom", time: visualizationData.brute_force.execution_time },
                         { name: "Branch and Bound", time: visualizationData.bnb.execution_time },
                         { name: "Leaderboard algoritam", time: visualizationData.leaderboard.execution_time },
                         { name: "Spektralna konvolucija", time: visualizationData.convolution.execution_time },

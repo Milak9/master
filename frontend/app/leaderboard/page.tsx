@@ -287,7 +287,7 @@ export default function LeaderboardPage() {
           <h3 className="text-xl font-semibold mb-4">Kod za Leaderboard algoritam</h3>
           <p className="text-muted-foreground mb-8">
             Algoritam održava listu najboljih kandidata (leaderboard) i u svakoj iteraciji proširuje samo
-            najperspektivnije peptide. Ovo značajno smanjuje prostor pretrage u poređenju sa algoritmom grube sile. Za
+            najperspektivnije peptide. Ovo značajno smanjuje prostor pretrage u poređenju sa pristupom grube sile. Za
             svaki od peptida koji se generiše određujemo koji je njegov <span className="italic">score</span>, odnosno
             broj masa linearnog spektra peptida koji je jednak masama u eksperimentalnom spektru.
           </p>

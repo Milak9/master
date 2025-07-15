@@ -348,11 +348,11 @@ export default function BruteForcePage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Algoritam grube sile</h1>
+      <h1 className="text-3xl font-bold mb-6">Pristup grubom silom</h1>
 
       <div className="prose prose-lg max-w-none mb-8">
         <p className="text-muted-foreground mb-6">
-          Algoritam grube sile (eng. Brute Force) <Link href="/literature#2" className="text-blue-600 underline hover:text-blue-800">[2]</Link> je najjednostavniji pristup rešavanju problema sekvenciranja
+          Pristup grubom silom (eng. Brute Force) <Link href="/literature#2" className="text-blue-600 underline hover:text-blue-800">[2]</Link> je najjednostavniji pristup rešavanju problema sekvenciranja
           antibiotika. Ovaj metod sistematski ispituje sve moguće kombinacije aminokiselina koje bi mogle formirati
           peptid zadate mase. Iako je ovaj pristup garantovano pronalazi tačno rešenje ako ono postoji, njegova
           vremenska složenost je eksponencijalna u odnosu na dužinu sekvence, što ga čini nepraktičnim za duže peptide.
@@ -438,12 +438,12 @@ export default function BruteForcePage() {
       </div>
 
       <Card className="p-6 mb-8">
-        <h3 className="text-xl font-semibold mb-4">Kod za algoritam grube sile</h3>
+        <h3 className="text-xl font-semibold mb-4">Kod za pristup grubom silom</h3>
         <p className="text-muted-foreground mb-8">
           Algoritam na ulazu očekuje eksperimentalni spektar uređen rastuće koji uključuje 0 i masu celog peptida koji
           se sekvencira.
           <br />
-          Implementacija algoritma grube sile počinje od praznog peptida i u svakom prolasku proširuje peptide
+          Implementacija pristupa grubom silom počinje od praznog peptida i u svakom prolasku proširuje peptide
           dodavanjem aminokiseline uz pomoć funkcije <span className="italic">extends</span>. Za svaki korak, algoritam
           proverava da li je masa peptida jednaka ciljanoj masi. Ako jeste, proverava se da li teorijski spektar peptida
           odgovara eksperimentalnom spektru. U slučaju da je teorijski spektar jednak eksperimentalnom spektru taj
@@ -585,7 +585,7 @@ export default function BruteForcePage() {
         U vizuelizaciji ispod, možete videti kako algoritam gradi stablo pretrage i kako se granama dolazi do listova drveta.
         Zeleni čvorovi predstavljaju potencijalna rešenja, crveni čvorovi su eliminisani, a plavi
         čvor je trenutno aktivan u pretrazi. Takođe drvo može da se zumira i pomera da bi lakše mogli da se vide svi čvorovi.
-        Pošto je ovo algoritam grube sile vizuelizacija algoritma traje dugo i ima dosta potencijalnih rešenja,
+        Pošto je ovo pristup grubom silom vizuelizacija algoritma traje dugo i ima dosta potencijalnih rešenja,
         preporučuje se da se unose sekvence manjih peptida da bi moglo lepo da se vidi drvo izvršavanja.<br/>
         Na kraju će biti prikazani peptidi koji predstavljaju najbolje kandidate za rešenje. Može imati više različitih kandidata
         s obzirom da različite aminokiseline mogu da imaju istu masu.<br/>

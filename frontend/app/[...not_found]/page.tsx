@@ -63,7 +63,7 @@ export default function NotFound() {
               href="/brute_force"
               className="text-sm px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
             >
-              Algoritam grube sile
+              Pristup grubom silo
             </Link>
             <Link
               href="/branch_and_bound"
