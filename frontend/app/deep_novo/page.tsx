@@ -57,10 +57,11 @@ export default function DeepNovoPage() {
 
             <h3 className="text-xl font-semibold mb-3">Postojeće tehnike</h3>
             <p className="text-muted-foreground mb-6">
-              Trenutne tehnike za sekvenciranje peptida (poput pretraživanja baze podataka i de novo sekvenciranja) mogu
-              imati poteškoća u radu sa novim, složenim ili nepotpunim podacima. Pristup pretraživanja baze podataka
-              oslanja se na poređenje eksperimentalnih podataka sa bazom podataka poznatih proteinskih sekvenci, ali to
-              je problem jer:
+              Trenutne tehnike za sekvenciranje peptida (poput pretraživanja baze podataka,
+              {" "}<span className="italic">de novo</span> sekvenciranja, kao i raznih algoritamskih pristupa) mogu imati poteškoća u
+              radu sa novim, složenim ili nepotpunim podacima. Pristup pretraživanja baze
+              podataka oslanja se na poređenje eksperimentalnih podataka sa bazom podataka
+              poznatih proteinskih sekvenci, ali neki od problema u ovom pristupu su sledeći:
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -88,14 +89,20 @@ export default function DeepNovoPage() {
             </div>
 
             <p className="text-muted-foreground space-y-2 gap-6 mb-8">
-              Pristup de novo sekvenciranja pokušava izgraditi sekvencu peptida iz početka, bez oslanjanja na bazu
-              podataka, ali je često manje precizan i računski skup. DeepNovo kombinuje prednosti oba pristupa koristeći
-              duboko učenje za poboljšanje tačnosti de novo sekvenciranja.
+              Pristup <span className="italic">de novo</span> sekvenciranja pokušava izgraditi sekvencu peptida iz početka,
+              bez oslanjanja na bazu podataka i koristeći samo podatke koji su dobijeni masenom
+              spektrometrijom. U okviru ovog pristupa koriste se i različiti algoritmi, kao što su
+              pristup grubom silom, <span className="italic">Branch and Bound</span>, 
+              {" "}<span className="italic">Leaderboard</span> algoritam, kao i spektralna
+              konvolucija, koji pokušavaju da generišu sekvence peptida i da porede njihove teo-
+              rijske spektre sa eksperimentalnim. Međutim, iako koristan za identifikaciju novih
+              peptida, <span className="italic">de novo</span> pristup je često manje precizan i računski zahtevan.
+              <span className="italic">DeepNovo</span> kombinuje prednosti oba pristupa koristeći duboko učenje za poboljšanje tačnosti de novo sekvenciranja.
             </p>
 
             <h3 className="text-xl font-semibold mb-3">Računska složenost</h3>
             <p className="text-muted-foreground mb-4">
-              De novo sekvenciranje, koje pokušava rekonstruisati sekvencu peptida bez oslanjanja na bazu podataka,
+              <span className="italic">De novo</span> sekvenciranje, koje pokušava rekonstruisati sekvencu peptida bez oslanjanja na bazu podataka,
               suočava se sa značajnim računskim izazovima:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-muted-foreground mb-6">
@@ -106,16 +113,16 @@ export default function DeepNovoPage() {
 
             <h3 className="text-xl font-semibold mb-3">Tehnike zasnova na De Novo sekvenciranju</h3>
             <p className="text-muted-foreground mb-4">
-              Pored DeepNovo tehnike koja će biti opisana u ovom radu, postoje i još neke tehnike zasnovane na De Novo principu:
+              Pored <span className="italic">DeepNovo</span> tehnike koja će biti opisana u ovom radu, postoje i još neke tehnike zasnovane na De Novo principu:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-muted-foreground mb-6">
-              <li>PEAKS <Link href="/literature#4" className="text-blue-600 underline hover:text-blue-800">[4]</Link> - koristi direktne aciklične grafove i određuje najbolji rezultat</li>
-              <li>Novor <Link href="/literature#5" className="text-blue-600 underline hover:text-blue-800">[5]</Link> - koristi klasifikatore mašinskog učenja da odredi sekvencu aminokiselina sa najvećom verovatnoćom </li>
-              <li>PepNovo <Link href="/literature#6" className="text-blue-600 underline hover:text-blue-800">[6]</Link> - koristi modelovanje verovatnoća pomoću grafova</li>
+              <li><strong>PEAKS</strong> <Link href="/literature#4" className="text-blue-600 underline hover:text-blue-800">[4]</Link> - koristi direktne aciklične grafove i određuje najbolji rezultat</li>
+              <li><strong>Novor</strong> <Link href="/literature#5" className="text-blue-600 underline hover:text-blue-800">[5]</Link> - koristi klasifikatore mašinskog učenja da odredi sekvencu aminokiselina sa najvećom verovatnoćom </li>
+              <li><strong>PepNovo</strong> <Link href="/literature#6" className="text-blue-600 underline hover:text-blue-800">[6]</Link> - koristi modelovanje verovatnoća pomoću grafova</li>
             </ul>
 
             <p className="text-muted-foreground">
-              DeepNovo je dizajniran da prevazilazi računske izazove koristeći moć dubokog učenja za direktno predviđanje
+              <span className="italic">DeepNovo</span> je dizajniran da prevazilazi računske izazove koristeći moć dubokog učenja za direktno predviđanje
               sekvenci aminokiselina iz podataka dobijenih masenom spektrometrijom, bez potrebe za bazom podataka referentnih sekvenci, a rezultati
               će pokazati da je bolji i od drugih metoda koje su zasnovane na de novo principu.
             </p>
@@ -126,7 +133,7 @@ export default function DeepNovoPage() {
           <div className="prose prose-lg max-w-none">
             <h2 className="text-2xl font-semibold mb-4">Šta je DeepNovo?</h2>
             <p className="text-muted-foreground mb-6">
-              DeepNovo <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link> je metoda zasnovana na dubokom učenju koja poboljšava sekvenciranje peptida koristeći algoritam
+              <span className="italic">DeepNovo</span> <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link> je metoda zasnovana na dubokom učenju koja poboljšava sekvenciranje peptida koristeći algoritam
               za predviđanje sekvenci aminokiselina iz podataka generisanih masenom spektrometrijom.
             </p>
 
@@ -134,7 +141,7 @@ export default function DeepNovoPage() {
               <div>
                 <h3 className="text-xl font-semibold mb-3">Kako funkcioniše?</h3>
                 <p className="text-muted-foreground mb-4">
-                  DeepNovo koristi duboke neuronske mreže — vrstu mašinskog učenja koja se pokazala efikasnom sa
+                  <span className="italic">DeepNovo</span> koristi duboke neuronske mreže — vrstu mašinskog učenja koja se pokazala efikasnom sa
                   složenim podacima. Mreža je trenirana da predviđa sekvencu aminokiselina iz podataka dobijenih masenom spektrometrijom.
                 </p>
                 <p className="text-muted-foreground">
@@ -169,7 +176,7 @@ export default function DeepNovoPage() {
                   <h4 className="text-lg font-semibold">Model dubokog učenja</h4>
                 </div>
                 <p className="text-muted-foreground">
-                  DeepNovo koristi rekurentnu neuronsku mrežu (RNN) sa arhitekturom dugog kratkoročnog pamćenja (LSTM).
+                  DeepNovo koristi rekurentnu neuronsku mrežu (<strong>RNN</strong>) sa arhitekturom dugog kratkoročnog pamćenja (<strong>LSTM</strong>).
                   Ova vrsta neuronske mreže je posebno dobra za rukovanje sekvencijalnim podacima, poput sekvenci
                   aminokiselina, gde je redosled elemenata (aminokiselina) veoma važan.
                 </p>
@@ -200,7 +207,7 @@ export default function DeepNovoPage() {
 
             <h3 className="text-xl font-semibold mb-3">Treniranje modela</h3>
             <p className="text-muted-foreground mb-4">
-              DeepNovo se trenira na velikom skupu podataka poznatih sekvenci peptida i njihovih odgovarajućih podataka
+              <span className="italic">DeepNovo</span> se trenira na velikom skupu podataka poznatih sekvenci peptida i njihovih odgovarajućih podataka
               masene spektrometrije. Uči mapirati eksperimentalne podatke na sekvence peptida kroz proces nazvan
               nadzirano učenje.
             </p>
@@ -217,7 +224,7 @@ export default function DeepNovoPage() {
             </div>
 
             <p className="text-muted-foreground">
-              Jednom treniran, DeepNovo može analizirati nove spektre i predviđati sekvence peptida sa visokom
+              Jednom treniran, <span className="italic">DeepNovo</span> može analizirati nove spektre i predviđati sekvence peptida sa visokom
               tačnošću, čak i za peptide koji nisu prisutni u postojećim bazama podataka.
             </p>
           </div>
@@ -227,50 +234,48 @@ export default function DeepNovoPage() {
           <div className="prose prose-lg max-w-none">
             <h2 className="text-2xl font-semibold mb-4">DeepNovo arhitektura neuronske mreže</h2>
             <p className="text-muted-foreground mb-6">
-              Srce DeepNovo pristupa je njegov model dubokog učenja (slika 1), koji se sastoji od:
-              <ul className="list-disc pl-8 mb-4 space-y-2 text-muted-foreground mt-2">
-                <li>
-                  <strong>Konvolutivne neuronske mreže (CNN)</strong>
-                </li>
-                <li>
-                  <strong>Rekurentne neuronske mreže (RNN)</strong>
-                </li>
-              </ul>
+              Srce <span className="italic">DeepNovo</span> pristupa je njegov model dubokog učenja (slika 1), koji se sastoji od:
             </p>
+            <ul className="list-disc pl-8 mb-4 space-y-2 text-muted-foreground mt-2">
+              <li>
+                <strong>Konvolutivne neuronske mreže (CNN)</strong>
+              </li>
+              <li>
+                <strong>Rekurentne neuronske mreže (RNN)</strong>
+              </li>
+            </ul>
 
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-8">
               <div className="order-1 lg:order-2">
                 <h3 className="text-xl font-semibold mb-3">Konvolutivne neuronske mreže (CNN)</h3>
                 <p className="text-muted-foreground mb-4">
-                  CNN je tip dubokog učenja koji se koristi da otkrije značajne šablone koji se pojavljuju
-                  u ulaznim podacima. Veoma je efikasna mreža i koristi tehniku <span className="italic">sliding window</span>
-                  {' '}i procesuira male lokalne regione koristeći filtere.
+                  <strong>CNN</strong> je veoma efikasna mreža i koristi se za otkrivanje značajnih šablona u
+                  ulaznim podacima. Oslanja se na tehniku <span className="italic">sliding window</span> i procesuira male lokalne
+                  regione koristeći filtere. Ova mreža je trenirana da prepozna lokalne šablone, različite
+                  tipove jona i da pretvori sirove podatke u reprezentaciju svojstava ulaznih podataka.
                 </p>
                 <p className="text-muted-foreground mb-4">
-                  U slučaju DeepNovo tehnike, konvoluciona mreža se sastoji od 3 konvoluciona sloja i koristi <span className="italic">ReLu</span>
-                  {' '}aktivacionu funkciju. 
-                  Ova mreža je trenirana da prepozna lokalne šablone, različite tipove jona i da pretvori sirove podatke u reprezentaciju
-                  svojstava ulaznih podataka.
-                </p>
-                <p className="text-muted-foreground mb-4">
-                  U ovom modelu su korišćene 2 CNN mreže, jedna je spektralna CNN a druga jonska CNN.
+                  U ovom modelu su korišćene 2 <strong>CNN</strong> mreže, jedna je spektralna <strong>CNN</strong> a druga jonska <strong>CNN</strong>.
                 </p>
 
                 <h4 className="font-semibold mb-3">Spektralna CNN</h4>
                 <p className="text-muted-foreground mb-4">
-                  Spektar dobijen masenom spektrometrijom konvertuje u vektor fiksne dužine (koji obično ima od 50 do 100 hiljada elemenata) i dobijeni
-                  vektor se prosleđuje ovoj mreži. Ovime se uče šabloni nad svim podacima spektrometrije i rezultat ove mreže se dalje koristni u rekurentnoj mreži.
-                  Ovo predstavlja značajan deo arhitekture jer može dosta da poboljša preciznost sekvenciranja i može
-                  da nauči šablone u spektru čak i ako su neki peak-ovi pomereni u spektru zbog šuma.
+                  Kao deo preprocesiranja podataka spektar dobijen masenom spektrometrijom transformiše se u vektor fiksne dužine (npr. 50.000
+                  elemenata) i dobijeni vektor se prosleđuje ovoj mreži. Na ovaj način, <strong>CNN</strong> {" "}
+                  uči šabloni nad svim podacima spektra i rezultat ove mreže se dalje koristi u rekurentnoj mreži. Konvolutivna 
+                  mreža se sastoji od 3 konvolutivna sloja i koristi <span className="italic">ReLu</span> aktivacionu funkciju. 
+                  Ovo predstavlja značajan deo arhitekture jer može dosta da poboljša preciznost sekvenciranja i može da nauči šablone
+                  u spektru čak i ako su neki maksimumi u spektru pomereni zbog šuma.
                 </p>
 
                 <h4 className="font-semibold mb-3">Jonska CNN</h4>
                 <p className="text-muted-foreground mb-4">
-                  Ova mreža se koristi tokom odabira sledeće aminokiseline u peptidu i ona služi da za mali region spektralnih podataka
-                  izvuče najbitnije bitne informacije. Gleda da li za predviđenu aminokiselinu postoje očekivani fragmenti jona. 
-                  Prilikom svakog koraka predviđanja sledeće aminokiseline DeepNovo generiše teorijski spektar fragmenata uz pomoć prefiksnih masa.
-                  Za svaki jon izvlači se mali prozor iz spektra oko tog jona i na kraju se dobije više različitih ulaza u mrežu.
-                  Ovaj deo modela je bitan u slučaju da su podaci šumoviti ili da neki vrh spektra nedostaje.
+                  Ova mreža se koristi tokom odabira sledeće aminokiseline u peptidu i služi da iz malog segmenta 
+                  spektra izdvoji najvažnije informacije. Za svakog kandidata aminokiseline, mreža analizira deo spektar i procenjuje da li
+                  se očekivani jonski fragmenti pojavljuju na odgovarajućim mestima. Prilikom svakog koraka predviđanja 
+                  sledeće aminokiseline <strong>DeepNovo</strong> koristi dosadašnje predikcije da izračuna prefiksnu masu,{" "}
+                  na osnovu koje generiše parcijalni teorijski spektar i proverava da li eksperimentalni spektar podržava ovaj izbor.
+                  Ovaj deo modela je bitan u slučaju da su podaci šumoviti ili da neke mase nedostaju u eksperimentalnom spektru.
                 </p>
               </div>
             </div>
@@ -279,38 +284,40 @@ export default function DeepNovoPage() {
               <div>
                 <h3 className="text-xl font-semibold mb-3">Rekurentne neuronske mreže (RNN)</h3>
                 <p className="text-muted-foreground mb-4">
-                  Ove mreže su dizajnirane za predviđanje sekvenci, gde izlaz zavisi ne samo od trenutne tačke podataka
-                  (podaci masenog spektra) već i od prethodnih tačaka podataka. U kontekstu sekvenciranja peptida, 
-                  RNN može naučiti kako jedna aminokiselina utiče na sledeću u sekvenci, što je ključno za tačno predviđanje.
+                  Ove mreže su dizajnirane za predviđanje sekvenci, gde izlaz ne zavisi samo od trenutnog podatka 
+                  u eksperimentalnom spektru, već i od podataka koji su mu prethodili. U kontekstu sekvenciranja 
+                  peptida, <strong>RNN</strong> može naučiti kako jedna aminokiselina utiče na sledeću u sekvenci, što je ključno za tačno predviđanje.
                 </p>
                 <p className="text-muted-foreground">
-                  DeepNovo koristi posebnu vrstu RNN-a koja se zove <span className="italic">Long Short-Term Memory</span> (LSTM).
-                  Ključna prednost LSTM mreža je ta što bolje prati duže zavisnosti, konkretno peptidi mogu da budu različitih dužina
-                  a ova mreža pamti i odnose koji su udaljeni, odnosno početak sekvence može da utiče na predviđanje neke kasnije aminokiseline.
+                  DeepNovo koristi posebnu vrstu RNN-a koja se zove <span className="italic">Long Short-Term Memory</span>
+                  {" "}(<strong>LSTM</strong>). Ključna prednost <strong>LSTM</strong> mreža je ta što bolje prati duže zavisnosti,
+                  konkretno peptidi mogu da budu različitih dužina a ova mreža pamti i odnose koji su udaljeni. 
+                  Ovo je bitno jer početak sekvence može da utiče na predviđanje neke kasnije aminokiseline.
                 </p>
                 <p className="text-muted-foreground">
                   Ova mreža se sastoji od 1 sloja LTSM-a i radi tako što dodaje jednu po jednu aminokiselinu sve dok ne stigne do kraja peptida.
                   U svakom koraku LTSM mreža gleda:
-                  <ol className="list-disc pl-8 mb-4 space-y-2 text-muted-foreground mt-2">
-                    <li>
-                      <strong>Šta je mreža naučila do sada - trenutno stanje</strong>
-                    </li>
-                    <li>
-                      <strong>Sledeća aminokiseline koja je kandidat</strong>
-                    </li>
-                    <li>
-                      <strong>Svojstva spektra koja su dobijana od konvolutivne mreže</strong>
-                    </li>
-                  </ol>
-
-                  Na osnovu ovoga, mreža određuje koja ja verovatnoća da je trenutna aminokiselina zapravo nalazi na datoj poziciji u peptidu.
                 </p>
+
+                <ol className="list-disc pl-8 mb-4 space-y-2 text-muted-foreground mt-2">
+                  <li>
+                    <strong>Šta je mreža naučila do sada - trenutno stanje</strong>
+                  </li>
+                  <li>
+                    <strong>Sledeća aminokiseline koja je kandidat</strong>
+                  </li>
+                  <li>
+                    <strong>Svojstva spektra koja su dobijana od konvolutivne mreže</strong>
+                  </li>
+                </ol>
+
                 <p className="text-muted-foreground">
-                  Kao izlaz iz ove mreže koristi se <span className="italic">softmax</span> projekcija i ona određuje za svaku aminokiselinu
-                  koja je verovatnoća da se ona nalazi na sledećoj poziciji u sekvenci.
-                  Dodatno, koristi se  <span className="italic">beam search</span>, odnosno ne bira se samo aminokiselina sa najvećom verovatnoćom
-                  nego se čuva više kandidata koji imaju veću verovatnoću. Ovim postupkom se povećava preciznost i gledaju se alternativna rešenja.
-                  Na kraju se sekvence rangiraju po rezultatu koliko se poklapaju sa traženim spektrom i koliko imaju grešaka i bira najbolja moguća.
+                  Kao izlaz iz ove mreže koristi se <span className="italic">softmax</span> projekcija i ona određuje za svaku
+                  aminokiselinu koja je verovatnoća da se ona nalazi na sledećoj poziciji u sekvenci.
+                  Dodatno, koristi se <span className="italic">beam search</span>, odnosno ne bira se samo aminokiselina sa 
+                  najvećom verovatnoćom nego se čuva više kandidata koji imaju veću verovatnoću. Ovim
+                  postupkom se povećava preciznost i gledaju se alternativna rešenja. Na kraju se
+                  sekvence rangiraju po rezultatu koliko se poklapaju sa traženim spektrom i koliko imaju grešaka i bira najbolja moguća.
                 </p>
               </div>
               <div className="flex items-center justify-center">
@@ -332,7 +339,7 @@ export default function DeepNovoPage() {
                     </div>
                   </button>
                   <p className="text-sm text-muted-foreground text-center">
-                    Slika 1: Arhitektura DeepNovo pristupa <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link>
+                    slika 1: Arhitektura <span className="italic">DeepNovo</span> pristupa <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link>
                     <span className="text-xs block text-primary-foreground/70 italic mt-1">
                       Kliknite na sliku za uvećani prikaz
                     </span>
@@ -377,7 +384,7 @@ export default function DeepNovoPage() {
             </div>
 
             <p className="text-muted-foreground">
-              Ova složena arhitektura omogućava DeepNovo-u da efikasno uči iz podataka masene spektrometrije i predviđa
+              Ova složena arhitektura omogućava <span className="italic">DeepNovo</span>-u da efikasno uči iz podataka masene spektrometrije i predviđa
               sekvence peptida sa visokom tačnošću, čak i u prisustvu šuma ili nepotpunih podataka.
             </p>
           </div>
@@ -405,14 +412,17 @@ export default function DeepNovoPage() {
                 </p>
                 <div className="p-6 mb-6">
                   <ol className="list-decimal pl-6 space-y-2 text-muted-foreground">
-                    <li>Preciznost (eng. precision) - koji predstavlja broj peptida koji je generisao algoritam koji su zapravo tačni</li>
-                    <li>Odziv (eng. recall) - koji broj stvarnih peptida je uspešno pronađen od strane modela</li>
-                    <li>AUC-PR - koliko dobro model balansira preciznost i odziv, što veća vrednost bolje će biti i preformanse</li>
+                    <li><strong>Preciznost</strong> (eng. <span className="italic">precision</span>) - predstavlja odnos broja peptida koje je 
+                      generisao algoritam koji su zapravo tačni i ukupnog broja peptida koje je generisao</li>
+                    <li><strong>Odziv</strong> (eng. <span className="italic">recall</span>) - predstavlja odnos broja tačnih peptida koje je
+                      generisao i koliko je ukupno bilo peptida koji su se tražili</li>
+                    <li><strong>AUC-PR</strong> - predstavlja koliko dobro model balansira preciznost i odziv, što je veća vrednost bolje će biti i preformanse</li>
                   </ol>
                 </div>
                 <p className="text-muted-foreground">
-                  Može se primetiti da je DeepNovo model na svakom od datih skupa podataka imao bolje rezultate. DeepNovo je imao i veću preciznost
-                  u traženju peptida kao i veći odziv, samim tim i odnos AUC-PR krive je bolji nego kod konkurenata.
+                  Može se primetiti da je <span className="italic">DeepNovo</span> model na svakom od datih skupa podataka imao bolje rezultate. 
+                  <span className="italic">DeepNovo</span> je imao i veću preciznost u traženju peptida 
+                  kao i veći odziv, samim tim i odnos <span className="italic">AUC-PR</span> krive je bolji nego kod konkurenata.
                 </p>
               </div>
               
@@ -435,7 +445,7 @@ export default function DeepNovoPage() {
                     </div>
                   </button>
                   <p className="text-sm text-muted-foreground text-center">
-                    Slika 1: Poređenje rezultata DeepNovo algoritma sa drugim algoritmima <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link>
+                    slika 1: Poređenje rezultata <span className="italic">DeepNovo</span> algoritma sa drugim algoritmima <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link>
                     <span className="text-xs block text-primary-foreground/70 italic mt-1">
                       Kliknite na sliku za uvećani prikaz
                     </span>
@@ -445,14 +455,14 @@ export default function DeepNovoPage() {
             </div>
 
             <h3 className="text-xl font-semibold mb-3">Zaključak</h3>
-            <p className="text-muted-foreground mb-4">DeepNovo je uspešno primenjen u nekoliko realnih scenarija:</p>
+            <p className="text-muted-foreground mb-4"><span className="italic">DeepNovo</span> je uspešno primenjen u nekoliko realnih scenarija:</p>
 
             <div className="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-lg mb-6">
               <h4 className="text-lg font-semibold mb-3 text-indigo-700 dark:text-indigo-300">
                 Identifikacija novih antimikrobnih peptida
               </h4>
               <p className="text-muted-foreground mb-4">
-                DeepNovo je korišćen za identifikaciju novih antimikrobnih peptida iz organizama koji nisu modelovali, gde
+                <span className="italic">DeepNovo</span> je korišćen za identifikaciju novih antimikrobnih peptida iz organizama koji nisu modelovali, gde
                 tradicionalne metode zasnovane na bazama podataka nisu bile efikasne.
                 <br/>
                 Rezultati su doveli do otkrića nekoliko potencijalnih kandidata za nove antibiotike, demonstrirajući
@@ -465,18 +475,18 @@ export default function DeepNovoPage() {
                 Analiza post-translacionih modifikacija
               </h4>
               <p className="text-muted-foreground mb-4">
-                DeepNovo je pokazao izuzetnu sposobnost u identifikaciji peptida sa složenim post-translacionim
+                <span className="italic">DeepNovo</span> je pokazao izuzetnu sposobnost u identifikaciji peptida sa složenim post-translacionim
                 modifikacijama (promenama koje se dese u proteinu nakon njegove kreacije), koje su često izazov za tradicionalne metode sekvenciranja.
               </p>
             </div>
 
             <div className="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-lg mb-6">
               <h4 className="text-lg font-semibold mb-3 text-indigo-700 dark:text-indigo-300">
-                DeepNovo nije specifičan za određenu vrstu
+                <span className="italic">DeepNovo</span> nije specifičan za određenu vrstu
               </h4>
               <p className="text-muted-foreground mb-4">
                 Uspešnom primenom algoritma na različitim vrstama i organizmima povećava se sama značaj ovog pristupa,
-                samim tim DeepNovo može da se primenim na širem spektru stvari.
+                samim tim <span className="italic">DeepNovo</span> može da se primenim na širem spektru stvari.
               </p>
             </div>
           </div>

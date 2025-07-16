@@ -80,7 +80,7 @@ export default function IntroPage() {
                   </div>
                 </button>
                 <p className="text-sm text-muted-foreground text-center">
-                  Slika 2: RNK kodonski točak prikazuje kako se sekvence od tri nukleotida (kodoni) prevode u
+                  slika 2: RNK kodonski točak prikazuje kako se sekvence od tri nukleotida (kodoni) prevode u
                   aminokiseline. Svaki kodon se čita od centra ka spolja, a zeleni trougao označava start kodon (AUG)
                   koji kodira metionin, dok crveni kvadrati označavaju stop kodone (UAA, UAG, UGA) koji određuju kraj
                   sekvence koja se prevodi u protein. Preuzeto sa <Link href="/literature#8" className="text-blue-600 underline hover:text-blue-800">[8]</Link>.
@@ -109,7 +109,7 @@ export default function IntroPage() {
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
-              Slika 1: Transkripcija DNK u RNK. Enzim RNK polimeraza (nije prikazan) čita DNK lanac i sintetiše
+              slika 1: Transkripcija DNK u RNK. Enzim RNK polimeraza (nije prikazan) čita DNK lanac i sintetiše
               komplementarni RNK lanac.
               <span className="text-xs block text-primary-foreground/70 italic mt-1">
                 Kliknite na sliku za uvećani prikaz
@@ -125,7 +125,7 @@ export default function IntroPage() {
               <p className="text-muted-foreground mb-6">
                 Tirocidin B1 je cikličan peptid dužine 10 (slika 3),
                 što znači da su prva i poslednja aminokiselina povezane i da samim tim 
-                postoji 10 njegovih različitih linearnih reprezentacija.
+                postoji 10 njegovih različitih linearnih reprezentacija (tabela 1).
                 Prateći centralnu dogmu i zaključka da se 1 kodon prevodi u 1 aminokiselinu, 
                 naučnici su probali da pronađu 10 kodona odnosno 30 nukleotida u genomu bakterije <span className="italic">Bacillus brevis</span>{" "}
                 od koje nastaje ovaj antibiotik. Ovaj postupak je veoma dugotrajan obzirom da mora da se proveri više hiljada 30-grama
@@ -162,10 +162,46 @@ export default function IntroPage() {
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
-              Slika 3: Struktura tirocidina B1, cikličnog peptida sastavljenog od 10 aminokiselina.
+              slika 3: Struktura tirocidina B1, cikličnog peptida sastavljenog od 10 aminokiselina.
               <span className="text-xs block text-primary-foreground/70 italic mt-1">
                 Kliknite na sliku za uvećani prikaz
               </span>
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center justify-center">
+            <table style={{ borderCollapse: "collapse", margin: "auto" }} border={1}>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: "left", padding: "6px" }}>#</th>
+                  <th style={{ textAlign: "left", padding: "6px" }}>Linearna sekvenca</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["red", "Lys"], ["blue", "Leu"], ["orange", "Phe"], ["violet", "Pro"], ["teal", "Trp"],
+                  ["orange", "Phe"], ["magenta", "Asn"], ["brown", "Gln"], ["cyan", "Tyr"], ["green", "Val"]
+                ].map((seq, i, full) => (
+                  <tr key={i + 1}>
+                    <td style={{ padding: "6px" }}>{i + 1}</td>
+                    <td style={{ padding: "6px" }}>
+                      {Array.from({ length: 10 }).map((_, j) => {
+                        const [color, name] = full[(i + j) % full.length];
+                        return (
+                          <span key={j} style={{ color: color }}>
+                            {name}
+                            {j < 9 && " – "}
+                          </span>
+                        );
+                      })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <p className="text-sm text-muted-foreground text-center">
+              tabela 1: Deset različitih linearnih reprezentacija tirocidina B1.
             </p>
           </div>
         </div>
@@ -226,7 +262,7 @@ export default function IntroPage() {
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
-              Slika 4: Tabela masa aminokiselina izraženih u daltonima (Da).
+              slika 4: Tabela masa aminokiselina izraženih u daltonima (Da).
               <span className="text-xs block text-primary-foreground/70 italic mt-1">
                 Kliknite na sliku za uvećani prikaz
               </span>
@@ -276,10 +312,67 @@ export default function IntroPage() {
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
-              Slika 5: Teorijski spektar peptida NQEL koji prikazuje sve moguće potpeptide, njihove mase i njegov teorijski spektar.
+              slika 5: Teorijski spektar peptida NQEL koji prikazuje sve moguće potpeptide, njihove mase i njegov teorijski spektar.
               <span className="text-xs block text-primary-foreground/70 italic mt-1">
                 Kliknite na sliku za uvećani prikaz
               </span>
+            </p>
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-semibold mb-6">Lažne i nedostajuće mase</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <div className="flex flex-col">
+            <div className="prose prose-lg max-w-full">
+              <p className="text-muted-foreground mb-6">
+                Teorijski spektar predstavlja spektar bez šumova i koja uvek ima sve tačne podatke. 
+                U realnosti eksperimentalni spektri često sadrže lažne ili nedostajuće mase. <span className="font-semibold">Lažna
+                masa</span> predstavlja masu koja se nalazi u eksperimentalnom spektru ali zapravo ne
+                postoji u teorijskom spektru peptida. <span className="font-semibold">Nedostajuća masa</span> predstavlja masu koja
+                se ne nalazi u eksperimentalnom spektru ali postoji u teorijskom spektru peptida.
+              </p>
+              <p className="text-muted-foreground mb-6">
+                U tabeli 2 može da se vidi primer teorijskog i eksperimentalnog spektra za peptid NEQ sa nedostajućim i lažnim masama.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center justify-center">
+            <table style={{ borderCollapse: "collapse", textAlign: "center", margin: "auto" }} border={1}>
+              <thead>
+                <tr>
+                  <th style={{ padding: "0 10px" }}><strong>eksperimentalni</strong></th>
+                  <td style={{ padding: "0 10px" }}>0</td>
+                  <td style={{ padding: "0 10px" }}>114</td>
+                  <td style={{ padding: "0 10px" }}>128</td>
+                  <td style={{ padding: "0 10px" }}></td>
+                  <td style={{ padding: "0 10px", color: "blue" }}>133</td>
+                  <td style={{ padding: "0 10px", color: "blue" }}>200</td>
+                  <td style={{ padding: "0 10px" }}></td>
+                  <td style={{ padding: "0 10px" }}>243</td>
+                  <td style={{ padding: "0 10px" }}></td>
+                  <td style={{ padding: "0 10px" }}>371</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th style={{ padding: "0 10px" }}><strong>teorijski</strong></th>
+                  <td style={{ padding: "0 10px" }}>0</td>
+                  <td style={{ padding: "0 10px" }}>114</td>
+                  <td style={{ padding: "0 10px" }}>128</td>
+                  <td style={{ padding: "0 10px", color: "green" }}>129</td>
+                  <td style={{ padding: "0 10px" }}></td>
+                  <td style={{ padding: "0 10px" }}></td>
+                  <td style={{ padding: "0 10px", color: "green" }}>242</td>
+                  <td style={{ padding: "0 10px" }}>243</td>
+                  <td style={{ padding: "0 10px", color: "green" }}>257</td>
+                  <td style={{ padding: "0 10px" }}>371</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="text-sm text-muted-foreground text-center">
+              tabela 2: Prikaz nedostajućih masa (obojene zelenom bojom) i lažnih masa (obojene plavom bojom) koje mogu da se jave u
+                eksperimentlanom spektru za peptid <strong>NEQ</strong>.
             </p>
           </div>
         </div>
