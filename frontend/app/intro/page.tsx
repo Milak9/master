@@ -80,7 +80,7 @@ export default function IntroPage() {
                   </div>
                 </button>
                 <p className="text-sm text-muted-foreground text-center">
-                  slika 2: RNK kodonski točak prikazuje kako se sekvence od tri nukleotida (kodoni) prevode u
+                  Slika 2: RNK kodonski točak prikazuje kako se sekvence od tri nukleotida (kodoni) prevode u
                   aminokiseline. Svaki kodon se čita od centra ka spolja, a zeleni trougao označava start kodon (AUG)
                   koji kodira metionin, dok crveni kvadrati označavaju stop kodone (UAA, UAG, UGA) koji određuju kraj
                   sekvence koja se prevodi u protein. Preuzeto sa <Link href="/literature#8" className="text-blue-600 underline hover:text-blue-800">[8]</Link>.
@@ -109,7 +109,7 @@ export default function IntroPage() {
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
-              slika 1: Transkripcija DNK u RNK. Enzim RNK polimeraza (nije prikazan) čita DNK lanac i sintetiše
+              Slika 1: Transkripcija DNK u RNK. Enzim RNK polimeraza (nije prikazan) čita DNK lanac i sintetiše
               komplementarni RNK lanac.
               <span className="text-xs block text-primary-foreground/70 italic mt-1">
                 Kliknite na sliku za uvećani prikaz
@@ -162,7 +162,7 @@ export default function IntroPage() {
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
-              slika 3: Struktura tirocidina B1, cikličnog peptida sastavljenog od 10 aminokiselina.
+              Slika 3: Struktura tirocidina B1, cikličnog peptida sastavljenog od 10 aminokiselina.
               <span className="text-xs block text-primary-foreground/70 italic mt-1">
                 Kliknite na sliku za uvećani prikaz
               </span>
@@ -201,7 +201,7 @@ export default function IntroPage() {
             </table>
 
             <p className="text-sm text-muted-foreground text-center">
-              tabela 1: Deset različitih linearnih reprezentacija tirocidina B1.
+              Tabela 1: Deset različitih linearnih reprezentacija tirocidina B1.
             </p>
           </div>
         </div>
@@ -262,7 +262,7 @@ export default function IntroPage() {
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
-              slika 4: Tabela masa aminokiselina izraženih u daltonima (Da).
+              Slika 4: Tabela masa aminokiselina izraženih u daltonima (Da).
               <span className="text-xs block text-primary-foreground/70 italic mt-1">
                 Kliknite na sliku za uvećani prikaz
               </span>
@@ -312,7 +312,7 @@ export default function IntroPage() {
               </div>
             </button>
             <p className="text-sm text-muted-foreground text-center">
-              slika 5: Teorijski spektar peptida NQEL koji prikazuje sve moguće potpeptide, njihove mase i njegov teorijski spektar.
+              Slika 5: Teorijski spektar peptida NQEL koji prikazuje sve moguće potpeptide, njihove mase i njegov teorijski spektar.
               <span className="text-xs block text-primary-foreground/70 italic mt-1">
                 Kliknite na sliku za uvećani prikaz
               </span>
@@ -371,7 +371,7 @@ export default function IntroPage() {
               </tbody>
             </table>
             <p className="text-sm text-muted-foreground text-center">
-              tabela 2: Prikaz nedostajućih masa (obojene zelenom bojom) i lažnih masa (obojene plavom bojom) koje mogu da se jave u
+              Tabela 2: Prikaz nedostajućih masa (obojene zelenom bojom) i lažnih masa (obojene plavom bojom) koje mogu da se jave u
                 eksperimentlanom spektru za peptid <strong>NEQ</strong>.
             </p>
           </div>

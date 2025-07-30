@@ -268,7 +268,7 @@ export default function Comparison() {
                     </td>
                   </tr>
                   <tr>
-                    <td className="border p-4 font-medium">Branch and Bound</td>
+                    <td className="border p-4 font-medium">Branch and Bound algoritam</td>
                     <td className="border p-4 font-mono">{visualizationData.bnb.execution_time}</td>
                     <td className="border p-4">
                       {visualizationData.bnb.solution ? visualizationData.bnb.solution.length : 0}
@@ -314,7 +314,7 @@ export default function Comparison() {
                     </td>
                   </tr>
                   <tr>
-                    <td className="border p-4 font-medium">Spektralna konvolucija</td>
+                    <td className="border p-4 font-medium">Algoritam spektralne konvolucije</td>
                     <td className="border p-4 font-mono">{visualizationData.convolution.execution_time}</td>
                     <td className="border p-4">
                       {visualizationData.convolution.solution ? visualizationData.convolution.solution.length : 0}

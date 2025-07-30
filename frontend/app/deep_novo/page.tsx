@@ -116,7 +116,7 @@ export default function DeepNovoPage() {
               Pored <span className="italic">DeepNovo</span> tehnike koja će biti opisana u ovom radu, postoje i još neke tehnike zasnovane na De Novo principu:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-muted-foreground mb-6">
-              <li><strong>PEAKS</strong> <Link href="/literature#4" className="text-blue-600 underline hover:text-blue-800">[4]</Link> - koristi direktne aciklične grafove i određuje najbolji rezultat</li>
+              <li><strong>PEAKS</strong> <Link href="/literature#4" className="text-blue-600 underline hover:text-blue-800">[4]</Link> - koristi direktne aciklične grafove</li>
               <li><strong>Novor</strong> <Link href="/literature#5" className="text-blue-600 underline hover:text-blue-800">[5]</Link> - koristi klasifikatore mašinskog učenja da odredi sekvencu aminokiselina sa najvećom verovatnoćom </li>
               <li><strong>PepNovo</strong> <Link href="/literature#6" className="text-blue-600 underline hover:text-blue-800">[6]</Link> - koristi modelovanje verovatnoća pomoću grafova</li>
             </ul>
@@ -188,7 +188,7 @@ export default function DeepNovoPage() {
                   <h3 className="text-xl font-semibold">Poboljšana tačnost</h3>
                 </div>
                 <p className="text-muted-foreground">
-                  Duboki model učenja daje veoma precizna predviđanja, čak i u slučajevima gde tradicionalne metode mogu
+                  Model dubokog učenja daje veoma precizna predviđanja, čak i u slučajevima gde tradicionalne metode mogu
                   imati poteškoća.
                 </p>
               </Card>
@@ -209,13 +209,13 @@ export default function DeepNovoPage() {
             <p className="text-muted-foreground mb-4">
               <span className="italic">DeepNovo</span> se trenira na velikom skupu podataka poznatih sekvenci peptida i njihovih odgovarajućih podataka
               masene spektrometrije. Uči mapirati eksperimentalne podatke na sekvence peptida kroz proces nazvan
-              nadzirano učenje.
+              nadgledano učenje.
             </p>
 
             <div className="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-lg mb-6">
               <h4 className="text-lg font-semibold mb-3 text-indigo-700 dark:text-indigo-300">Proces treniranja</h4>
               <ol className="list-decimal pl-6 space-y-2 text-muted-foreground">
-                <li>Prikupljanje velikog skupa podataka poznatih peptidnih sekvenci i njihovih spektara</li>
+                <li>Prikupljanje peptidnih sekvenci i njihovih spektara</li>
                 <li>Pretprocesiranje spektralnih podataka za normalizaciju i uklanjanje šuma</li>
                 <li>Treniranje neuronske mreže da predviđa aminokiseline na osnovu spektralnih karakteristika</li>
                 <li>Optimizacija modela korišćenjem tehnika kao što su regularizacija i rano zaustavljanje</li>
@@ -339,7 +339,7 @@ export default function DeepNovoPage() {
                     </div>
                   </button>
                   <p className="text-sm text-muted-foreground text-center">
-                    slika 1: Arhitektura <span className="italic">DeepNovo</span> pristupa <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link>
+                    Slika 1: Arhitektura <span className="italic">DeepNovo</span> pristupa <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link>
                     <span className="text-xs block text-primary-foreground/70 italic mt-1">
                       Kliknite na sliku za uvećani prikaz
                     </span>
@@ -445,7 +445,7 @@ export default function DeepNovoPage() {
                     </div>
                   </button>
                   <p className="text-sm text-muted-foreground text-center">
-                    slika 1: Poređenje rezultata <span className="italic">DeepNovo</span> algoritma sa drugim algoritmima <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link>
+                    Slika 1: Poređenje rezultata <span className="italic">DeepNovo</span> algoritma sa drugim algoritmima <Link href="/literature#3" className="text-blue-600 underline hover:text-blue-800">[3]</Link>
                     <span className="text-xs block text-primary-foreground/70 italic mt-1">
                       Kliknite na sliku za uvećani prikaz
                     </span>
