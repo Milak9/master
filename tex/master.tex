@@ -5,6 +5,7 @@
 \usepackage{float}
 \usepackage{tikz}
 \usepackage{titlesec}
+\usepackage{caption}
 \usetikzlibrary{shapes, positioning}
 \usepackage{amsmath}
 \usepackage[ruled,vlined]{algorithm2e}
@@ -13,6 +14,7 @@
 
 \maxtocdepth{subsection}
 \maxsecnumdepth{subsection}
+\captionsetup{labelfont=it, textfont=it}
 
 \bib{master}
 
@@ -59,7 +61,7 @@ Ovaj rad predstavlja elektronsku lekciju posvećenu sekvenciranju antibiotika, s
 % ------------------------------------------------------------------------------
 Sekvenciranje bioloških molekula predstavlja proces određivanja preciznog redosleda gradivnih jedinica od kojih su sastavljeni. Tako, na primer, govorimo o sekvenciranju DNK, kojim se utvrđuje niz nukleotida u genomu organizma. Međutim, osim genoma, moguće je sekvencirati i proteine, pri čemu se određuje redosled aminokiselina koji čini njihovu primarnu strukturu. Takav postupak naziva se sekvenciranje proteina.
 
-Iako se sekvenciranje genoma i sekvenciranje proteina oslanja na eksperimentalne tehnike, genom se, zahvaljujući univerzalnom genetskom kodu, može relativno jednostavno odrediti, dok se struktura proteina ne može direktno predvideti iz genetske informacije i zahteva dodatne metode, poput masene spektrometrije. U prirodi postoji 20 standardnih aminokiselina (slika \ref{fig:aminokiseline}) koje se kombinuju u različitim sekvencama kako bi formirale proteine. U kontekstu antibiotika, specifičan redosled aminokiselina je od presudnog značaja jer direktno utiče na:
+U prirodi postoji 20 standardnih aminokiselina (slika \ref{fig:aminokiseline}) koje se kombinuju u različite sekvence kako bi formirale proteine. U kontekstu antibiotika, specifičan redosled aminokiselina je od presudnog značaja jer direktno utiče na:
 
 \begin{itemize}
     \item Trodimenzionalnu strukturu molekula
@@ -76,12 +78,12 @@ Mnogi savremeni antibiotici predstavljaju peptide, što znači da su zapravo kra
 \end{figure}
 
 \section{Cilj rada}
-U ovom radu implementirana je interaktivna elektronska platforma namenjena prikazu algoritamskih pristupa za sekvenciranje antibiotika, sa fokusom na njihovu vizuelizaciju u realnom vremenu. Platforma korisnicima omogućava da se istraže principi i rad savremenih algoritama kroz interaktivne simulacije, čime se olakšava razumevanje kompleksnih bioinformatičkih koncepata.
+U ovom radu implementirana je interaktivna elektronska platforma namenjena prikazu algoritamskih pristupa za sekvenciranje antibiotika, sa fokusom na njihovu vizuelizaciju u realnom vremenu. Platforma omogućava da se istraže principi i rad savremenih algoritama kroz interaktivne simulacije, čime se olakšava razumevanje kompleksnih bioinformatičkih koncepata.
 
 Glavni ciljevi ovog rada su:
 \begin{itemize}
     \item Pružiti pregled modernih algoritama za sekvenciranje antibiotika
-    \item Razviti interaktivnu edukativnu platformu za vizuelizaciju sekvenciranja
+    \item Razviti interaktivnu edukativnu platformu za vizuelizaciju algoritama za sekvenciranje proteina
 \end{itemize}
 
 Rad je posebno koristan studentima bioinformatike i molekularne biologije kao alat za bolje razumevanje algoritama za rekonstrukciju peptidnih sekvenci.
@@ -94,7 +96,8 @@ Rad je posebno koristan studentima bioinformatike i molekularne biologije kao al
 Proces sekvenciranja antibiotika je fundamentalan u razumevanju kako su ovi molekuli proizvedeni od strane bakterija i kako se oni mogu sintetisati ili modifikovati za primene u medicini. Antibiotici su često peptidi, pri čemu veliki broj pripada neribozomalnim peptidima (\emph{non-ribosomal peptides - NRPs}), koji ne prate standardna pravila za sintezu proteina čime se otežava njihovo sekvenciranje \cite{online_lecture, online_book}.
 
 DNK sadrži recept za kreiranje proteina. Naime, DNK se sastoji od gena koji mogu biti uključeni i tada će se na osnovu njih kreirati proteini ili isključeni kada se oni neće koristiti za kreiranje proteina. Ovaj proces uključivanja i isključivanja gena naziva se genska ekspresija i zavisi od toga da li je potrebno da se određeni protein kreira ili ne (na primer, fotosinteza kod biljaka koja se obavlja samo preko dana).
-Najveći broj proteina nastaje kroz proces koji se zove centralna dogma molekularne biologije, koja kaže da se DNK prvo prepisuje u RNK (slika \ref{fig:transkripcija}), a zatim se RNK prevodi u protein. Proces prevođenja DNK u RNK naziva se transkripcija i on podrazumeva da enzim RNK polimeraza očitava jedan lanac DNK i na osnovu njega sintetiše jedan, komplementaran RNK lanac, pri čemu se nukleotid timin (T) zamenjuje uracilom (U). Na slici \ref{fig:transkripcija} se može se primetiti da se DNK sastoji od 2 lanca koja su komplementarna. Enzim RNK polimeraza se zakači na DNK lanac ka početku gena, zatim se kreće duž gena čime razdvaja dva lanca DNK i tako stvara prostor za prepisivanje DNK čime se dobija novi molekul RNK.
+
+Najveći broj proteina nastaje kroz proces koji se zove centralna dogma molekularne biologije, koja podrazumeva da se DNK prvo prepisuje u RNK (slika \ref{fig:transkripcija}), a zatim se RNK prevodi u protein. Proces prevođenja DNK u RNK naziva se transkripcija i on podrazumeva da enzim RNK polimeraza očitava jedan lanac DNK i na osnovu njega sintetiše jedan, komplementaran RNK lanac, pri čemu se nukleotid timin (T) zamenjuje uracilom (U). Na slici \ref{fig:transkripcija} se može se primetiti da se DNK sastoji od 2 lanca koja su komplementarna. Enzim RNK polimeraza se zakači na DNK lanac na početku gena, zatim se kreće duž gena čime razdvaja dva lanca DNK i tako stvara prostor za prepisivanje DNK čime se dobija novi molekul RNK.
 
 \begin{figure}[h]
   \centering
@@ -116,7 +119,16 @@ Prilikom prevođenja RNK u protein potrebno je na osnovu nukleotida odrediti koj
 \section{Odstupanje od centralne dogme}
 Tirocidin B1 je cikličan peptid dužine 10 (slika \ref{fig:tirocidin}), što znači da su prva i poslednja aminokiselina povezane i da samim tim postoji 10 njegovih različitih linearnih reprezentacija (tabela \ref{tab:linear_representations}). Prateći centralnu dogmu i činjenicu da se 1 kodon prevodi u 1 aminokiselinu, bilo je za očekivati da je moguće pronaći 10 kodona odnosno 30 nukleotida u genomu bakterije \emph{Bacillus brevis} od koje nastaje ovaj antibiotik. Da bi se ovaj postupak obavio, potrebno je proveriti više hiljada 30-grama koji mogu da počnu bilo gde u genomu, što može delovati kao dugotrajan zadatak, ali uz moderne računare je ostvariv u prihvatljivom vremenu. Analiziranjem genoma utvrđeno je da ne postoji 30-gram koji se kodira u neki od 10 različitih reprenzatacija traženog antibiotika.
 
-\begin{table}[h]
+\begin{figure}[h]
+  \centering
+  \includesvg[width=0.8\textwidth]{images/tyrocidine.svg}
+  \caption{Struktura tirocidina B1, cikličnog peptida sastavljenog od 10 aminokiselina.}
+  \label{fig:tirocidin}
+\end{figure}
+
+Na ovaj način je pokazano da Tirocidin B1 ne prati centralnu dogmu molekularne biologije i da ovaj peptid nastaje kroz drugačiji proces. Dalja istraživanja pokazala su da postoje peptidi koji nastaju uz pomoć posebnih enzima koji su zaduženi za njihovo sintentisanje pod nazivom \emph{NRP} sintetaze. Ovi enzimi se sastoje od kompleksnih molekulskih jedinica, takozvanih modula, gde svaki modul odgovara jednoj aminokiselini koja učestvuje u sastavu proteina. U slučaju Tirocidina B1, enzim sadrži 10 modula i svaki od modula kodira 1 aminokiselinu čime je određena struktura antibiotika.
+
+\begin{table}[H]
 \centering
 \begin{tabular}{ll}
 \toprule
@@ -138,21 +150,12 @@ Tirocidin B1 je cikličan peptid dužine 10 (slika \ref{fig:tirocidin}), što zn
 \label{tab:linear_representations}
 \end{table}
 
-\begin{figure}[h]
-  \centering
-  \includesvg[width=0.8\textwidth]{images/tyrocidine.svg}
-  \caption{Struktura tirocidina B1, cikličnog peptida sastavljenog od 10 aminokiselina.}
-  \label{fig:tirocidin}
-\end{figure}
-
-Na ovaj način je pokazano da Tirocidin B1 ne prati centralnu dogmu molekularne biologije i da ovaj peptid nastaje kroz drugačiji proces, uz pomoć posebnih enzima koji su zaduženi za njihovo sintentisanje. Oni se zovu \emph{NRP} sintetaze. Ovi enzimi se sastoje od kompleksnih molekulskih jedinica, takozvanih modula, gde svaki modul odgovara jednoj aminokiselini koja učestvuje u sastavu proteina. U slučaju Tirocidina B1, enzim sadrži 10 modula i svaki od modula kodira 1 aminokiselinu čime je određena struktura antibiotika.
-
 Samim tim, pošto struktura proteina nije određena na osnovu genoma bakterije, metode za sekvencioniranje DNK ovde nisu od pomoći i potrebno je sekvencirati direktno sam peptid.
 
 \section{Maseni spektrometar}
 Maseni spektrometar je mašina za merenje masa molekula, uključujući mase peptida i proteina. Alat funkcioniše na principu analize više uzoraka istog peptida, tako što date uzorke deli na sve moguće potpeptide, nakon čega se određuju mase potpeptida. U realnosti uzorak se pretvara u naelektrisane jone da bi na njih mogli da utiču električno i magnetno polje. Potom se joni dele na osnovu odnosa mase i naelektrisanja, a njihove vrednosti se zatim precizno mere \cite{spectrometer}.
 
-Masa se meri u daltonima (Da), pri čemu je 1 Da približno jednak masi protona/neutrona. Samim tim masa molekula je jednaka sumi masa protona/neutrona koji čine taj molekul. Mase aminokiselina su poznate i prikazane su na Slici \ref{fig:aminokiseline}. Može se primetiti da neke aminokiseline imaju istu masu, tako da 20 različitih aminokiselina ima 18 različitih masa.
+Masa se meri u daltonima (Da), pri čemu je 1 Da približno jednak masi protona/neutrona. Samim tim masa molekula je jednaka sumi masa protona/neutrona koji čine taj molekul. Mase aminokiselina su poznate i prikazane su na slici \ref{fig:aminokiseline}. Može se primetiti da neke aminokiseline imaju istu masu, tako da 20 različitih aminokiselina ima 18 različitih masa.
 
 Samim tim na osnovu poznatih masa aminokiselina možemo da odredimo masu celog peptida. Na primer, masa tirocidina se može izračunati na sledeći način:
 \begin{verbatim}
@@ -180,15 +183,15 @@ Kao ulaz u svaki od ovih algoritama očekuje se eksperimentalni spektar, odnosno
 % ------------------------------------------------------------------------------
 U ovom odeljku biće prikazani algoritmi za određivanje cikličnog peptida na osnovu poznatog eksperimentalnog spektra. Neki od algoritama koji će biti objašnjeni su:
 \begin{itemize}
-    \item \textbf{Algoritam grube sile} (\emph{Brute force}): Direktan pristup gde se isprobavaju sve moguće kombinacije da bi se našlo optimalno rešenje.
+    \item \textbf{Pristup grubom silom} (\emph{Brute force}): Direktan pristup gde se isprobavaju sve moguće kombinacije da bi se našlo optimalno rešenje.
     \item \textbf{\emph{Branch and Bound}}: Optimizovan algoritam koji će odbacivati kandidate čim prestanu da budu potencijalno rešenje.
     \item \textbf{\emph{Leaderboard} algoritam}: Algoritam koji održava listu \emph{N} najboljih kandidata za rešenje i na osnovu njih smanjuje broj potencijalnih kandidata.
     \item \textbf{Spektralna konvolucija}: Određuje aminokiseline koje mogu da učestvuju u peptidu na osnovu eksperimentalnog spektra.
     \item \textbf{\emph{DeepNovo}}: Metoda zasnovana na dubokom učenju koja omogućava sekvenciranje peptida bez oslanjanja na baze podataka.
 \end{itemize}
 
-\section{Gruba sila (\emph{Brute Force})}
-Najosnovniji pristup sekvenciranju koji sistematski ispituje sve moguće kombinacije aminokiselina dok ne pronađe sekvencu koja najbolje odgovara eksperimentalnom spektru \cite{online_lecture, online_book}. Iako jednostavan za implementaciju, ovaj pristup postaje neizvodiv za duže sekvence zbog eksponencijalnog rasta prostora pretrage.
+\section{Pristup grubom silom (\emph{Brute Force})}
+Pristup grubom silom predstavlja osnovni pristup sekvenciranju koji sistematski ispituje sve moguće kombinacije aminokiselina dok ne pronađe sekvencu koja najbolje odgovara eksperimentalnom spektru \cite{online_lecture, online_book}. Iako jednostavan za implementaciju, ovaj pristup postaje neizvodiv za duže sekvence zbog eksponencijalnog rasta prostora pretrage.
 
 Na primer, za peptid mase 579 Da, algoritam će generisati sve moguće kombinacije aminokiselina i proveriti da li njihova ukupna masa odgovara zadatoj masi. Kao što je prikazano u tabeli \ref{tab:primer1}, mogu postojati različiti peptidi sa istom ukupnom masom (\textbf{FPAYT} i \textbf{QNWGS}), što dodatno komplikuje problem.
 
@@ -212,7 +215,7 @@ Na primer, za peptid mase 579 Da, algoritam će generisati sve moguće kombinaci
 
 Da bi se utvrdilo koji od peptida je tačno rešenje, algoritam mora da generiše teorijski spektar za svaki kandidat peptid i uporedi ga sa eksperimentalnim spektrom. Ovo dodatno povećava računsku složenost algoritma, ali je neophodno za pronalaženje tačnog rešenja.
 
-Na slici \ref{fig:same_mass}, možemo da vidimo koliko postoji različitih peptida za istu masu, samim tim možemo zaključiti da je izvršavanje algoritma grube sile veoma neefikasno.
+Na slici \ref{fig:same_mass}, možemo da vidimo koliko postoji različitih peptida za istu masu, samim tim možemo zaključiti da je izvršavanje pristupom grubom silom veoma neefikasno.
 
 \begin{figure}[h]
   \centering
@@ -221,11 +224,11 @@ Na slici \ref{fig:same_mass}, možemo da vidimo koliko postoji različitih pepti
   \label{fig:same_mass}
 \end{figure}
 
-Na osnovu prethodnog teksta definiše se pseudokod za algoritam grube sile koji se može videti kao algoritam \ref{alg:brute_force}.
+Na osnovu prethodnog teksta definiše se pseudokod za pristup grubom silom koji se može videti kao algoritam \ref{alg:brute_force}.
 
 \begin{algorithm}[H]
 \label{alg:brute_force}
-\caption{Gruba sila}
+\caption{Pristup grubom silom}
 \SetAlgoLined
 \DontPrintSemicolon
 \SetKwFunction{FRec}{GrubaSila}
@@ -267,7 +270,7 @@ Na osnovu prethodnog teksta definiše se pseudokod za algoritam grube sile koji 
 \end{itemize}
 
 \section{\emph{Branch and Bound}}
-\emph{Branch and Bound} algoritam \cite{online_lecture, online_book} je optimizovana verzija algoritma grube sile koja koristi strategiju „podeli pa vladaj“ za efikasnije pretraživanje prostora rešenja. Za razliku od algoritma grube sile koji ispituje sve moguće kombinacije, \emph{Branch and Bound} algoritam inteligentno eliminiše delove prostora pretrage koji ne mogu sadržati optimalno rešenje.
+\emph{Branch and Bound} algoritam \cite{online_lecture, online_book} je optimizovana verzija pristupa grubom silom koja koristi strategiju „podeli pa vladaj“ za efikasnije pretraživanje prostora rešenja. Za razliku od pristupa grubom silom koji ispituje sve moguće kombinacije, \emph{Branch and Bound} algoritam inteligentno eliminiše delove prostora pretrage koji ne mogu sadržati optimalno rešenje.
 
 U kontekstu sekvenciranja peptida, algoritam funkcioniše na sledeći način:
 \begin{itemize}
@@ -276,14 +279,14 @@ U kontekstu sekvenciranja peptida, algoritam funkcioniše na sledeći način:
     \item \textbf{Optimizacija:} Algoritam može koristiti dodatne heuristike za procenu koje grane prvo istražiti, što dodatno ubrzava pronalaženje rešenja.
 \end{itemize}
 
-Prednosti \emph{Branch and Bound} algoritma u odnosu na algoritam grube sile su značajne i njihovo poređenje može da se vidi u tabeli \ref{tab:branch_vs_brute}.
+Prednosti \emph{Branch and Bound} algoritma u odnosu na pristup grubom silom su značajne i njihovo poređenje može da se vidi u tabeli \ref{tab:branch_vs_brute}.
 
 \begin{table}[H]
 \centering
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{|>{\raggedright\arraybackslash}m{0.45\textwidth}|>{\raggedright\arraybackslash}m{0.45\textwidth}|}
 \hline
-\textbf{Algoritam grube sile} & \textbf{Branch and Bound} \\
+\textbf{Pristup grubom silom} & \textbf{Branch and Bound} \\
 \hline
 Istražuje sve moguće kombinacije & Inteligentno eliminiše neperspektivne grane \\
 \hline
@@ -294,7 +297,7 @@ Garantuje pronalaženje svih rešenja & I dalje garantuje pronalaženje svih re�
 Neefikasan za duže peptide & Efikasniji za duže peptide \\
 \hline
 \end{tabular}
-\caption{Poređenje algoritma grube sile i Branch and Bound pristupa}
+\caption{Poređenje pristupa grubom silom i Branch and Bound pristupa}
 \label{tab:branch_vs_brute}
 \end{table}
 
@@ -353,9 +356,9 @@ Posmatramo primer sa 3 aminokiseline:
     \item C (masa = 200 Da)
 \end{itemize}
 
-Tražimo sekvencu AB (ukupna masa = 250 Da). Poredimo algoritme grube sile i grananja i ograničavanja.
+Tražimo sekvencu AB (ukupna masa = 250 Da). Poredimo pristup grubom silom i pristup grananja i ograničavanja.
 
-\subsection{Algoritam grube sile}
+\subsection{Pristup grubom silom}
 Ispituje sve kombinacije i odbacuje samo kada ukupna masa premaši traženu masu:
 
 \begin{center}
@@ -483,12 +486,36 @@ Odbacuje grane gde bilo koji deo sekvence nema masu koja postoji u eksperimental
 \subsection{Zaključak}
 
 Algoritam grananja i ograničavanja značajno smanjuje prostor pretrage eliminacijom neperspektivnih grana već u ranim fazama, dok gruba sila mora da ispita sve kombinacije.
-Na ovom primeru može se primetiti kako se odmah odbacuje cela \textbf{C} grana i svi njeni potomci. U ovom slučaju smanjuje se prostor pretrage za samo dva čvora, ali u stvarnosti postoji 20 aminokiselina i odsecanje čvorova i njihovih potomaka u samom startu predstavlja ogromno ubrzanje i poboljšanje u odnosu na algoritam grube sile.
+Na ovom primeru može se primetiti kako se odmah odbacuje cela \textbf{C} grana i svi njeni potomci. U ovom slučaju smanjuje se prostor pretrage za samo dva čvora, ali u stvarnosti postoji 20 aminokiselina i odsecanje čvorova i njihovih potomaka u samom startu predstavlja ogromno ubrzanje i poboljšanje u odnosu na pristup grubom silom.
+
+\section{Nedostak prethodnih algoritama}
+
+Glavni nedostatak prethodnih algoritama je to što teorijski spektar peptida koji je kandidat za rešenje mora skroz da se poklopi sa zadatim eksperimentalnim spektrom. U realnosti to nije moguće, eksperimentalni spektri često sadrže lažne ili nedostajuće mase i samim tim mase neće biti iste kao u teorijskom spektru.
+\textbf{Lažna masa} predstavlja masu koja se nalazi u eksperimentalnom spektru ali zapravo ne postoji u teorijskom spektru peptida.
+\textbf{Nedostajuća masa} predstavlja masu koja se ne nalazi u eksperimentalnom spektru ali postoji u teorijskom spektru peptida.
+
+U tabeli \ref{tab:false_and_missing_masses} može da se vidi primer teorijskog i eksperimentalnog spektra za peptid \textbf{NEQ} sa nedostajućim i lažnim masama.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}
+    {l@{\hspace{10pt}}|c@{\hspace{10pt}}c@{\hspace{10pt}}c@{\hspace{10pt}}c@{\hspace{10pt}}c@{\hspace{10pt}}c@{\hspace{10pt}}c@{\hspace{10pt}}c@{\hspace{10pt}}c@{\hspace{10pt}}c}
+      \textbf{eksperimentalni} & 0 & 114 & 128 & & \textcolor{blue}{133} & \textcolor{blue}{200} & & 243 & & 371 \\
+      \hline
+      \textbf{teorijski} & 0 & 114 & 128 & \textcolor{green!70!black}{129} & & & \textcolor{green!70!black}{242} & 243 & \textcolor{green!70!black}{257} & 371 \\
+    \end{tabular}
+    
+    \caption{Prikaz nedostajućih masa (obojene zelenom bojom) i lažnih masa (obojene plavom bojom) koje mogu da se jave u eksperimentlanom spektru za peptid \textbf{NQE}}
+    \label{tab:false_and_missing_masses}
+\end{table}
+
+U narednim sekcijama dat je prikaz algoritama koji su dizajnirani tako da rade sa lažnim i nedostajućim masama.
+
 
 \section{\emph{Leaderboard} algoritam}
 \emph{Leaderboard} algoritam \cite{online_lecture, online_book} predstavlja optimizovani pristup za sekvenciranje peptida. Za razliku od sekvenciranja grubom silom koje zahteva tačno poklapanje između teorijskog spektra kandidata i eksperimentalnog spektra, ovaj algoritam je dizajniran da radi sa nedostajućim i lažnim masama tako što prati samo najbolje kandidate peptida umesto svih mogućnosti.
-\emph{Leaderboard} algoritam održava listu najboljih kandidata tokom pretrage. U svakoj iteraciji, algoritam proširuje sekvence sa svim mogućim aminokiselinama i zadržava one kandidate čiji linearni spektar ima najveći broj poklapanja sa zadatim eksperimentalnim spektrom.
-Određuje se linearni spektar kandidata zato što peptidi još nisu do kraja formirani tako da se još ne zna kako bi oni izgledali ciklično.
+\emph{Leaderboard} algoritam održava listu najboljih kandidata tokom pretrage. U svakoj iteraciji, algoritam proširuje sekvence sa svim mogućim aminokiselinama i zadržava one kandidate čiji teorijski spektar linearnog peptida ima najveći broj poklapanja sa zadatim eksperimentalnim spektrom.
+Određuje se teorijski spektar linearnog peptida zato što peptidi još nisu do kraja formirani tako da se još ne zna kako bi oni izgledali ciklično.
 
 \subsection{Prednosti algoritma}
 
@@ -557,7 +584,7 @@ Spektralna konvolucija \cite{online_lecture, online_book} je tehnika koja se kor
 Proces se sastoji iz dva glavna koraka:
 
 \begin{itemize}
-    \item \textbf{Izračunavanje konvolucije}: Za svaki par masa u spektru, izračunava se njihova razlika. Ove razlike mogu odgovarati masama aminokiselina. Pravi se matrica konvolucije, koja predstavlja donju trougaonu matricu gde je prva vrsta i prva kolona eksperimentalni spektar a pozicije u matrici predstavljaju apsolutnu vrednost razlike elemenata sa tim indeksom iz spektra.
+    \item \textbf{Izračunavanje konvolucije}: Za svaki par masa u spektru, izračunava se njihova razlika. Ove razlike mogu odgovarati masama aminokiselina. Pravi se matrica konvolucije, koja predstavlja donjetrougaonu matricu gde je prva vrsta i prva kolona eksperimentalni spektar a pozicije u matrici predstavljaju apsolutnu vrednost razlike elemenata sa tim indeksom iz spektra.
     \item \textbf{Identifikacija aminokiselina}: Najčešće razlike koje se pojavljuju u spektru verovatno odgovaraju aminokiselinama prisutnim u peptidu. Te aminokiseline se izdvajaju i koriste u \emph{Leaderboard} algoritmu.
 \end{itemize}
 
@@ -639,18 +666,22 @@ U tabeli \ref{tab:convolution_matrix} može da se vidi matrica konvolucije za ek
 Na osnovu tabele \ref{tab:convolution_matrix} možemo da vidimo koje su to mase koje se najviše puta ponavljaju. Vidimo da se mase 114, 128 i 129 pojavljuju 4 puta i njih ćemo sigurno koristiti u \emph{Leaderboard} algoritmu, preostale mase koje bi se koristile zavise od broja \textbf{S}, koji nam govori koliko najčešćih masa ćemo uzeti.
 
 Na osnovu tabele \ref{fig:aminokiseline} možemo da vidimo da masa 114 odgovara aminokiselini sa skraćenicom \textbf{N}, da masa 128 odgovara \textbf{K} i \textbf{Q} aminokiselinama a da masa 129 odgovara aminokiselini \textbf{E}.
-Rešenja zadatog teorijskog spektra su peptidi \textbf{NQE} i \textbf{NKE} i njihove ciklične kombinacije. Možemo da primetimo da smo u samom startu suzili izbor aminokiselina sa 20 na samo 3 koje predstavljaju rešenje, čime smo mnogo ubrzali proces pronalaska peptida.
+Rešenja zadatog teorijskog spektra su peptidi \textbf{NQE} i \textbf{NKE} i njihove ciklične kombinacije. Možemo da primetimo da smo u samom startu suzili izbor aminokiselina sa 20 na samo 3 koje predstavljaju rešenje, čime smo u velikoj meri ubrzali proces pronalaska peptida.
 
 \section{\emph{DeepNovo}}
 
-Trenutne tehnike za sekvenciranje peptida (poput pretraživanja baze podataka i \emph{de novo} sekvenciranja) mogu imati poteškoća u radu sa novim, složenim ili nepotpunim podacima \cite{deepnovo}. Pristup pretraživanja baze podataka oslanja se na poređenje eksperimentalnih podataka sa bazom podataka poznatih proteinskih sekvenci, ali neki od problema u ovom pristupu su sledeći:
+Dva osnovna pristupa koja se koriste prilikom sekvenciranja peptida su pristup pretraživanja baze podataka i \textit{de novo} pristup.
+
+Pristup pretraživanja baze podataka se oslanja se na poređenje eksperimentalnih podataka sa bazom podataka poznatih proteinskih sekvenci, ali neki od problema u ovom pristupu su sledeći:
 
 \begin{itemize}
     \item \textbf{Nepoznati proteini} - Novi proteini koji nikada ranije nisu viđeni neće se podudarati ni sa čim u bazi podataka, što dovodi do nemogućnosti identifikacije.
-    \item \textbf{Nedostajući podaci} - Podaci generisani iz eksperimenata masene spektrometrije mogu biti pogrešni i nepotpuni, što otežava pouzdano poređenje.
+    \item \textbf{Nedostajući podaci} - Podaci dobijeni masenim spektrometrom mogu biti pogrešni i nepotpuni, što otežava pouzdano poređenje.
 \end{itemize}
 
-Pristup \emph{de novo} sekvenciranja pokušava izgraditi sekvencu peptida iz početka, bez oslanjanja na bazu podataka, ali je često manje precizan i računski skup \cite{deepnovo}. \emph{DeepNovo} kombinuje prednosti oba pristupa koristeći duboko učenje za poboljšanje tačnosti \emph{de novo} sekvenciranja.
+Pristup \emph{de novo} sekvenciranja pokušava izgraditi sekvencu peptida iz početka, bez oslanjanja na bazu podataka i koristeći samo podatke koji su dobijeni masenom spektrometrijom. U okviru ovog pristupa koriste se i različiti algoritmi, kao što su pristup grubom silom, \emph{Branch and Bound}, \emph{Leaderboard} algoritam, kao i spektralna konvolucija, koji pokušavaju da generišu sekvence peptida i da porede njihove teorijske spektre sa eksperimentalnim. Međutim, iako koristan za identifikaciju novih peptida, \emph{de novo} pristup je često manje precizan i računski zahtevan \cite{deepnovo}. 
+
+Trenutne tehnike za sekvenciranje peptida (poput pretraživanja baze podataka, \emph{de novo} sekvenciranja, kao i raznih algoritamskih pristupa) mogu imati poteškoća u radu sa novim, složenim ili nepotpunim podacima \cite{deepnovo}. \emph{DeepNovo} kombinuje prednosti oba pristupa koristeći duboko učenje za poboljšanje tačnosti \emph{de novo} sekvenciranja.
 
 \subsection{Računska složenost}
 \emph{De novo} sekvenciranje, koje pokušava rekonstruisati sekvencu peptida bez oslanjanja na bazu podataka, suočava se sa značajnim računskim izazovima:
@@ -658,34 +689,34 @@ Pristup \emph{de novo} sekvenciranja pokušava izgraditi sekvencu peptida iz po�
 \begin{itemize}
 \item Eksponencijalni rast prostora pretrage sa povećanjem dužine peptida
 \item Potreba za složenim algoritmima za interpretaciju spektralnih podataka
-\item Teškoće u razlikovanju izobaričnih aminokiselina (aminokiseline sa istom ili vrlo sličnom masom)
+\item Teškoće u razlikovanju izobaričnih aminokiselina (aminokiseline sa istom ili vrlo sličnom masom) - primeri takvih aminokiselina su \textit{I} i \textit{L} čija je masa 113 daltona, kao i \textit{K} i \textit{Q} čija je masa 128 daltona
 \end{itemize}
 
 \subsection{Tehnike zasnovane na \emph{De Novo} sekvenciranju}
 Pored \textbf{DeepNovo} tehnike koja će biti opisana u ovom radu, postoje i još neke tehnike zasnovane na \emph{De Novo} principu:
 
 \begin{itemize}
-\item \textbf{PEAKS} \cite{peaks} - koristi direktne aciklične grafove i određuje najbolji rezultat
-\item \textbf{Novor} \cite{novor} - koristi klasifikatore mašinskog učenja da odredi sekvencu aminokiselina sa najvećom verovatnoćom
+\item \textbf{PEAKS} \cite{peaks} - koristi direktne aciklične grafove
+\item \textbf{Novor} \cite{novor} - koristi klasifikacione modele da odredi sekvencu aminokiselina sa najvećom verovatnoćom
 \item \textbf{PepNovo} \cite{pepnovo} - koristi modelovanje verovatnoća pomoću grafova
 \end{itemize}
 
-\emph{DeepNovo} je dizajniran da prevazilazi računske izazove koristeći moć dubokog a rezultati će pokazati da je bolji i od drugih metoda koje su zasnovane na \emph{de novo} principu.
+\emph{DeepNovo} je dizajniran da prevazilazi računske izazove koristeći moć dubokog učenja a rezultati će pokazati da je bolji i od drugih metoda koje su zasnovane na \emph{de novo} principu.
 
 \subsection{Opšti pregled}
 \emph{DeepNovo} \cite{deepnovo} je metoda zasnovana na dubokom učenju koja poboljšava sekvenciranje peptida koristeći algoritam za predviđanje sekvenci aminokiselina iz podataka generisanih masenom spektrometrijom.
 
-Osnovna ideja je da model dubokog učenja može naučiti obrasce u podacima masene spektrometrije i davati predviđanja o sekvenci peptida bez potrebe za oslanjanjem na referentnu bazu podataka.
+Osnovna ideja je da model dubokog učenja može naučiti obrasce u podacima masene spektrometrije i predvideti sekvencu peptida bez potrebe za oslanjanjem na referentnu bazu podataka.
 
-Ova inovativna metoda pokazuje značajno poboljšanje u tačnosti sekvenciranja, posebno u slučajevima kada su peptidne sekvence nove i ne podudaraju se ni sa jednom poznatom proteinskom bazom podataka.
+Ova inovativna metoda pokazuje značajno poboljšanje u tačnosti sekvenciranja, posebno u slučajevima kada su peptidne sekvence nove i ne podudaraju se ni sa jednom već poznatom.
 
 \subsubsection{Proces treniranja}
-\emph{DeepNovo} se trenira na velikom skupu podataka poznatih sekvenci peptida i njihovih odgovarajućih podataka masene spektrometrije. Model uči da preslikava eksperimentalne podatke na sekvence peptida kroz proces nadziranog učenja, gde se optimizuju parametri mreže da bi se minimizirala razlika između predviđenih i stvarnih sekvenci.
+\emph{DeepNovo} se trenira na velikom skupu podataka poznatih sekvenci peptida i njihovih odgovarajućih podataka masene spektrometrije. Model uči da preslikava eksperimentalne podatke na sekvence peptida kroz proces nadgledanog učenja, gde se optimizuju parametri mreže da bi se minimizirala razlika između predviđenih i stvarnih sekvenci.
 
 Proces treniranja obuhvata sledeće ključne faze:
 
 \begin{enumerate}
-\item Prikupljanje velikog skupa podataka poznatih peptidnih sekvenci i njihovih spektara
+\item Prikupljanje peptidnih sekvenci i njihovih spektara
 
 \item Pretprocesiranje spektralnih podataka za normalizaciju i uklanjanje šuma
 
@@ -697,7 +728,7 @@ Proces treniranja obuhvata sledeće ključne faze:
 \end{enumerate}
 
 \subsection{Arhitektura neuronske mreže}
-\textbf{DeepNovo} koristi hibridnu arhitekturu koja kombinuje konvolucione i rekurentne neuronske mreže i može se videti na slici \ref{fig:arhitektura}.
+\textbf{DeepNovo} koristi hibridnu arhitekturu koja kombinuje konvolutivne i rekurentne neuronske mreže i može se videti na slici \ref{fig:arhitektura}.
 
 \begin{figure}[H]
 \centering
@@ -706,47 +737,43 @@ Proces treniranja obuhvata sledeće ključne faze:
 \label{fig:arhitektura}
 \end{figure}
 
-\subsubsection{Konvolucione neuronske mreže (CNN)}
-\textbf{CNN} se koristi za otkrivanje značajnih šablona u ulaznim podacima. Veoma je efikasna mreža i koristi tehniku \emph{sliding window} i procesuira male lokalne regione koristeći filtere. U slučaju \textbf{DeepNovo} tehnike, konvoluciona mreža se sastoji od 3 konvoluciona sloja i koristi \emph{ReLu} aktivacionu funkciju. Ova mreža je trenirana da prepozna lokalne šablone, različite tipove jona i da pretvori sirove podatke u reprezentaciju svojstava ulaznih podataka.
+\subsubsection{Konvolutivne neuronske mreže (CNN)}
+\textbf{CNN} je veoma efikasna mreža i koristi se za otkrivanje šablona u ulaznim podacima. Oslanja se na tehniku \emph{sliding window} i procesuira male lokalne regione koristeći filtere. Ova mreža je trenirana da prepozna različite tipove jona i da pretvori sirove podatke u reprezentaciju svojstava ulaznih podataka.
 
-U ovom modelu su korišćene 2 \textbf{CNN} mreže:
+U ovom modelu su korišćene dve \textbf{CNN} mreže:
 
 \begin{itemize}
-\item \textbf{Spektralna CNN}: Spektar dobijen masenom spektrometrijom konvertuje u vektor fiksne dužine (koji obično ima od 50 do 100 hiljada elemenata) i dobijeni vektor se prosleđuje ovoj mreži. Ovime se uče šabloni nad svim podacima spektrometrije i rezultat ove mreže se dalje koristni u rekurentnoj mreži. Ovo predstavlja značajan deo arhitekture jer može dosta da poboljša preciznost sekvenciranja i može da nauči šablone u spektru čak i ako su neki peak-ovi pomereni u spektru zbog šuma.
-\item \textbf{Jonska CNN}: Ova mreža se koristi tokom odabira sledeće aminokiseline u peptidu i ona služi da za mali region spektralnih podataka izvuče najbitnije informacije. Gleda da li za predviđenu aminokiselinu postoje očekivani fragmenti jona. Prilikom svakog koraka predviđanja sledeće aminokiseline \textbf{DeepNovo} generiše teorijski spektar fragmenata uz pomoć prefiksnih masa. Za svaki jon izvlači se mali prozor iz spektra oko tog jona i na kraju se dobije više različitih ulaza u mrežu. Ovaj deo modela je bitan u slučaju da su podaci šumoviti ili da neki vrh spektra nedostaje.
+\item \textbf{Spektralna CNN}: Kao deo preprocesiranja podataka spektar dobijen masenom spektrometrijom transformiše se u vektor fiksne dužine (npr. 50 000 elemenata) i dobijeni vektor se prosleđuje ovoj mreži. Na ovaj način, \emph{CNN} uči šablone nad svim podacima spektra i kao rezultat ove mreže dobija se novi vektor koji se dalje koristi u rekurentnoj mreži. Ovaj vektor predstavlja karakteristike koje je \emph{CNN} mreža, uz pomoć filtera, naučila nad podacima masenog spektrometra. Konvolutivna mreža se sastoji od 3 konvolutivna sloja i koristi \emph{ReLu} aktivacionu funkciju. Ovo predstavlja značajan deo arhitekture jer može dosta da poboljša preciznost sekvenciranja i može da nauči šablone u spektru čak i ako su neki maksimumi u spektru pomereni zbog šuma.
+\item \textbf{Jonska CNN}: Ova mreža se koristi tokom odabira sledeće aminokiseline u peptidu i služi da iz malog segmenta spektra izdvoji najvažnije informacije. Za svakog kandidata aminokiseline, mreža analizira deo spektra i procenjuje da li se očekivani jonski fragmenti pojavljuju na odgovarajućim mestima. Prilikom svakog koraka predviđanja sledeće aminokiseline \textbf{DeepNovo} koristi dosadašnje predikcije da izračuna prefiksnu masu, na osnovu koje generiše parcijalni teorijski spektar i proverava da li eksperimentalni spektar podržava ovaj izbor. Ovaj deo modela je bitan u slučaju da su podaci šumoviti ili da neke mase nedostaju u eksperimentalnom spektru.
 \end{itemize}
 
 \subsubsection{Rekurentne neuronske mreže (RNN)}
-Ove mreže su dizajnirane za predviđanje sekvenci, gde izlaz zavisi ne samo od trenutne tačke podataka (podaci masenog spektra) već i od prethodnih tačaka podataka. U kontekstu sekvenciranja peptida, \textbf{RNN} može naučiti kako jedna aminokiselina utiče na sledeću u sekvenci, što je ključno za tačno predviđanje.
+Ove mreže su dizajnirane za predviđanje sekvenci, gde predikcija sledećeg elementa (aminokiseline) ne zavisi samo od prethodno predviđenih aminokiselina, već i od karakteristika spektra koje opisuju ceo peptid. U kontekstu sekvenciranja peptida, \textbf{RNN} može naučiti kako izbor jedne aminokiselina utiče na sledeću u sekvenci, što je ključno za tačno predviđanje.
 
-\emph{DeepNovo} koristi posebnu vrstu RNN-a koja se zove \emph{Long Short-Term Memory (LSTM)}. Ključna prednost \textbf{LSTM} mreža je ta što bolje prati duže zavisnosti, konkretno peptidi mogu da budu različitih dužina a ova mreža pamti i odnose koji su udaljeni, odnosno početak sekvence može da utiče na predviđanje neke kasnije aminokiseline.
+\emph{DeepNovo} koristi posebnu vrstu RNN-a koja se zove \emph{Long Short-Term Memory (LSTM)}. Ključna prednost \textbf{LSTM} mreža je ta što bolje prati duže zavisnosti, što znači da peptidi mogu da budu različitih dužina a ova mreža pamti i odnose koji su udaljeni. Ovo je bitno jer početak sekvence može da utiče na predviđanje neke kasnije aminokiseline.
 
-Ova mreža se sastoji od 1 sloja \textbf{LTSM}-a i radi tako što dodaje jednu po jednu aminokiselinu sve dok ne stigne do kraja peptida. U svakom koraku \textbf{LTSM} mreža gleda:
+Ova mreža se sastoji od 1 sloja i radi tako što dodaje jednu po jednu aminokiselinu sve dok ne stigne do kraja peptida. U svakom koraku \textbf{LSTM} mreža uzima u obzir:
 \begin{itemize}
     \item Šta je mreža naučila do sada - trenutno stanje
     \item Sledeća aminokiselina koja je kandidat
-    \item Svojstva spektra koja su dobijana od konvolucione mreže
+    \item Svojstva spektra koja su dobijana od konvolutivne mreže
 \end{itemize}
 
-Na osnovu ovoga, mreža određuje koja ja verovatnoća da je trenutna aminokiselina zapravo nalazi na datoj poziciji u peptidu.
-
-Kao izlaz iz ove mreže koristi se \emph{softmax} projekcija i ona određuje za svaku aminokiselinu koja je verovatnoća da se ona nalazi na sledećoj poziciji u sekvenci. Dodatno, koristi se \emph{beam search}, odnosno ne bira se samo aminokiselina sa najvećom verovatnoćom nego se čuva više kandidata koji imaju veću verovatnoću. Ovim postupkom se povećava preciznost i gledaju se alternativna rešenja. Na kraju se sekvence rangiraju po rezultatu koliko se poklapaju sa traženim spektrom i koliko imaju grešaka i bira najbolja moguća.
+Kao izlaz iz ove mreže koristi se \emph{softmax} projekcija i ona određuje za svaku aminokiselinu koja je verovatnoća da se ona nalazi na sledećoj poziciji u sekvenci. Dodatno, koristi se \emph{beam search}, odnosno ne bira se samo aminokiselina sa najvećom verovatnoćom nego se čuva više kandidata koji imaju veću verovatnoću. Ovim postupkom se povećava preciznost i gledaju se alternativna rešenja. Na kraju se sekvence rangiraju po skoru koji pokazuje koliko se poklapaju sa traženim spektrom i koliko imaju grešaka i bira se najbolja moguća.
 
 \subsection{Rezultati i evaluacija}
 
 \emph{DeepNovo} metoda nadmašuje tradicionalne metode, posebno u slučajevima kada su sekvence peptida nove i ne podudaraju se ni sa jednom poznatom proteinskom bazom podataka.
 
-Eksperimenti su pokazali značajno poboljšanje u tačnosti identifikacije aminokiselina, posebno za složene peptide.
-
-Za potrebe testiranja naučnici su koristili podatke različitih vrsta. Na slici \ref{fig:performanse} su prikazani rezultati poređenja više algoritama. Da bi se merila preciznost rešenja poređena je prava sekvenca aminokiselina sa onom koja je dobijena na osnovu spektra. 
+Eksperimenti su pokazali značajno poboljšanje u tačnosti identifikacije aminokiselina, posebno za složene peptide. Za potrebe testiranja naučnici su koristili podatke različitih vrsta. Na slici \ref{fig:performanse} su prikazani rezultati poređenja više algoritama. Da bi se merila preciznost rešenja poređena je prava sekvenca aminokiselina sa onom koja je dobijena na osnovu spektra. 
 Takođe, koristile su se različite metrike:
 \begin{itemize}
-    \item \textbf{Preciznost (eng. precision)} - koji predstavlja broj peptida koji je generisao algoritam koji su zapravo tačni
-    \item \textbf{Odziv (eng. recall)} - koji broj stvarnih peptida je uspešno pronađen od strane modela
-    \item \textbf{AUC-PR} - koliko dobro model balansira preciznost i odziv, što veća vrednost bolje će biti i preformanse
+    \item \textbf{Preciznost (eng. precision)} - predstavlja odnos broja peptida koje je generisao algoritam koji su zapravo tačni i ukupnog broja peptida koje je generisao
+    \item \textbf{Odziv (eng. recall)} - predstavlja  odnos broja tačnih peptida koje je generisao i koliko je ukupno bilo peptida koji su se tražili
+    \item \textbf{AUC-PR} - predstavlja koliko dobro model balansira preciznost i odziv, što je veća vrednost bolje će biti i preformanse
 \end{itemize}
 
-Može se primetiti da je \textbf{DeepNovo} model na svakom od datih skupa podataka imao bolje rezultate. \textbf{DeepNovo} je imao i veću preciznost u traženju peptida kao i veći odziv, samim tim i odnos \emph{AUC-PR} krive je bolji nego kod konkurenata.
+Može se primetiti da je \textbf{DeepNovo} model na svakom od datih skupa podataka imao bolje rezultate. \textbf{DeepNovo} je imao i veću preciznost u traženju peptida kao i veći odziv, samim tim i odnos \emph{AUC-PR} krive je bolji nego kod konkurenata, što znači da predlaže ispravne peptide i pronalazi većinu peptida.
 
 \begin{figure}[h]
 \centering
@@ -759,7 +786,7 @@ Može se primetiti da je \textbf{DeepNovo} model na svakom od datih skupa podata
 
 \begin{itemize}
 \item \textbf{Identifikacija novih antimikrobnih peptida}: Otkrivanje potencijalnih kandidata za nove antibiotike
-\item \textbf{Analiza post-translacionih modifikacija}: Detekcija peptida sa složenim modifikacijama koje su se desile nakon njegovog kreiranja
+\item \textbf{Analiza post-translacionih modifikacija}: Detekcija peptida sa složenim modifikacijama koje su se desile nakon njegovog kreiranja, što može dovesti do neočekivanih masa koje je teško pronaći
 \item \textbf{Univerzalna primena}: Uspešna implementacija na različitim vrstama i organizmima
 \end{itemize}
 
@@ -768,9 +795,9 @@ Može se primetiti da je \textbf{DeepNovo} model na svakom od datih skupa podata
 \chapter{Elektronska platforma}
 % ------------------------------------------------------------------------------
 
-U ovom poglavlju će biti opisana elektronska platforma koja je napravljena kao deo ovog rada. Objasniće se njeno pokretanje i korišćenje kao i tehnologije koje su korišćene prilikom pravljenja platforme.
+U ovom poglavlju će biti opisana elektronska platforma koja je razvijena kao deo ovog rada. Biće objašnjeno njeno pokretanje i korišćenje kao i tehnologije koje su upotrebljenje prilikom pravljenja platforme.
 
-\emph{Frontend} aplikacije je pisan u programskom jeziku \textbf{TypeScript} \cite{typescript} uz korišćenje \textbf{Node 18} \cite{node} i \textbf{Next.js} \emph{framework}-a \cite{next}.
+\emph{Frontend} aplikacije je pisan u programskom jeziku \textbf{TypeScript} \cite{typescript} uz korišćenje \textbf{Node.js 18} \cite{node} i \textbf{Next.js} \emph{framework}-a \cite{next}.
 \emph{Backend} aplikacije je implementiran u programskom jeziku \textbf{Python 3.12} \cite{python} uz korišćenje \textbf{Django} \emph{framework}-a \cite{django}. Izvorni kod aplikacije se nalazi na \emph{GitHub}-u, u javnom repozitorijumu \cite{github}.
 
 \section{Pokretanje aplikacije}
@@ -779,14 +806,14 @@ Pokretanje aplikacije može da se odradi na nekoliko načina:
 \begin{itemize}
     \item \textbf{Docker Compose} \cite{docker_compose} - najjednostavniji način pokretanja aplikacije uz korišćenje \emph{Docker} alata \cite{docker}
     \item \textbf{Direktno pokretanje komponenti} - pokretanje posebno \emph{Frontend} i posebno \emph{Backend} komponenti
-    \item \textbf{Google Cloud Run (GCR)} \cite{gcr} - ova aplikacija je dostupna za korišćenje preko \emph{Google Cloud Run} platforme, pa će se samim tim objasniti i kako odraditi \emph{deploy} aplikacije na \textbf{GCR}
+    \item \textbf{Google Cloud Run (GCR)} \cite{gcr} - ova aplikacija je dostupna za korišćenje preko \emph{Google Cloud Run} platforme, pa će biti objašnjeno i kako odraditi \emph{deploy} aplikacije na \textbf{GCR}
 \end{itemize}
 
 \subsection{\emph{Docker Compose} konfiguracija}
-Za potrebe što lakšeg pokretanja aplikacije korišćen je \emph{open source} alat \emph{Docker} i \emph{Docker Compose}. \emph{Docker Compose} nam pruža jednostavan način da aplikaciju pokrenemo sa svim definisanim bibliotekama, promenljivama okruženja bez potrebe da se bilo šta dodatno namesti. Ovo je posebno bitno u slučaju kada se aplikacija sastoji iz više komponenti pa je potrebno da se pokrene više kontejnera kao što je ovde slučaj.
+Za potrebe što lakšeg pokretanja aplikacije korišćen je \emph{open source} alat \emph{Docker} i \emph{Docker Compose}. \emph{Docker Compose} nam pruža jednostavan način da aplikaciju pokrenemo sa svim definisanim bibliotekama i promenljivim okruženja bez potrebe da se bilo šta dodatno podešava. Ovo je posebno bitno u situacijama kada se aplikacija sastoji iz više komponenti pa je potrebno da se pokrene više kontejnera kao što je ovde slučaj.
 Unutar \textbf{docker} foldera nalaze \emph{docker} i \emph{docker-compose fajlovi}.
 
-Što se tiče klijentskog dela aplikacije njegovo pokretanje je definisano u \emph{Dockerfile.frontend} datoteci i njegov sadržaj može da se vidi na slici \ref{fig:docker_frontend}.
+Što se tiče klijentskog dela aplikacije, njegovo pokretanje je definisano u \emph{Dockerfile.frontend} datoteci i njegov sadržaj može da se vidi na slici \ref{fig:docker_frontend}. Može da se primeti da se koristi \emph{multi-stage build} koji služi da odvoji deo za instaliranje i kompilaciju fajlova od dela za pokretanje aplikacije. Ovo doprinosi tome da završna slika bude što manja.
 
 \begin{figure}[h]
 \centering
@@ -795,20 +822,19 @@ Unutar \textbf{docker} foldera nalaze \emph{docker} i \emph{docker-compose fajlo
 \label{fig:docker_frontend}
 \end{figure}
 
-Može da se primeti da se koristi \emph{multi-stage build} koji služi da odvoji deo za instaliranje i kompilaciju fajlove od dela koji će pokrenuti aplikaciju. Ovo doprinosi tome da završa slika bude što manja.
+Pokretanje serverskog dela aplikacije definisano je u \emph{Dockerfile.backend} datoteci i njegov sadržaj može da se vidi na slici \ref{fig:docker_backend}. Može da se primeti da se koristi \emph{Gunicorn} koji predstavlja \emph{WSGI HTTP} server za produkciona okruženja.
 
-Pokretanje serverskog dela aplikacije definisano je u \emph{Dockerfile.backend} datoteci i njegov sadržaj može da se vidi na slici \ref{fig:docker_backend}.
-
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{images/docker_backend.png}
 \caption{\emph{Dockerfile} za serverski deo aplikacije}
 \label{fig:docker_backend}
 \end{figure}
 
-Može da se primeti da se koristi \emph{Gunicorn} koji predstavlja \emph{WSGI HTTP} server za produkciona okruženja.
-
-Sadržaj glavne \texttt{docker-compose.yml} datoteke može da se vidi na slici \ref{fig:docker_compose}.
+Sadržaj glavne \texttt{docker-compose.yml} datoteke može da se vidi na slici \ref{fig:docker_compose}. Da bi se projekat pokrenuo potrebno je pozicionirati se u \textbf{/docker} direktorijum i pokrenuti sledeću komandu:
+\begin{verbatim}
+    docker-compose up -d --build
+\end{verbatim}
 
 \begin{figure}[h]
 \centering
@@ -817,10 +843,6 @@ Sadržaj glavne \texttt{docker-compose.yml} datoteke može da se vidi na slici \
 \label{fig:docker_compose}
 \end{figure}
 
-Da bi se projekat pokrenuo potrebno je pozicionirati se u \textbf{/docker} direktorijum i pokrenuti sledeću komandu:
-\begin{verbatim}
-    docker-compose up -d --build
-\end{verbatim}
 
 Ova komanda pokreće dva kontejnera. \emph{Frontend} delu aplikacije može da se pristupi tako što se u veb pregladaču otvori \emph{http://localhost:3000}, dok se \emph{backend} deo aplikacije nalazi na \emph{http://localhost:8000}.
 
@@ -846,7 +868,7 @@ Da bi se direktno pokrenuo \emph{Backend} aplikacije potrebno je imati instalira
 \end{verbatim}
 
 Pokretanjem ovih komandi kreiraćemo virtuelno okruženje u kom će se instalirati sve zavisnosti ove aplikacije. Za praćenje verzije korišćenih biblioteka korišćen je \emph{Pipfile} i zato mora da se instalira i \emph{pipenv}.
-Nakon pokretanja serverskom delu aplikacije mogu se slati zahtevi na adresu \emph{http://localhost:8000}.
+Nakon pokretanja, serverskom delu aplikacije mogu se slati zahtevi na adresu \emph{http://localhost:8000}.
 
 \subsection{\emph{Google Cloud Run} implementacija}
 Aplikacija je trenutno \emph{deploy}-ovana na Google Cloud Run i može joj se pristupiti preko \emph{https://antibiotic-sequencing-304513663933.us-central1.run.app/}.
@@ -908,7 +930,7 @@ U slučaju da je potrebno okačiti novu verziju aplikacije, prate se isti koraci
     --region us-central1
 \end{verbatim}
 
-Ako želimo da pristupimo \emph{Docker} slikama koje smo okačili potrebno je otvoriti \emph{https://console.cloud.google.com/artifacts}, slika \ref{fig:gcr_images}.
+Ako želimo da pristupimo \emph{Docker} slikama koje smo okačili potrebno je otvoriti \emph{https://console.cloud.google.com/artifacts} (slika \ref{fig:gcr_images}).
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{images/gcr_images.png}
@@ -916,7 +938,7 @@ Ako želimo da pristupimo \emph{Docker} slikama koje smo okačili potrebno je ot
 \label{fig:gcr_images}
 \end{figure}
 
-Podignutim servisima može se pristupiti preko \emph{https://console.cloud.google.com/run}, slika \ref{fig:gcr_services}.
+Podignutim servisima može se pristupiti preko \emph{https://console.cloud.google.com/run} (slika \ref{fig:gcr_services}).
 
 \begin{figure}[h]
 \centering
@@ -925,7 +947,7 @@ Podignutim servisima može se pristupiti preko \emph{https://console.cloud.googl
 \label{fig:gcr_services}
 \end{figure}
 
-Ako se klikne na neki od servisa pristupiće se brojnim metrikama koje su nam dostupne, \ref{fig:gcr_services_details}. Takođe, tu možemo da vidimo i koji je \emph{URL} našeg servisa kao i da vidimo koji je status i da li su se desile neke greške.
+Ako se klikne na neki od servisa pristupiće se brojnim metrikama koje su nam dostupne (slika \ref{fig:gcr_services_details}). Takođe, tu možemo da vidimo i koji je \emph{URL} našeg servisa kao i da vidimo koji je status i da li su se desile neke greške.
 
 \begin{figure}[h]
 \centering
@@ -939,14 +961,8 @@ Ako se klikne na neki od servisa pristupiće se brojnim metrikama koje su nam do
 
 \subsection{Početna stranica}
 
-Prilikom otvaranja aplikacije otvoriće se početna stranica koja može da se vidi na slici \ref{fig:landing_page}. Na vrhu stranice nalazi se navigacioni meni kojim može da se prelazi sa stranice na stranicu. Takođe, u gornjem desnom uglu nalazi se ikonica koja vodi ka \emph{Github} repozitorijumu gde može da se nađe izvorni kod ove aplikacije.
+Prilikom otvaranja aplikacije, biće prikazana početna stranica što se može videti na slici \ref{fig:landing_page}. Na vrhu stranice nalazi se navigacioni meni kojim može da se prelazi sa stranice na stranicu. Takođe, u gornjem desnom uglu nalazi se ikonica koja vodi ka \emph{Github} repozitorijumu gde može da se nađe izvorni kod ove aplikacije.
 Klikom na dugme \emph{Istraži algoritme} odlazi se na stranicu \emph{Uvod}, gde mogu da se nađu teorijska objašnjenja pojma koja su potrebna za razumevanje algoritama.
-
-\subsection{Uvodna stranica}
-
-Ova stranica služi da predstavi teorijske osnove i pojmove koji su potrebni za dalje razumevanje algoritama. Na slici \ref{fig:intro_1} može da se vidi deo ove stranice. Klikom na bilo koju sliku sa ove stranice ona će se otvoriti i omogućiti jasniji prikaz iste.
-
-Na dnu stranice stranice, koja je prikazana na slici \ref{fig:intro_2}, takođe postoji meni koji vodi ka algoritmima koji su odrađeni u sklopu ovde aplikacije.
 
 \begin{figure}[H]
 \centering
@@ -954,6 +970,12 @@ Na dnu stranice stranice, koja je prikazana na slici \ref{fig:intro_2}, takođe 
 \caption{Početna stranica kada se otvori aplikacija}
 \label{fig:landing_page}
 \end{figure}
+
+\subsection{Uvodna stranica}
+
+Ova stranica služi da predstavi teorijske osnove i pojmove koji su potrebni za dalje razumevanje algoritama. Na slici \ref{fig:intro_1} može da se vidi deo ove stranice. Klikom na bilo koju sliku sa ove stranice ona će se otvoriti i omogućiti jasniji prikaz iste.
+
+Na dnu stranice stranice, koja je prikazana na slici \ref{fig:intro_2}, takođe postoji meni koji vodi ka algoritmima koji su odrađeni u sklopu ovde aplikacije.
 
 \begin{figure}[H]
 \centering
@@ -969,18 +991,19 @@ Na dnu stranice stranice, koja je prikazana na slici \ref{fig:intro_2}, takođe 
 \label{fig:intro_2}
 \end{figure}
 
-\subsection{Algoritam grube sile}
+\subsection{Pristup grubom silom}
 
-Stranica za algoritam grube sile, na slici \ref{fig:brute_force_1}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
+Stranica za pristup grubom silom, prikazana na slici \ref{fig:brute_force_1}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
+Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i postoji mogućnost da se odabere da li korisnik želi da vidi vizuelizaciju ovog algoritma ili želi da vidi samo rešenja \ref{fig:brute_force_2}. Na slici \ref{fig:brute_force_4} može da se vidi drvo koje se izgradilo da bi se došlo do rešenja. Postoje i elementi za kontrolisanje izvršavanja animacije kao što su \emph{Play/Pause/Reset} a pored toga postoji i \emph{slider} kojim može da se premota animacija do određenog dela izvršavanja. Pošto drvo izvršavanja može da bude veoma veliko dodata je i opcija uveličavanja tako da određeni deo drveta može da se uveliča a onda ostatak drveta može da se vidi povlačenjem miša. Čvorovi koji su obeleženi zelenom bojom predstavljaju rešenje a crveni čvorovi su odbačeni i ne predstavljaju rešenje. Kada se miš postavi iznad nekog crvenog čvora prikazaće se i objašnjenje zašto on nije rešenje.
+Kada se animacija završi moguće je kliknuti i na dugme \emph{Download} čime će se izgrađeno drvo skinuti na Vaš računar u \emph{SVG} formatu.
 \begin{figure}[h]
 \centering
 \includegraphics[width=1\textwidth]{images/brute_force_1.png}
-\caption{Stranica za algoritam grube sile sa objašnjem istog}
+\caption{Stranica za pristup grubom silom sa objašnjem istog}
 \label{fig:brute_force_1}
 \end{figure}
 
-Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i postoji mogućnost da se odabere da li korisnik želi da vidi vizuelizaciju ovog algoritma ili želi da vidi samo rešenja \ref{fig:brute_force_2}. Na slici \ref{fig:brute_force_4} može da se vidi drvo koje se izgradilo da bi se došlo do rešenja. Postoje i elementi za kontrolisanje izvršavanja animacije kao što su \emph{Play/Pause/Reset} a pored toga postoji i \emph{slider} kojim može da se premota animacija do određenog dela izvršavanja. Pošto drvo izvršavanja može da bude veoma veliko dodata je i opcija uveličavanja tako da određeni deo drveta može da se uveliča a onda ostatak drveta može da se vidi povlačenjem miša. Čvorovi koji su obeleženi zelenom bojom predstavljaju rešenje a crveni čvorovi su odbačeni i ne predstavljaju rešenje. Kada se miš postavi iznad nekog crvenog čvora prikazaće se i objašnjenje zašto on nije rešenje.
-Kada se animacija završi moguće je kliknuti i na dugme \emph{Download} čime će se izgrađeno drvo skinuti na Vaš računar u \emph{SVG} formatu.
+Na kraju će se za svaki peptid koji je kandidat da bude rešenje prikazati i njegov teorijski spektar, a u slučaju da se taj teorijski spektar poklapa sa unetim eksperimentalnim spektrom, prikazaće se poruka da je pronađeno rešenje, što se može videti i na slici \ref{fig:brute_force_3}. U slučaju da za zadati eksperimentalni spektar nema rešenja ispisaće se poruka koja to i govori.
 \clearpage
 \begin{figure}[H]
 \centering
@@ -992,21 +1015,19 @@ Kada se animacija završi moguće je kliknuti i na dugme \emph{Download} čime �
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\textwidth]{images/brute_force_4.png}
-\caption{Deo izgrađenog stabla u algoritmu grube sile}
+\caption{Deo izgrađenog stabla u pristupu grubom silom}
 \label{fig:brute_force_4}
 \end{figure}
-
-Na kraju će se za svaki peptid koji je kandidat da bude rešenje prikazati i njegov teorijski spektar a u slučaju da se taj teorijski spektar poklapa sa unetim eksperimentalni spektar prikazaće se poruka da je pronađeno rešenje, što se može videti i na slici \ref{fig:brute_force_3}. U slučaju da za zadati eksperimentalni spektar nema rešenja ispisaće se poruka koja to i govori.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\textwidth]{images/brute_force_3.png}
-\caption{Pronađena rešenja u algoritmu grube sile}
+\caption{Pronađena rešenja u pristupu grubom silom}
 \label{fig:brute_force_3}
 \end{figure}
 
 \subsection{\emph{Branch and Bound}}
-Stranica za algoritam \emph{Branch and Bound}, na slici \ref{fig:branch_and_bound}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
+Stranica za algoritam \emph{Branch and Bound}, prikazana na slici \ref{fig:branch_and_bound}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
 \begin{figure}[h]
 \centering
 \includegraphics[width=1\textwidth]{images/branch_and_bound.png}
@@ -1014,10 +1035,10 @@ Stranica za algoritam \emph{Branch and Bound}, na slici \ref{fig:branch_and_boun
 \label{fig:branch_and_bound}
 \end{figure}
 
-Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i može da se odabere da se vidi vizuelizacija ovog algoritma ili samo rešenje. Ovaj algoritam je veoma sličan algoritmu grube sile, tako da je i vizuelizacija i elementi koji čine tu vizuelizaciju potpuno ista. Jedina razlika je što je ovaj algoritam dosta brži i može da ranije odseče kandidate koji nisu rešenje tako da eksperimentalni spektar koji može da se unese je duži. Dodatno, pošto u ovom algoritmu postoji više razloga zašto je neki čvor odsečen tako će i poruke koje se prikazuju kada se mišem prevuče preko nekog čvora biti drugačije. Ovde je takođe po okončanju animacije moguće skinuti igrađeno drvo u \emph{SVG} formatu.
+Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i može da se odabere da se vidi vizuelizacija ovog algoritma ili samo rešenje. Ovaj algoritam je veoma sličan pristupu grubom silom, tako da je i vizuelizacija i elementi koji čine tu vizuelizaciju potpuno ista. Jedina razlika je što je ovaj algoritam dosta brži i može da ranije odseče kandidate koji nisu rešenje tako da eksperimentalni spektar koji može da se unese je duži. Dodatno, pošto u ovom algoritmu postoji više razloga zašto je neki čvor odsečen tako će i poruke koje se prikazuju kada se mišem prevuče preko nekog čvora biti drugačije. Ovde je takođe po okončanju animacije moguće skinuti igrađeno drvo u \emph{SVG} formatu.
 
 \subsection{\emph{Leaderboard}}
-Stranica za algoritam \emph{Leaderboard}, na slici \ref{fig:leaderboard_1}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
+Stranica za algoritam \emph{Leaderboard}, prikazana na slici \ref{fig:leaderboard_1}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\textwidth]{images/leaderboard_1.png}
@@ -1045,7 +1066,7 @@ U poslednjoj rundi biće prikazani peptidi koji su rešenje zadatog eksperimenta
 \end{figure}
 
 \subsection{Spektralna konvolucija}
-Stranica za algoritam spektralne konvolucije, na slici \ref{fig:convolution_1}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
+Stranica za algoritam spektralne konvolucije, prikazana na slici \ref{fig:convolution_1}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\textwidth]{images/convolution_1.png}
@@ -1053,7 +1074,7 @@ Stranica za algoritam spektralne konvolucije, na slici \ref{fig:convolution_1}, 
 \label{fig:convolution_1}
 \end{figure}
 
-Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i može da se odabere da se vidi vizuelizacija ovog algoritma ili da se prikažu samo rešenja. Ovaj algoritam je veoma sličan \emph{Leaderboard} algoritmu, tako da je i vizuelizacija i elementi koji čine tu vizuelizaciju potpuno ista. Jedina razlika je što je ovaj algoritam na samom početku kreira matricu konvolucije, slika \ref{fig:convolution_2}, i uz pomoć matrice smanjuje broj aminokiselina koje mogu da učestvuju u izgradnji peptida, slika \ref{fig:convolution_3}. Postoje posebne kontrole za kontrolisanje animacije za izgradnju matrice konvolucije, kao i posebne kontrole za \emph{Leaderboard} deo ovog algoritma. Ove kontrole su slične onima iz prethodnih algoritama.
+Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i može da se odabere da se vidi vizuelizacija ovog algoritma ili da se prikažu samo rešenja. Ovaj algoritam je veoma sličan \emph{Leaderboard} algoritmu, tako da je i vizuelizacija i elementi koji čine tu vizuelizaciju potpuno ista. Jedina razlika je što ovaj algoritam na samom početku kreira matricu konvolucije (slika \ref{fig:convolution_2}), i uz pomoć matrice smanjuje broj aminokiselina koje mogu da učestvuju u izgradnji peptida (slika \ref{fig:convolution_3}). Postoje posebne kontrole za upravljenje animacijom za izgradnju matrice konvolucije, kao i posebne kontrole za \emph{Leaderboard} deo ovog algoritma. Ove kontrole su slične onima iz prethodnih algoritama.
 
 \begin{figure}[H]
 \centering
@@ -1070,9 +1091,9 @@ Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar
 \end{figure}
 
 \subsection{\emph{DeepNovo}}
-Stranica za \emph{DeepNovo} sekvenciranje, na slici \ref{fig:deepnovo_1}, sadrži \emph{tab}-ove koji pružaju uvid u detalje kao što su:
+Stranica za \emph{DeepNovo} sekvenciranje, prikazana na slici \ref{fig:deepnovo_1}, sadrži \emph{tab}-ove koji pružaju uvid u detalje kao što su:
 \begin{itemize}
-    \item \textbf{Pozadina} - koji su trenutni problemi sekvenciranja
+    \item \textbf{Pregled situacije} - koji su trenutni problemi sekvenciranja
     \item \textbf{DeepNovo} - šta je DeepNovo i kako funkcioniše
     \item \textbf{Arhitektura} - koje komponente čine DeepNovo
     \item \textbf{Rezultati} - uspešnost primene DeepNovo metode
@@ -1087,18 +1108,27 @@ Stranica za \emph{DeepNovo} sekvenciranje, na slici \ref{fig:deepnovo_1}, sadrž
 
 \subsection{Poređenje algoritama}
 
-Stranica za poređenje algoritama, na slici \ref{fig:comparison}, prikazuje vremena izvršavanja algoritama grube sile, \emph{Branch and Bound}, \emph{Leaderboard} i spektralne konvolucije. Dodatno, za svaki algoritam prikazuje i to da je pronašao rešenje i ako da koliko ih je. Na kraju će za svaki od algoritama biti prikazana i njegova rešenja. 
+Stranica za poređenje algoritama prikazuje vremena izvršavanja pristupa grubom silom, algoritama \emph{Branch and Bound}, \emph{Leaderboard} i spektralna konvolucija. Dodatno, za svaki algoritam prikazuje se i kolona \textit{Status} koja govori da li je algoritam uspeo da pronađe rešenje. U slučaju da je algoritam pronašao rešenja, prikazaće se i koliko ih je pronašao. Ukoliko postoji više od 4 rešenja za određeni algoritam, biće prikazana prva 4 rešanja kao i dugme koje kada se klikne vodi na sva rešenja za traženi algoritam. Na kraju će za svaki od algoritama biti prikazana i njegova rešenja. 
 
-\begin{figure}[h]
+U slučaju da se za teorijski spektar unese \textbf{[0, 114, 128, 129, 242, 243, 257, 371]} svi algoritmi pronalaze rešenja što je i prikazano na slici \ref{fig:comparison_all_solution}.
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{images/comparison_all_solution.png}
+\caption{Prikaz poređenje brzine algoritama kada svi algoritmi pronalaze rešenja}
+\label{fig:comparison_all_solution}
+\end{figure}
+
+Kada se unese teorijski spektar koji ima lažne ili nedostajuće mase, na primer \textbf{[0, 113, 114, 128, 129, 227, 240, 242, 257, 355, 356, 370, 370, 484]}, samo \emph{Leaderboard} algoritam i algoritam spektralne konvolucije pronalaze rešenja (slika \ref{fig:comparison}).
+\begin{figure}[H]
 \centering
 \includegraphics[width=1\textwidth]{images/comparison.png}
-\caption{Poređenje brzine izvršavanja algoritama grube sile, \emph{Branch and Bound}, \emph{Leaderboard} i spektralne konvolucije}
+\caption{Prikaz poređenje brzine algoritama kada samo \emph{Leaderboard} algoritam i algoritam spektralne konvolucije pronalaze rešenja}
 \label{fig:comparison}
 \end{figure}
 
 \subsection{Nepostojeća stranica}
 
-U slučaju da se unese pogrešan \emph{URL} za stranicu prikazaće se da ta stranica ne postoji i ponudi izbor postojćeih stranica, na slici \ref{fig:wrong_page} može da se to i vidi.
+U slučaju da se unese pogrešan \emph{URL} za stranicu prikazaće se da ta stranica ne postoji i biće ponuđen izbor postojećih stranica, što je i prikazano na slici \ref{fig:wrong_page}.
 
 \begin{figure}[H]
 \centering
