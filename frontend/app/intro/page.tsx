@@ -46,8 +46,8 @@ export default function IntroPage() {
               <p className="text-muted-foreground mb-6">
                 Tradicionalno, proteini prate{" "}
                 <span className="font-semibold">Centralnu Dogmu Molekularne biologije</span>, koja kaže da se DNK prvo
-                prepisuje u RNK - slika 1, a zatim se RNK prevodi u protein.
-                Na slici jedan se može se primetiti da se DNK sastoji od 2 lanca koja su komplementarna. Enzim <span className="italic">RNK polimeraza</span> 
+                prepisuje u RNK - Slika 1, a zatim se RNK prevodi u protein.
+                Na Slici 1 se može se primetiti da se DNK sastoji od 2 lanca koja su komplementarna. Enzim <span className="italic">RNK polimeraza</span> 
                 {" "}se kači na početak gena i kreće kroz gene gde razdvaja lanac i stvara prostor za prepisivanje DNK u RNK čime se dobija RNK.
               </p>
 
@@ -57,7 +57,7 @@ export default function IntroPage() {
                 koja je aminokiselina u pitanju uzima se sekvenca od 3 nukleotida takođe poznata kao kodon.
                 Pošto je uzeta sekvenca od 3 nukleotida ovo nam daje 64 različita kodona koja treba da se prevedu u 20 aminokiselina,
                 da smo uzeli sekvencu od 2 nukleotida dobili bismo 16 različitih kombinacija čime ne bismo mogli da dobijemo sve aminokiseline.
-                Na slici 2 može se videti kako se kodoni prevode u odgovarajuće aminokiseline. Postoje start i stop kodoni koji određuju početak odnosno kraj
+                Na Slici 2 može se videti kako se kodoni prevode u odgovarajuće aminokiseline. Postoje start i stop kodoni koji određuju početak odnosno kraj
                 sekvence koja se prevodi u protein.
               </p>
             </div>
@@ -123,9 +123,9 @@ export default function IntroPage() {
           <div className="flex flex-col">
             <div className="prose prose-lg max-w-full">
               <p className="text-muted-foreground mb-6">
-                Tirocidin B1 je cikličan peptid dužine 10 (slika 3),
+                Tirocidin B1 je cikličan peptid dužine 10 (Slika 3),
                 što znači da su prva i poslednja aminokiselina povezane i da samim tim 
-                postoji 10 njegovih različitih linearnih reprezentacija (tabela 1).
+                postoji 10 njegovih različitih linearnih reprezentacija (Tabela 1).
                 Prateći centralnu dogmu i zaključka da se 1 kodon prevodi u 1 aminokiselinu, 
                 naučnici su probali da pronađu 10 kodona odnosno 30 nukleotida u genomu bakterije <span className="italic">Bacillus brevis</span>{" "}
                 od koje nastaje ovaj antibiotik. Ovaj postupak je veoma dugotrajan obzirom da mora da se proveri više hiljada 30-grama
@@ -223,7 +223,7 @@ export default function IntroPage() {
                 <p className="text-muted-foreground">
                   Masa se meri u daltonima <span className="italic">(Da)</span>, pri čemu je{" "}
                   <span className="italic">1 Da</span> približno jednak masi protona/neutrona. Samim tim masa molekula
-                  je jednaka sumi masa protona/neutrona koji čine taj molekul. Mase aminokiselina su poznate i prikazane su na slici 4. 
+                  je jednaka sumi masa protona/neutrona koji čine taj molekul. Mase aminokiselina su poznate i prikazane su na Slici 4. 
                   Može se primetiti da neke aminokiseline imaju istu masu, tako da 20 različitih aminokiselina ima 18 različitih masa.
                 </p>
 
@@ -288,7 +288,7 @@ export default function IntroPage() {
               <p className="text-muted-foreground mb-6">
                 Kao ulaz u svaki od ovih algoritama očekuje se eksperimentalni spektar, odnosno spektar koji je dobijen uz pomoć
                 masenog spektrometra za neki peptid.
-                Na slici 5 su prikazane mase svih potpeptida peptida NQEL koje se dobijaju uz pomoć
+                Na Slici 5 su prikazane mase svih potpeptida peptida NQEL koje se dobijaju uz pomoć
                 masenog spektrometra, kao i masa praznog peptida i celog peptida, takođe je prikazan i teorijski spektar.
               </p>
             </div>
@@ -332,7 +332,7 @@ export default function IntroPage() {
                 se ne nalazi u eksperimentalnom spektru ali postoji u teorijskom spektru peptida.
               </p>
               <p className="text-muted-foreground mb-6">
-                U tabeli 2 može da se vidi primer teorijskog i eksperimentalnog spektra za peptid NEQ sa nedostajućim i lažnim masama.
+                U Tabeli 2 može da se vidi primer teorijskog i eksperimentalnog spektra za peptid NEQ sa nedostajućim i lažnim masama.
               </p>
             </div>
           </div>

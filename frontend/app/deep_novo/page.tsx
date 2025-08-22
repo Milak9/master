@@ -39,7 +39,7 @@ export default function DeepNovoPage() {
       <Tabs defaultValue="background" value={activeTab} onValueChange={setActiveTab} className="w-full mb-12">
         <TabsList className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 w-full gap-2 sm:gap-0 mb-6">
           <TabsTrigger value="background" className="w-full justify-start sm:justify-center">
-            Pregled situacije
+            Postojeće tehnike i problemi
           </TabsTrigger>
           <TabsTrigger value="deepnovo" className="w-full justify-start sm:justify-center">
             DeepNovo
@@ -234,7 +234,7 @@ export default function DeepNovoPage() {
           <div className="prose prose-lg max-w-none">
             <h2 className="text-2xl font-semibold mb-4">DeepNovo arhitektura neuronske mreže</h2>
             <p className="text-muted-foreground mb-6">
-              Srce <span className="italic">DeepNovo</span> pristupa je njegov model dubokog učenja (slika 1), koji se sastoji od:
+              Srce <span className="italic">DeepNovo</span> pristupa je njegov model dubokog učenja (Slika 1), koji se sastoji od:
             </p>
             <ul className="list-disc pl-8 mb-4 space-y-2 text-muted-foreground mt-2">
               <li>
@@ -406,7 +406,7 @@ export default function DeepNovoPage() {
                   složene peptide.
                 </p>
                 <p className="text-muted-foreground">
-                  Za potrebe testiranja naučnici su koristili podatke različitih vrsta. Na slici 1. su prikazani rezultati
+                  Za potrebe testiranja naučnici su koristili podatke različitih vrsta. Na Slici 1. su prikazani rezultati
                   poređenja više algoritama. Da bi se merila preciznost rešenja poređena je prava sekvenca aminokiselinama
                   sa onom koja je dobijena na osnovu spektra. Takođe, koristile su se različite metrike:
                 </p>
