@@ -90,9 +90,10 @@ Rad je posebno koristan studentima bioinformatike i molekularne biologije kao al
 \section{Centralna dogma molekularne biologije}
 Proces sekvenciranja antibiotika je fundamentalan u razumevanju kako su ovi molekuli proizvedeni od strane bakterija i kako se oni mogu sintetisati ili modifikovati za primene u medicini. Antibiotici su često peptidi, pri čemu veliki broj pripada neribozomalnim peptidima (\emph{non-ribosomal peptides - NRPs}), koji ne prate standardna pravila za sintezu proteina čime se otežava njihovo sekvenciranje \cite{online_lecture, online_book}.
 
-DNK sadrži recept za kreiranje proteina. Naime, DNK se sastoji od gena koji mogu biti uključeni i tada će se na osnovu njih kreirati proteini ili isključeni kada se oni neće koristiti za kreiranje proteina. Ovaj proces uključivanja i isključivanja gena naziva se genska ekspresija i zavisi od toga da li je potrebno da se određeni protein kreira ili ne (na primer, fotosinteza kod biljaka koja se obavlja samo preko dana).
+DNK sadrži recept za kreiranje proteina. Naime, DNK se sastoji od kodirajućih gena, koji sadrže informacije potrebne za sintezu proteina, i nekodirajućih gena koji ne proizvode proteine. Kodirajući geni mogu biti aktivirani ili deaktivirani, što znači da se u datom trenutku koriste ili ne koriste za sintezu proteina. Ovaj proces naziva se genska ekspresija i zavisi od potreba ćelije (na primer, gen za fotosintezu kod biljaka aktivira se samo tokom dana).
 
-Najveći broj proteina nastaje kroz proces koji se zove centralna dogma molekularne biologije, koja podrazumeva da se DNK prvo prepisuje u RNK (Slika \ref{fig:transkripcija}), a zatim se RNK prevodi u protein. Proces prevođenja DNK u RNK naziva se transkripcija i on podrazumeva da enzim RNK polimeraza očitava jedan lanac DNK i na osnovu njega sintetiše jedan, komplementaran RNK lanac, pri čemu se nukleotid timin (T) zamenjuje uracilom (U). Na Slici \ref{fig:transkripcija} se može se primetiti da se DNK sastoji od 2 lanca koja su komplementarna. Enzim RNK polimeraza se zakači na DNK lanac na početku gena, zatim se kreće duž gena čime razdvaja dva lanca DNK i tako stvara prostor za prepisivanje DNK čime se dobija novi molekul RNK.
+Najveći broj proteina nastaje kroz procese transkripcije i translacije genetskih informacija. 
+Proces transkripcije podrazumeva da se DNK prepisuje u RNK (Slika \ref{fig:transkripcija}). Ovaj proces se odvija uz pomoć enzima RNK polimeraze koji očitava jedan lanac DNK i na osnovu njega sintetiše jedan, komplementaran RNK lanac, pri čemu se nukleotid timin (T) zamenjuje uracilom (U). Na Slici \ref{fig:transkripcija} može se primetiti da se DNK sastoji od 2 lanca koja su komplementarna. Enzim RNK polimeraza se veže na DNK lanac na početku gena, zatim razdvaja lance DNK i tako omogućava sintetisanje novog, komplementarnog lanca, odnosno prepisivanje DNK čime se dobija novi molekul RNK.
 
 \begin{figure}[h]
   \centering
@@ -101,18 +102,20 @@ Najveći broj proteina nastaje kroz proces koji se zove centralna dogma molekula
   \label{fig:transkripcija}
 \end{figure}
 
-Prilikom prevođenja RNK u protein potrebno je na osnovu nukleotida odrediti koja je aminokiselina u pitanju. Za ovaj proces je zadužena organela ribozom, koja omogućava očitavanje informacija koju nosi RNK prema unapred utvrđenom pravilu koje se naziva genetski kod. Budući da je potrebno uniformno tumačiti nukleotidnu sekvencu, koristi se niz od tri uzastopna nukleotida, poznat kao kodon. Upotrebom kodona dužine tri nukleotida dobija se ukupno 64 različite sekvence, koje se mapiraju na 20 različitih aminokiselina. Da je korišćen niz od samo dva nukleotida, bilo bi moguće formirati svega 16 kombinacija, što ne bi bilo dovoljno da se pokriju sve aminokiseline neophodne za sintezu proteina. Na Slici \ref{fig:codon-wheel} može se videti kako se kodoni prevode u odgovarajuće aminokiseline. Postoje start i stop kodoni koji određuju početak odnosno kraj sekvence koja se prevodi u protein.
+Nakon proces transkripcije odvija se proces translacije koji podrazumeva da se RNK prevodi u protein. Prilikom prevođenja RNK u protein potrebno je na osnovu nukleotida odrediti koja je aminokiselina u pitanju. Za ovaj proces je zadužena organela ribozom, koja omogućava očitavanje informacija koju nosi RNK prema unapred utvrđenom pravilu koje se naziva genetski kod. Budući da je potrebno uniformno tumačiti nukleotidnu sekvencu, koristi se niz od tri uzastopna nukleotida, poznat kao kodon. Upotrebom kodona dužine tri nukleotida dobija se ukupno 64 različite sekvence, koje se mapiraju na 20 različitih aminokiselina. Da je korišćen niz od samo dva nukleotida, bilo bi moguće formirati svega 16 kombinacija, što ne bi bilo dovoljno da se pokriju sve aminokiseline neophodne za sintezu proteina. Na Slici \ref{fig:codon-wheel} može se videti kako se kodoni prevode u odgovarajuće aminokiseline. Postoje \emph{Start} i \emph{Stop} kodoni koji određuju početak odnosno kraj sekvence koja se prevodi u protein.
+
+Ovaj celokupni protok informacija i proces nastajanja proteina u biološkim sistemima naziva se \textbf{centralna dogma molekularne biologije}.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{images/RNA-Codon-Wheel.png}
-  \caption{RNK kodonski točak prikazuje kako se sekvence od tri nukleotida (kodoni) prevode u aminokiseline. Svaki kodon se čita od centra ka spolja, a zeleni trougao označava start kodon (AUG) koji kodira metionin, dok crveni kvadrati označavaju stop kodone (UAA, UAG, UGA) koji određuju kraj sekvence koja se prevodi u protein. Preuzeto sa \cite{codon_chart}.}
+  \caption{RNK kodonski točak prikazuje koje sekvence od tri nukleotida (kodoni) kodiraju ili odgovaraju kojim aminokiselinama. Svaki kodon se čita od centra ka spolja, a zeleni trougao označava start kodon (AUG) koji kodira metionin, dok crveni kvadrati označavaju stop kodone (UAA, UAG, UGA) koji određuju kraj sekvence koja se prevodi u protein. Preuzeto sa \cite{codon_chart}.}
   \label{fig:codon-wheel}
 \end{figure}
 
 
 \section{Odstupanje od centralne dogme}
-Tirocidin B1 je cikličan peptid dužine 10 (Slika \ref{fig:tirocidin}), što znači da su prva i poslednja aminokiselina povezane i da samim tim postoji 10 njegovih različitih linearnih reprezentacija (Tabela \ref{tab:linear_representations}). Prateći centralnu dogmu i činjenicu da se 1 kodon prevodi u 1 aminokiselinu, bilo je za očekivati da je moguće pronaći 10 kodona odnosno 30 nukleotida u genomu bakterije \emph{Bacillus brevis} od koje nastaje ovaj antibiotik. Da bi se ovaj postupak obavio, potrebno je proveriti više hiljada 30-grama koji mogu da počnu bilo gde u genomu, što može delovati kao dugotrajan zadatak, ali uz moderne računare je ostvariv u prihvatljivom vremenu. Analiziranjem genoma utvrđeno je da ne postoji 30-gram koji se kodira u neki od 10 različitih reprenzatacija traženog antibiotika.
+Tirocidin B1 je cikličan peptid (ciklopeptid) dužine 10 (Slika \ref{fig:tirocidin}), što znači da su prva i poslednja aminokiselina povezane i da samim tim postoji 10 njegovih različitih linearnih reprezentacija (Tabela \ref{tab:linear_representations}). Prateći centralnu dogmu i činjenicu da se 1 kodon prevodi u 1 aminokiselinu, bilo bi za očekivati da je moguće pronaći 10 kodona odnosno 30 nukleotida u genomu bakterije \emph{Bacillus brevis} od koje nastaje ovaj antibiotik. Da bi se ovaj postupak obavio, potrebno je proveriti više hiljada 30-grama koji mogu da počnu bilo gde u genomu, što može delovati kao dugotrajan zadatak, ali uz moderne računare je ostvariv u prihvatljivom vremenu. Analiziranjem genoma utvrđeno je da ne postoji 30-gram koji se kodira u neku od 10 različitih reprenzatacija odgovarajućeg antibiotika.
 
 \begin{figure}[h]
   \centering
@@ -121,7 +124,7 @@ Tirocidin B1 je cikličan peptid dužine 10 (Slika \ref{fig:tirocidin}), što zn
   \label{fig:tirocidin}
 \end{figure}
 
-Na ovaj način je pokazano da Tirocidin B1 ne prati centralnu dogmu molekularne biologije i da ovaj peptid nastaje kroz drugačiji proces. Dalja istraživanja pokazala su da postoje peptidi koji nastaju uz pomoć posebnih enzima koji su zaduženi za njihovo sintentisanje pod nazivom \emph{NRP} sintetaze. Ovi enzimi se sastoje od kompleksnih molekulskih jedinica, takozvanih modula, gde svaki modul odgovara jednoj aminokiselini koja učestvuje u sastavu proteina. U slučaju Tirocidina B1, enzim sadrži 10 modula i svaki od modula kodira 1 aminokiselinu čime je određena struktura antibiotika.
+Na ovaj način je pokazano da Tirocidin B1 ne prati centralnu dogmu molekularne biologije i da sinteza ovog proteina prati drugačiji proces. Dalja istraživanja pokazala su da postoje peptidi koji nastaju uz pomoć posebnih enzima koji su zaduženi za njihovo sintentisanje pod nazivom \emph{NRP} sintetaze. Ovi enzimi se sastoje od kompleksnih molekulskih jedinica, takozvanih modula, gde svaki modul odgovara jednoj aminokiselini koja učestvuje u sastavu proteina. U slučaju Tirocidina B1, enzim sadrži 10 modula i svaki od modula kodira 1 aminokiselinu čime je određena struktura antibiotika.
 
 \begin{table}[H]
 \centering
@@ -159,16 +162,16 @@ Samim tim na osnovu poznatih masa aminokiselina možemo da odredimo masu celog p
 \end{verbatim}
 
 \section{Teorijski spektar peptida}
-Teorijski spektar peptida predstavlja mase svih mogućih potpeptida, uključujući 0 i masu celog peptida. Na osnovu peptida možemo lako da odredimo teorijski spektar ali na osnovu spektra ne možemo lako da odredimo koji je peptid u pitanju.
+Teorijski spektar peptida predstavlja mase svih mogućih potpeptida, uključujući 0 i masu celog peptida. Znajući aminokiselinsku sekvencu peptida možemo lako da odredimo teorijski spektar ali na osnovu teorijskog spektra ne možemo lako da odredimo koja je sekvenca peptida u pitanju.
 
 Problem sekvenciranja ciklopeptida samim tim se svodi na problem kako rekonstruisati ciklični peptid na osnovu njegovog teorijskog spektra. U nastavku će biti prikazano nekoliko različitih algoritama za sekvenciranje peptida.
 
-Kao ulaz u svaki od ovih algoritama očekuje se eksperimentalni spektar, odnosno spektar koji je dobijen uz pomoć masenog spektrometra za neki peptid. Na Slici \ref{fig:spektar} su prikazane mase svih potpeptida peptida \textbf{NQEL} koje se dobijaju uz pomoć masenog spektrometra, kao i masa praznog peptida i celog peptida, takođe je prikazan i teorijski spektar.
+Kao ulaz u svaki od ovih algoritama očekuje se eksperimentalni spektar, odnosno spektar koji je dobijen uz pomoć masenog spektrometra za neki peptid. Spektar dobijen na ovaj način često ne odgovara teorijskom spektru zato što se dobija eksperimentalno a postupak merenja je podložan greškama. Na Slici \ref{fig:spektar} su prikazane mase svih potpeptida peptida \textbf{NQEL} koje bi trebalo da se dobiju uz pomoć masenog spektrometra, kao i masa praznog peptida i celog peptida.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.9\textwidth]{images/peptide-theoretical-spectrum.png}
-  \caption{Teorijski spektar peptida \textbf{NQEL} koji prikazuje sve moguće potpeptide, njihove mase i njegov teorijski spektar}
+  \caption{Mase svih potpeptida peptida \textbf{NQEL} i njegov teorijski spektar}
   \label{fig:spektar}
 \end{figure}
 
@@ -179,7 +182,7 @@ Kao ulaz u svaki od ovih algoritama očekuje se eksperimentalni spektar, odnosno
 U ovom odeljku biće prikazani algoritmi za određivanje cikličnog peptida na osnovu poznatog eksperimentalnog spektra. Neki od algoritama koji će biti objašnjeni su:
 \begin{itemize}
     \item \textbf{Pristup grubom silom} (\emph{Brute force}): Direktan pristup gde se isprobavaju sve moguće kombinacije da bi se našlo optimalno rešenje.
-    \item \textbf{\emph{Branch and Bound}}: Optimizovan algoritam koji će odbacivati kandidate čim prestanu da budu potencijalno rešenje.
+    \item \textbf{Pristup grananja i ograničavanja} (\emph{Branch and Bound}): Optimizovan algoritam koji će odbacivati kandidate čim prestanu da budu potencijalno rešenje.
     \item \textbf{\emph{Leaderboard} algoritam}: Algoritam koji održava listu \emph{N} najboljih kandidata za rešenje i na osnovu njih smanjuje broj potencijalnih kandidata.
     \item \textbf{Spektralna konvolucija}: Određuje aminokiseline koje mogu da učestvuju u peptidu na osnovu eksperimentalnog spektra.
     \item \textbf{\emph{DeepNovo}}: Metoda zasnovana na dubokom učenju koja omogućava sekvenciranje peptida bez oslanjanja na baze podataka.
@@ -208,7 +211,7 @@ Na primer, za peptid mase 579 Da, algoritam će generisati sve moguće kombinaci
 \label{tab:primer1}
 \end{table}
 
-Da bi se utvrdilo koji od peptida je tačno rešenje, algoritam mora da generiše teorijski spektar za svaki kandidat peptid i uporedi ga sa eksperimentalnim spektrom. Ovo dodatno povećava računsku složenost algoritma, ali je neophodno za pronalaženje tačnog rešenja.
+Da bi se utvrdilo koja od sekvenci je tačno rešenje, algoritam mora da generiše teorijski spektar za svaki kandidat peptid i uporedi ga sa eksperimentalnim spektrom. Ovo dodatno povećava računsku složenost algoritma, ali je neophodno za pronalaženje tačnog rešenja.
 
 Na Slici \ref{fig:same_mass}, možemo da vidimo koliko postoji različitih peptida za istu masu, samim tim možemo zaključiti da je izvršavanje pristupom grubom silom veoma neefikasno.
 
@@ -219,7 +222,7 @@ Na Slici \ref{fig:same_mass}, možemo da vidimo koliko postoji različitih pepti
   \label{fig:same_mass}
 \end{figure}
 
-Na osnovu prethodnog teksta definiše se pseudokod za pristup grubom silom koji se može videti kao algoritam \ref{alg:brute_force}.
+Sledeći pseudokod (Algoritam \ref{alg:brute_force}) precizno opisuje prethodno opisani algoritam.
 
 \begin{algorithm}[H]
 \label{alg:brute_force}
@@ -231,20 +234,20 @@ Na osnovu prethodnog teksta definiše se pseudokod za pristup grubom silom koji 
 \Fn{\FRec{eksperimentalniSpektar}}{
     $peptidi \gets$ Lista sa praznim stringom\;
     $rezultati \gets$ Prazna lista\;
-    $ciljna\_masa \gets$ Poslednji element $eksperimentalniSpektar$\;
+    $ciljnaMasa \gets$ Poslednji element liste $eksperimentalniSpektar$\;
     
     \While{$peptidi \neq$ Prazno}{
-        $prosireni \gets$ \textbf{Proširi}($peptidi$)\;
+        $prosireni \gets$ \textbf{ProdužiPeptide}($peptidi$)\;
         $kandidati \gets$ Prazna lista\;
     
         \ForEach{$peptid \in prosireni$}{
             $masa \gets$ \textbf{IzračunajMasu}($peptid$)\;
     
-            \uIf{$masa = ciljna\_masa$}{
+            \uIf{$masa = ciljnaMasa$}{
                 \If{\textbf{CikličniSpektar}($peptid$) $=$ $eksperimentalniSpektar$}{
                     Dodaj $peptid$ u $rezultati$\;
                 }
-            }\ElseIf{$masa < ciljna\_masa$}{
+            }\ElseIf{$masa < ciljnaMasa$}{
                 Dodaj $peptid$ u $kandidati$\;
             }
         }
@@ -259,9 +262,9 @@ Na osnovu prethodnog teksta definiše se pseudokod za pristup grubom silom koji 
 \noindent
 \textbf{Objašnjenje pomoćnih funkcija:}
 \begin{itemize}
-  \item \textbf{Proširi(peptidi)} – sve preostale peptide proširuje sa svakom mogućom aminokiselinom i vraća proširenu listu.
+  \item \textbf{ProdužiPeptide(peptidi)} – sve preostale peptide proširuje sa svakom mogućom aminokiselinom i vraća proširenu listu.
   \item \textbf{IzračunajMasu(peptid)} – računa ukupnu masu peptida sabiranjem masa svih aminokiselina koje čine taj peptid.
-  \item \textbf{CikličniSpektar(peptid)} – za peptid koji je potencijalno rešenje generiše se ciklični spektar koji se poredi sa zadatim eksperimentalnim spektrom.
+  \item \textbf{CikličniSpektar(peptid)} – za peptid koji je potencijalno rešenje generiše se ciklični teorijski spektar.
 \end{itemize}
 
 \section{\emph{Branch and Bound}}
@@ -285,7 +288,7 @@ Prednosti \emph{Branch and Bound} algoritma u odnosu na pristup grubom silom su 
 \hline
 Istražuje sve moguće kombinacije & Inteligentno eliminiše neperspektivne grane \\
 \hline
-Eksponencijalna vremenska složenost & Značajno bolja vremenska složenost (u najgorem slučaju i dalje eksponencijalna, ali znatno brža) \\
+Eksponencijalna vremenska složenost & Značajno bolja vremenska složenost (u najgorem slučaju i dalje eksponencijalna, ali znatno manje sveukupno vreme izvršavanja algoritma) \\
 \hline
 Garantuje pronalaženje svih rešenja & I dalje garantuje pronalaženje svih rešenja \\
 \hline
@@ -296,7 +299,7 @@ Neefikasan za duže peptide & Efikasniji za duže peptide \\
 \label{tab:branch_vs_brute}
 \end{table}
 
-Pseudokod za algoritam Branch and Bound može se videti kao algoritam \ref{alg:branch_and_bound}.
+Pseudokod za algoritam \emph{Branch and Bound} može se videti kao algoritam \ref{alg:branch_and_bound}.
 
 \begin{algorithm}[H]
 \label{alg:branch_and_bound}
@@ -308,20 +311,20 @@ Pseudokod za algoritam Branch and Bound može se videti kao algoritam \ref{alg:b
 \Fn{\FRec{eksperimentalniSpektar}}{
     $peptidi \gets$ Lista sa praznim stringom\;
     $rezultati \gets$ Prazna lista\;
-    $ciljna\_masa \gets$ Poslednji element $eksperimentalniSpektar$\;
+    $ciljnaMasa \gets$ Poslednji element liste $eksperimentalniSpektar$\;
     
     \While{$peptidi \neq$ Prazno}{
-        $prosireni \gets$ \textbf{Proširi}($peptidi$)\;
+        $prosireni \gets$ \textbf{ProdužiPeptide}($peptidi$)\;
         $kandidati \gets$ Prazna lista\;
     
         \ForEach{$peptid \in prosireni$}{
             $masa \gets$ \textbf{IzračunajMasu}($peptid$)\;
 
-            \uIf{$masa = ciljna\_masa$}{
+            \uIf{$masa = ciljnaMasa$}{
                 \If{\textbf{CikličniSpektar}($peptid$) $=$ $eksperimentalniSpektar$}{
                     Dodaj $peptid$ u $rezultati$\;
                 }
-            }\ElseIf{$masa < ciljna\_masa$}{
+            }\ElseIf{$masa < ciljnaMsa$}{
                 \If{\textbf{Konzistentan}($peptid$, $eksperimentalniSpektar$)}{
                     Dodaj $peptid$ u $kandidati$\;
                 }
@@ -339,7 +342,7 @@ Pseudokod za algoritam Branch and Bound može se videti kao algoritam \ref{alg:b
 \noindent
 \textbf{Objašnjenje pomoćnih funkcija:}
 \begin{itemize}
-  \item \textbf{Konzistentan(peptid, eksperimentalniSpektar)} – glavni korak odsecanja i smanjivanja prostora pretrage.  Provera da li se svaka masa u okviru linearnog spektra peptida javlja i u okviru eksperimentalnog spektra. Ako neka masa postoji u okviru linearnog spektra a ne u okviru eksperimentalnog spektra to znaci da spektrum nije konzistentan, obrnuto ne mora da važi, jer se računa spektar parcijalnog peptida a ne još celog pa masa koja trenutno nije prisutna može da se pojavi.
+  \item \textbf{Konzistentan(peptid, eksperimentalniSpektar)} – glavni korak odsecanja i smanjivanja prostora pretrage.  Provera da li se svaka masa u okviru linearnog teorijskog spektra peptida javlja i u okviru eksperimentalnog spektra. Pošto se radi o parcijalnom kandidatu računa se linearni teorijski spektar a ne ciklični teorijski spektar. Ako neka masa postoji u okviru linearnog teorijskog spektra a ne u okviru eksperimentalnog spektra to znaci da spektrum nije konzistentan, obrnuto ne mora da važi, jer se računa spektar parcijalnog peptida a ne još celog pa masa koja trenutno nije prisutna može da se pojavi.
 \end{itemize}
 
 \section{Uporedna analiza prethodnih algoritama}
@@ -485,7 +488,7 @@ Na ovom primeru može se primetiti kako se odmah odbacuje cela \textbf{C} grana 
 
 \section{Nedostak prethodnih algoritama}
 
-Glavni nedostatak prethodnih algoritama je to što teorijski spektar peptida koji je kandidat za rešenje mora skroz da se poklopi sa zadatim eksperimentalnim spektrom. U realnosti to nije moguće, eksperimentalni spektri često sadrže lažne ili nedostajuće mase i samim tim mase neće biti iste kao u teorijskom spektru.
+Glavni nedostatak prethodnih algoritama je to što teorijski spektar peptida koji je kandidat za rešenje mora skroz da se poklopi sa zadatim eksperimentalnim spektrom. U realnosti to nije moguće, eksperimentalni spektri često sadrže greške nastale usled merenja masenog spektrometra i samim tim izmerene mase neće biti iste kao u teorijskom spektru.
 \textbf{Lažna masa} predstavlja masu koja se nalazi u eksperimentalnom spektru ali zapravo ne postoji u teorijskom spektru peptida.
 \textbf{Nedostajuća masa} predstavlja masu koja se ne nalazi u eksperimentalnom spektru ali postoji u teorijskom spektru peptida.
 
@@ -504,12 +507,12 @@ U Tabeli \ref{tab:false_and_missing_masses} može da se vidi primer teorijskog i
     \label{tab:false_and_missing_masses}
 \end{table}
 
-U narednim sekcijama dat je prikaz algoritama koji su dizajnirani tako da rade sa lažnim i nedostajućim masama.
+U narednim sekcijama dat je prikaz algoritama koji su dizajnirani tako da uzmu u obzir lažne i nedostajuće mase.
 
 
 \section{\emph{Leaderboard} algoritam}
 \emph{Leaderboard} algoritam \cite{online_lecture, online_book} predstavlja optimizovani pristup za sekvenciranje peptida. Za razliku od sekvenciranja grubom silom koje zahteva tačno poklapanje između teorijskog spektra kandidata i eksperimentalnog spektra, ovaj algoritam je dizajniran da radi sa nedostajućim i lažnim masama tako što prati samo najbolje kandidate peptida umesto svih mogućnosti.
-\emph{Leaderboard} algoritam održava listu najboljih kandidata tokom pretrage. U svakoj iteraciji, algoritam proširuje sekvence sa svim mogućim aminokiselinama i zadržava one kandidate čiji teorijski spektar linearnog peptida ima najveći broj poklapanja sa zadatim eksperimentalnim spektrom.
+\emph{Leaderboard} algoritam održava listu najboljih kandidata tokom pretrage. U svakoj iteraciji, algoritam proširuje sekvence sa svim mogućim aminokiselinama i zadržava one kandidate čiji teorijski spektar linearnog (parcijalnog) peptida ima najveći broj poklapanja sa zadatim eksperimentalnim spektrom.
 Određuje se teorijski spektar linearnog peptida zato što peptidi još nisu do kraja formirani tako da se još ne zna kako bi oni izgledali ciklično.
 
 \subsection{Prednosti algoritma}
@@ -539,37 +542,37 @@ Algoritam \ref{alg:leaderboard} prikazuje pseudokod \emph{Leaderboard} algoritma
 \SetKwProg{Fn}{Funkcija}{}{}
 \Fn{\FRec{eksperimentalniSpektar}}{
     $peptidi \gets$ Lista sa praznim stringom\;
-    $leader\_peptid \gets$ Prazan peptid\;
-    $najbolji\_rezultat \gets 0$\;
-    $ciljna\_masa \gets$ Poslednji element $eksperimentalniSpektar$\;
+    $leaderPeptid \gets$ Prazan peptid\;
+    $najboljiRezultat \gets 0$\;
+    $ciljnaMasa \gets$ Poslednji element liste $eksperimentalniSpektar$\;
 
     \While{$peptidi \neq$ Prazno}{
-        $prosireni \gets$ \textbf{Proširi}($peptidi$)\;
+        $prosireni \gets$ \textbf{ProdužiPeptide}($peptidi$)\;
         $kandidati \gets$ Prazna lista\;
         \ForEach{$peptid \in prosireni$}{
             $masa \gets$ \textbf{IzračunajMasu}($peptid$)\;
-            \uIf{$masa = ciljna\_masa$}{
-                $rezultat\_kandidata \gets$ \textbf{CikličniScore}($peptid$, $eksperimentalniSpektar$)
+            \uIf{$masa = ciljnaMasa$}{
+                $rezultatKandidata \gets$ \textbf{CikličniScore}($peptid$, $eksperimentalniSpektar$)
                 
-                \If{$rezultat\_kandidata > najbolji\_rezultat$}{
-                    $leader\_peptid \gets peptid$\;
-                    $najbolji\_rezultat \gets rezultat$\;
+                \If{$rezultatKandidata > najboljiRezultat$}{
+                    $leaderPeptid \gets peptid$\;
+                    $najboljiRezultat \gets rezultat$\;
                 }
-            }\ElseIf{$masa < ciljna\_masa$}{
+            }\ElseIf{$masa < ciljnaMasa$}{
                 Dodaj $peptid$ u $kandidati$\;
             }
         }
         $peptidi \gets$ \textbf{Trim}($kandidati$, $eksperimentalniSpektar$, $N$)\;
     }
-    \Return{$leader\_peptid$}
+    \Return{$leaderPeptid$}
 }
 \end{algorithm}
 
 \noindent
 \textbf{Objašnjenje pomoćnih funkcija:}
 \begin{itemize}
-    \item \textbf{Trim(kandidati, eksperimentalniSpektar, N)} – Jedna od glavnih funkcija. Ulaz u funkciju predstavljaju peptidi koji su kandidati za rešenje, eksperimentalni spektar kao i broj peptida koji ćemo vratiti iz funkcije odnosno najbolji kandidati za potencijalno rešenje. Bitno je izabrati dobro broj kandidata koji prolazi u dalju rundu. U slučaju da je taj broj previše mali rizujemo da previše agresivno odsečemo neke kandidate i da potencijalno izgubimo rešenje. U slučaju da je broj previše veliki čuvaćemo previše kandidata i samim tim povećati vreme izvršavanja algoritma. Generalno, dobra je praksa ako se traže peptidi sa manjom masom da se koristi manji broj kandidata koji nastavlja u sledeću rundu a ako se masa poveća da se samim tim poveća i broj kandidata koji nastavlja u sledeću rundu. Funkcija \textbf{Trim} koristi funkciju \textbf{linearScore} koja računa broj poklapanja teorijskog spektra peptida sa eksperimentalnim spektrom. Ova funkcija se koristi kada se ceo peptid još ne zna i samim tim ne mogu da se kreiraju sve ciklične varijacije jer bi se dobile mase koje se možda ne bi dobile kada se peptid proširi aminokiselinama. Na kraju \textbf{Trim} kandidati se sortiraju opadujuće po linearnom skoru i u sledeću rundu prolaze prvih \textbf{N} kandidata kao i svi kandidati koji imaju isti razultat kao kandidat na poziciji N. Na ovaj način osiguravamo da sa sigurnošću svi dobri kandidati prođu u sledeću rundu.
-    \item \textbf{CikličniScore(peptid, eksperimentalniSpektar)} – Računa broj poklapanja teorijskog spektra cikličnog peptida sa eksperimentalnim spektrom. Ova funkcija se koristi u slučaju da je masa peptida jednaka najvećoj teoorijskoj masi jer je u tom slučaju formiran ceo peptid i mogu da se nađu svi potpeptidi.
+    \item \textbf{Trim(kandidati, eksperimentalniSpektar, N)} – Jedna od glavnih funkcija. Ulaz u funkciju predstavljaju peptidi koji su kandidati za rešenje, eksperimentalni spektar kao i broj peptida koji ćemo vratiti iz funkcije odnosno najbolji kandidati za potencijalno rešenje. Bitno je izabrati dobro broj kandidata koji prolazi u dalju rundu. U slučaju da je taj broj previše mali rizikujemo da previše agresivno odsečemo neke kandidate i da potencijalno izgubimo neko relativno dobro rešenje. U slučaju da je broj previše veliki čuvaćemo previše kandidata i samim tim povećati vreme izvršavanja algoritma. Generalno, dobra je praksa ako se traže peptidi sa manjom masom da se koristi manji broj kandidata koji nastavlja u sledeću rundu a ako se masa poveća da se samim tim poveća i broj kandidata koji nastavlja u sledeću rundu. Funkcija \textbf{Trim} koristi funkciju \textbf{linearScore} koja računa broj poklapanja teorijskog spektra peptida kandidata sa eksperimentalnim spektrom. Ova funkcija se koristi kada se ceo peptid još ne zna i samim tim ne mogu da se kreiraju sve ciklične varijacije jer bi se dobile mase koje možda ne postoje u kompletiranoj sekvenci ciklopeptida (zbog karakteristike cikličnosti). Na kraju \textbf{Trim} kandidati se sortiraju opadujuće prema njihovom linearnom skoru i u sledeću rundu prolaze prvih \textbf{N} kandidata kao i svi kandidati koji imaju isti razultat kao kandidat na poziciji N. Na ovaj način osiguravamo da svi dobri kandidati prođu u sledeću rundu.
+    \item \textbf{CikličniScore(peptid, eksperimentalniSpektar)} – Računa broj poklapanja teorijskog spektra cikličnog peptida kandidata sa eksperimentalnim spektrom. Ova funkcija se koristi u slučaju da je masa peptida kandidata jednaka ciljnoj masi (najvećoj masi eksperimentalnog spektra) jer je u tom slučaju formiran ceo peptid i mogu da se nađu svi potpeptidi.
 \end{itemize}
 
 \section{Spektralna konvolucija}
@@ -579,58 +582,58 @@ Spektralna konvolucija \cite{online_lecture, online_book} je tehnika koja se kor
 Proces se sastoji iz dva glavna koraka:
 
 \begin{itemize}
-    \item \textbf{Izračunavanje konvolucije}: Za svaki par masa u spektru, izračunava se njihova razlika. Ove razlike mogu odgovarati masama aminokiselina. Pravi se matrica konvolucije, koja predstavlja donjetrougaonu matricu gde je prva vrsta i prva kolona eksperimentalni spektar a pozicije u matrici predstavljaju apsolutnu vrednost razlike elemenata sa tim indeksom iz spektra.
+    \item \textbf{Izračunavanje konvolucije}: Za svaki par masa u spektru, izračunava se njihova razlika. Ove razlike mogu odgovarati masama aminokiselina. Pravi se matrica konvolucije, koja predstavlja donjetrougaonu matricu gde je prva vrsta i prva kolona eksperimentalni spektar a ostale kolone u matrici sadrže apsolutnu vrednost razlike odgovarajućih masa eksperimentalnog spektra.
     \item \textbf{Identifikacija aminokiselina}: Najčešće razlike koje se pojavljuju u spektru verovatno odgovaraju aminokiselinama prisutnim u peptidu. Te aminokiseline se izdvajaju i koriste u \emph{Leaderboard} algoritmu.
 \end{itemize}
 
-Glavna prednost ovog algoritma jeste to što u samom startu smanjuje skup aminokiselina koje mogu da učestvuju u građenju peptida, čime se algoritam dosta ubrzava. Takođe, ovim se otvara mogućnost da se identifikuju nepoznate ili modifikovane aminokiseline. Još jedna od prednosti ovog algoritma jeste to što može da radi na eksperimentalnim spektrima koji imaju još više pogrešnih ili nedostajućih masa.
+Glavna prednost ovog algoritma jeste to što u samom startu smanjuje skup aminokiselina koje mogu da učestvuju u građenju peptida, čime se algoritam dosta ubrzava. Takođe, na ovaj način se otvara mogućnost da se identifikuju nepoznate (nestandardne) aminokiseline ili aminokiseline čiji je hemijski sastav malo izmenjen. Još jedna od prednosti ovog algoritma jeste to što može da radi sa eksperimentalnim spektrima koji imaju veći udeo pogrešnih ili nedostajućih masa.
 
 Algoritam \ref{alg:spectral_convolution} prikazuje pseudokod algoritma spektralne konvolucije.
 
-\begin{algorithm}[H]
-\label{alg:spectral_convolution}
+\begin{algorithm}[h]
 \caption{Spektralna konvolucija}
+\label{alg:spectral_convolution}
 \SetAlgoLined
 \DontPrintSemicolon
 \SetKwFunction{FRec}{SpektralnaKonvolucija}
 \SetKwProg{Fn}{Funkcija}{}{}
 \Fn{\FRec{eksperimentalniSpektar}}{
-    $matrica\_konvolucije \gets$ Prazna lista\;
-    $n \gets$ Broj elemenata u $eksperimentalniSpektar$\;
+    $matricaKonvolucije \gets$ Prazna lista\;
+    $n \gets$ Broj elemenata u listi $eksperimentalniSpektar$\;
 
     \For{$i \gets 0$ \KwTo $n-1$}{
         \For{$j \gets 0$ \KwTo $i-1$}{
-            $masa \gets S[i] - S[j]$\;
+            $masa \gets eksperimentalniSpektar[i] - eksperimentalniSpektar[j]$\;
             \If{$57 \leq masa \leq 200$}{
-                Dodaj $masa$ u $konvolucija$\;
+                Dodaj $masa$ u $matricaKonvolucije$\;
             }
         }
     }
 
-    $broj\_pojavljivanja \gets$ Prazna mapa\;
-    \ForEach{$masa$ u $konvolucija$}{
-        \If{$masa \in broj\_pojavljivanja$}{
-            $broj\_pojavljivanja[masa] \gets broj\_pojavljivanja[masa] + 1$\;
+    $brojPojavljivanja \gets$ Prazna mapa\;
+    \ForEach{$masa$ u $matricaKonvolucije$}{
+        \If{$masa \in brojPojavljivanja$}{
+            $brojPojavljivanja[masa] \gets brojPojavljivanja[masa] + 1$\;
         }
         \Else{
-            $broj\_pojavljivanja[masa] \gets 1$\;
+            $brojPojavljivanja[masa] \gets 1$\;
         }
     }
 
-    $sortirane\_frekvencije \gets$ \textbf{SortirajOpadajuće}($broj\_pojavljivanja$)\;
-    $najcesce\_mase \gets$ Uzimamo $S$ najčešćih masa iz $sortirane\_frekvencije$\;
+    $sortiraneFrekvencije \gets$ \textbf{SortirajOpadajuće}($brojPojavljivanja$)\;
+    $najcesceMase \gets$ Uzimamo $S$ (unapred određen ceo broj) najčešćih masa iz $sortiraneFrekvencije$\;
     
-    $leader\_peptid \gets$ \textbf{LeaderboardSequencing}($eksperimentalniSpektar$, $najcesce\_mase$)\;
+    $leaderPeptid \gets$ \textbf{LeaderboardSequencing}($eksperimentalniSpektar$, $najcesceMase$)\;
 
-    \Return{$leader\_peptid$}
+    \Return{$leaderPeptid$}
 }
 \end{algorithm}
 
 \noindent
 \textbf{Objašnjenje pomoćnih funkcija:}
 \begin{itemize}
-    \item \textbf{SortirajOpadajuće(broj\_pojavljivanja)} – U konkretnoj implementaciji matrica konvolucije je najlakše da bude lista da bi se što lakše iteriralo kroz nju. Na osnovu matrice se formiraju frekvencije masa i sortira se opadajuće na osnovu broja pojavljivanja masa.
-    \item \textbf{LeaderboardSequencing(eksperimentalniSpektar, najcesce\_mase)} – Poziva se prethodno implementiran \emph{Leaderboard} algoritam, samo se ne koriste sve aminokiseline nego se koristi smanjen skup aminokiselina za proširivanje i pravljenje novih peptida.
+    \item \textbf{SortirajOpadajuće(brojPojavljivanja)} – U konkretnoj implementaciji matrica konvolucije je najlakše da bude lista da bi se što lakše iteriralo kroz nju. Na osnovu matrice se formiraju frekvencije masa i sortira se opadajuće na osnovu broja pojavljivanja masa.
+    \item \textbf{LeaderboardSequencing(eksperimentalniSpektar, najcesceMase)} – Poziva se prethodno implementiran \emph{Leaderboard} algoritam, samo se ne koriste sve aminokiseline nego se koristi smanjen skup aminokiselina za proširivanje i pravljenje novih peptida.
 \end{itemize}
 
 U Tabeli \ref{tab:convolution_matrix} može da se vidi matrica konvolucije za eksperimentalni spektar:
@@ -688,7 +691,7 @@ Trenutne tehnike za sekvenciranje peptida (poput pretraživanja baze podataka, \
 \end{itemize}
 
 \subsection{Tehnike zasnovane na \emph{De Novo} sekvenciranju}
-Pored \textbf{\emph{DeepNovo}} tehnike koja će biti opisana u ovom radu, postoje i još neke tehnike zasnovane na \emph{De Novo} principu:
+Pored prethodno opisanih algoritama kao što su pristup grubom silom, \emph{Branch and Bound}, \emph{Leaderboard} algoritam i spektralna konvolucija, postoje i još neke tehnike zasnovane na \emph{De Novo} principu:
 
 \begin{itemize}
 \item \textbf{PEAKS} \cite{peaks} - koristi usmerene aciklične grafove
@@ -721,7 +724,7 @@ Proces treniranja obuhvata sledeće ključne faze:
 \subsection{Arhitektura neuronske mreže}
 \textbf{\emph{DeepNovo}} koristi hibridnu arhitekturu koja kombinuje konvolutivne i rekurentne neuronske mreže i može se videti na Slici \ref{fig:arhitektura}.
 
-\begin{figure}[H]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{images/deep_novo_architecture.jpeg}
 \caption{Arhitektura DeepNovo pristupa, preuzeto sa \cite{deepnovo}}
@@ -729,34 +732,34 @@ Proces treniranja obuhvata sledeće ključne faze:
 \end{figure}
 
 \subsubsection{Konvolutivne neuronske mreže (CNN)}
-\textbf{CNN} se koristi za otkrivanje šablona u ulaznim podacima. Oslanja se na tehniku \emph{sliding window} i procesuira male lokalne regione koristeći filtere. Ova mreža je trenirana da prepozna različite tipove jona i da pretvori sirove podatke u reprezentaciju svojstava ulaznih podataka.
+\textbf{CNN} se koriste za otkrivanje šablona u ulaznim podacima i najčešće se primenjuju na podatke poput slika i zvuka. Oslanja se na tehniku kliznog prozora (eng. \emph{sliding window}) i procesuira male lokalne regione ulaznog vektora, koji predstavlja transformisane spektralne podatke, koristeći filtere (male matrice težina). Ova mreža je trenirana da prepozna različite tipove jonskih fragmenata (delove peptida) koji nastaju u masenom spektrometru i da pretvori sirove podatke u reprezentaciju svojstava ulaznih podataka.
 
 U ovom modelu su korišćene dve \textbf{CNN} mreže:
 
 \begin{itemize}
-\item \textbf{Spektralna CNN}: Kao deo preprocesiranja podataka spektar dobijen masenom spektrometrijom transformiše se u vektor fiksne dužine (npr. 50 000 elemenata) i dobijeni vektor se prosleđuje ovoj mreži. Na ovaj način, \emph{CNN} uči šablone nad svim podacima spektra i kao rezultat ove mreže dobija se novi vektor koji se dalje koristi u rekurentnoj mreži. Dobijeni vektor predstavlja karakteristike koje je \emph{CNN} mreža, uz pomoć filtera, naučila nad podacima masenog spektrometra. Konvolutivna mreža se sastoji od 3 konvolutivna sloja i koristi \emph{ReLu} aktivacionu funkciju. Ovo predstavlja značajan deo arhitekture jer može dosta da poboljša preciznost sekvenciranja i može da nauči šablone u spektru čak i ako su neki maksimumi u spektru pomereni zbog šuma.
-\item \textbf{Jonska CNN}: Ova mreža se koristi tokom odabira sledeće aminokiseline u peptidu i služi da iz malog segmenta spektra izdvoji najvažnije informacije. Za svakog kandidata aminokiseline, mreža analizira deo spektra i procenjuje da li se očekivani jonski fragmenti pojavljuju na odgovarajućim mestima. Prilikom svakog koraka predviđanja sledeće aminokiseline \textbf{\emph{DeepNovo}} koristi dosadašnje predikcije da izračuna prefiksnu masu, na osnovu koje generiše parcijalni teorijski spektar i proverava da li eksperimentalni spektar podržava ovaj izbor. Ovaj deo modela je bitan u slučaju da su podaci šumoviti ili da neke mase nedostaju u eksperimentalnom spektru.
+\item \textbf{Spektralna CNN}: Kao deo preprocesiranja podataka spektar dobijen masenom spektrometrijom transformiše se u vektor fiksne dužine (npr. 50 000 elemenata) i dobijeni vektor se prosleđuje ovoj mreži. U slučaju da je dobijeni vektor manji od zadate fiksne dužine on se dopunjuje nulama. Na ovaj način, \emph{CNN} uči šablone nad svim podacima spektra i kao rezultat ove mreže dobija se novi vektor koji se dalje koristi u rekurentnoj mreži. Dobijeni vektor predstavlja karakteristike koje je \emph{CNN} mreža, uz pomoć filtera, naučila nad podacima masenog spektrometra. Konvolutivna mreža se sastoji od 3 konvolutivna sloja i koristi \emph{ReLu} aktivacionu funkciju. Ovo predstavlja značajan deo arhitekture jer može dosta da poboljša preciznost sekvenciranja i može da nauči šablone u spektru čak i ako su neki maksimumi odnosa mase i naelektrisanja u spektru pomereni zbog šuma.
+\item \textbf{Jonska CNN}: Ova mreža se koristi tokom odabira sledeće aminokiseline u peptidu i služi da iz malog segmenta spektra izdvoji najvažnije informacije. Za svakog kandidata aminokiseline, mreža analizira deo spektra i procenjuje da li se očekivani jonski fragmenti pojavljuju na odgovarajućim mestima. Prilikom svakog koraka predviđanja sledeće aminokiseline \textbf{\emph{DeepNovo}} koristi dosadašnje predikcije, sabira njihove mase i dobija ciljnu masu, na osnovu koje se pravi parcijalni teorijski spektar i proverava da li je konzistentan sa eksperimentalnim spektrom. Ovaj deo modela je bitan u slučaju da su podaci šumoviti ili da neke mase nedostaju u eksperimentalnom spektru.
 \end{itemize}
 
 \subsubsection{Rekurentne neuronske mreže (RNN)}
-Ove mreže su dizajnirane za predviđanje sekvenci, gde predikcija sledećeg elementa (aminokiseline) ne zavisi samo od prethodno predviđenih aminokiselina, već i od karakteristika spektra koje opisuju ceo peptid. U kontekstu sekvenciranja peptida, \textbf{RNN} može naučiti kako izbor jedne aminokiseline utiče na pojavljivanje sledeće u sekvenci, što je ključno za tačno predviđanje.
+Ove mreže su dizajnirane za predviđanje sekvenci, gde predikcija sledećeg elementa (aminokiseline) ne zavisi samo od prethodno predviđenih elemenata sekvence (aminokiselina), već i od celokupnih ulaznih podataka (spektra koji opisuje ceo peptid). U kontekstu sekvenciranja peptida, \textbf{RNN} može naučiti kako izbor jedne aminokiseline utiče na pojavljivanje sledeće u sekvenci, što je ključno za tačno predviđanje.
 
-\emph{DeepNovo} koristi posebnu vrstu RNN-a koja se zove \emph{Long Short-Term Memory (LSTM)}. Ključna prednost \textbf{LSTM} mreža je ta što bolje prate nesusedne zavisnosti, što znači da peptidi mogu da budu različitih dužina a ova mreža pamti i odnose koji su udaljeni. Ovo je bitno jer početak sekvence može da utiče na predviđanje neke kasnije aminokiseline.
+\emph{DeepNovo} koristi posebnu vrstu RNN-a koja se zove \emph{Long Short-Term Memory (LSTM)}. Ključna prednost \textbf{LSTM} mreža je ta što bolje prate zavisnosti između nesusednih elemenata sekvence, što znači da peptidi mogu da budu različitih dužina a ova mreža pamti i odnose između aminokiselina koje su udaljene. Ovo je bitno jer početak sekvence može da utiče na predviđanje neke kasnije aminokiseline.
 
 Ova mreža se sastoji od 1 sloja i radi tako što dodaje jednu po jednu aminokiselinu sve dok ne stigne do kraja peptida. U svakom koraku \textbf{LSTM} mreža uzima u obzir:
 \begin{itemize}
     \item Šta je mreža naučila do sada - trenutno stanje
     \item Sledeća aminokiselina koja je kandidat
-    \item Svojstva spektra koja su dobijana od konvolutivne mreže
+    \item Svojstva spektra koja su dobijena kao izlaz konvolutivne mreže
 \end{itemize}
 
-Kao izlaz iz ove mreže koristi se \emph{softmax} projekcija i ona određuje za svaku aminokiselinu koja je verovatnoća da se ona nalazi na sledećoj poziciji u sekvenci. Dodatno, koristi se \emph{beam search}, odnosno ne bira se samo aminokiselina sa najvećom verovatnoćom nego se čuva više kandidata koji imaju veću verovatnoću. Ovim postupkom se povećava preciznost i gledaju se alternativna rešenja. Na kraju se sekvence rangiraju po skoru koji pokazuje koliko se poklapaju sa traženim spektrom i koliko imaju grešaka i bira se najbolja moguća.
+Kao izlaz iz ove mreže koristi se \emph{softmax} projekcija i ona određuje za svaku aminokiselinu koja je verovatnoća da se ona nalazi na sledećoj poziciji u sekvenci. Dodatno, koristi se \emph{beam search}, odnosno ne bira se samo aminokiselina sa najvećom verovatnoćom nego se čuva više kandidata koji imaju veću verovatnoću. Ovim postupkom se povećava preciznost i gledaju se alternativna rešenja. Na kraju se sekvence rangiraju po skoru koji pokazuje koliko se poklapaju sa datim eksperimentalnim spektrom i koliko imaju grešaka i bira se najbolja moguća.
 
 \subsection{Rezultati i evaluacija}
 
 \emph{DeepNovo} metoda nadmašuje tradicionalne metode, posebno u slučajevima kada su sekvence peptida nove i ne podudaraju se ni sa jednom poznatom proteinskom bazom podataka.
 
-Eksperimenti su pokazali značajno poboljšanje u tačnosti identifikacije aminokiselina, posebno za složene peptide. Za potrebe testiranja naučnici su koristili podatke različitih vrsta. Na Slici \ref{fig:performanse} su prikazani rezultati poređenja više algoritama. Da bi se merila preciznost rešenja poređena je prava sekvenca aminokiselina sa onom koja je dobijena na osnovu spektra. 
+Eksperimenti su pokazali značajno poboljšanje u tačnosti identifikacije aminokiselina, posebno za složene peptide. Za potrebe testiranja naučnici su koristili podatke različitih vrsta. Na Slici \ref{fig:performanse} su prikazani rezultati poređenja više algoritama. Da bi se merila preciznost rešenja poređena je prava sekvenca aminokiselina sa onom koja je dobijena na osnovu eksperimentalnog spektra. 
 Takođe, koristile su se različite metrike:
 \begin{itemize}
     \item \textbf{Preciznost (eng. precision)} - predstavlja odnos broja peptida koje je generisao algoritam koji su zapravo tačni i ukupnog broja peptida koje je generisao
@@ -764,7 +767,7 @@ Takođe, koristile su se različite metrike:
     \item \textbf{AUC-PR} - predstavlja koliko dobro model balansira preciznost i odziv, što je veća vrednost bolje će biti i preformanse
 \end{itemize}
 
-Može se primetiti da je \textbf{\emph{DeepNovo}} model na svakom od datih skupa podataka imao bolje rezultate. \textbf{\emph{DeepNovo}} je imao i veću preciznost u traženju peptida kao i veći odziv, samim tim i odnos \emph{AUC-PR} krive je bolji nego kod konkurenata, što znači da predlaže ispravne peptide i pronalazi većinu peptida.
+Primećeno je da je \textbf{\emph{DeepNovo}} model na svakom od datih skupova podataka imao bolje rezultate. \textbf{\emph{DeepNovo}} je imao i veću preciznost u traženju peptida kao i veći odziv, samim tim i odnos \emph{AUC-PR} krive je bolji nego kod konkurenata, što znači da predlaže ispravne peptide i pronalazi većinu peptida.
 
 \begin{figure}[h]
 \centering
@@ -777,8 +780,8 @@ Može se primetiti da je \textbf{\emph{DeepNovo}} model na svakom od datih skupa
 
 \begin{itemize}
 \item \textbf{Identifikacija novih antimikrobnih peptida}: Otkrivanje potencijalnih kandidata za nove antibiotike
-\item \textbf{Analiza post-translacionih modifikacija}: Detekcija peptida sa složenim modifikacijama koje su se desile nakon njegovog kreiranja, što može dovesti do neočekivanih masa koje je teško pronaći
-\item \textbf{Univerzalna primena}: Uspešna implementacija na različitim vrstama i organizmima
+\item \textbf{Analiza post-translacionih modifikacija}: Detekcija peptida sa složenim modifikacijama koje su se desile nakon njihove sinteze, što može dovesti do neočekivanih masa koje je teško pronaći
+\item \textbf{Univerzalna primena}: Uspešna implementacija na peptidima poreklom iz različitih bioloških organizama (npr. ljudski, mikrobiološki, životinjski uzorci).
 \end{itemize}
 
 
@@ -793,23 +796,23 @@ U ovom poglavlju će biti opisana elektronska platforma koja je razvijena kao de
 
 \section{Pokretanje aplikacije}
 
-Pokretanje aplikacije može da se odradi na nekoliko načina:
+Moguće je pokrenuti aplikaciju na nekoliko načina:
 \begin{itemize}
     \item \textbf{Docker Compose} \cite{docker_compose} - najjednostavniji način pokretanja aplikacije uz korišćenje \emph{Docker} alata \cite{docker}
     \item \textbf{Direktno pokretanje komponenti} - pokretanje posebno \emph{Frontend} i posebno \emph{Backend} komponenti
-    \item \textbf{Google Cloud Run (GCR)} \cite{gcr} - ova aplikacija je dostupna za korišćenje preko \emph{Google Cloud Run} platforme, pa će biti objašnjeno i kako odraditi \emph{deploy} aplikacije na \textbf{GCR}
+    \item \textbf{Google Cloud Run (GCR)} \cite{gcr} - ova aplikacija je dostupna za korišćenje preko \emph{Google Cloud Run} platforme, pa će biti objašnjeno i kako izvršiti \emph{deploy} aplikacije na \textbf{GCR}
 \end{itemize}
 
 \subsection{\emph{Docker Compose} konfiguracija}
 Za potrebe što lakšeg pokretanja aplikacije korišćen je \emph{open source} alat \emph{Docker} i \emph{Docker Compose}. \emph{Docker Compose} nam pruža jednostavan način da aplikaciju pokrenemo sa svim definisanim bibliotekama i promenljivim okruženja bez potrebe da se bilo šta dodatno podešava. Ovo je posebno bitno u situacijama kada se aplikacija sastoji iz više komponenti pa je potrebno da se pokrene više kontejnera kao što je ovde slučaj.
-Unutar \textbf{docker} foldera nalaze \emph{docker} i \emph{docker-compose fajlovi}.
+Unutar \textbf{docker} foldera nalaze se \emph{docker} i \emph{docker-compose} fajlovi.
 
 Što se tiče klijentskog dela aplikacije, njegovo pokretanje je definisano u \emph{Dockerfile.frontend} datoteci i njegov sadržaj može da se vidi na Slici \ref{fig:docker_frontend}. Može da se primeti da se koristi \emph{multi-stage build} koji služi da odvoji deo za instaliranje i kompilaciju fajlova od dela za pokretanje aplikacije. Ovo doprinosi tome da završna slika bude što manja.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{images/docker_frontend.png}
-\caption{\emph{Dockerfile} za klijentski deo aplikacije}
+\caption{Dockerfile za klijentski deo aplikacije}
 \label{fig:docker_frontend}
 \end{figure}
 
@@ -818,7 +821,7 @@ Pokretanje serverskog dela aplikacije definisano je u \emph{Dockerfile.backend} 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{images/docker_backend.png}
-\caption{\emph{Dockerfile} za serverski deo aplikacije}
+\caption{Dockerfile za serverski deo aplikacije}
 \label{fig:docker_backend}
 \end{figure}
 
@@ -830,7 +833,7 @@ Sadržaj glavne \texttt{docker-compose.yml} datoteke može da se vidi na Slici \
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{images/docker_compose.png}
-\caption{\emph{Docker Compose} fajl koji pokreće definisane \emph{Docker} fajlove}
+\caption{Docker Compose fajl koji pokreće definisane Docker fajlove}
 \label{fig:docker_compose}
 \end{figure}
 
@@ -862,8 +865,8 @@ Pokretanjem ovih komandi kreiraćemo virtuelno okruženje u kom će se instalira
 Nakon pokretanja, serverskom delu aplikacije mogu se slati zahtevi na adresu \emph{http://localhost:8000}.
 
 \subsection{\emph{Google Cloud Run} implementacija}
-Aplikacija je trenutno \emph{deploy}-ovana na Google Cloud Run i može joj se pristupiti preko \emph{https://antibiotic-sequencing-304513663933.us-central1.run.app/}.
-Koristi se besplatna verzija koja se ne naplaćuje a pored toga \emph{Google Cloud Run} pruža sledeće pogodnosti:
+Aplikacija je trenutno \emph{deploy}-ovana na Google Cloud Run i može joj se pristupiti preko linka \emph{https://antibiotic-sequencing-304513663933.us-central1.run.app/}.
+Koristi se verzija koja se ne naplaćuje a pored toga \emph{Google Cloud Run} pruža sledeće pogodnosti:
 
 \begin{itemize}
 \item \textbf{Skalabilnost}: Automatsko skaliranje u zavisnosti od opterećenja
@@ -884,16 +887,16 @@ Postoji \emph{Google Cloud CLI} alat koji može da se instalira i da se iz termi
 \begin{verbatim}
     gcloud config set project <PROJECT_ID>
 \end{verbatim}
-\item Pravljenje \emph{Docker} image-a:
+\item Pravljenje \emph{Docker image} fajla:
 \begin{verbatim}
     docker build -t gcr.io/<PROJECT_ID>/fe:v1.0 
     -f docker/Dockerfile.frontend .
 \end{verbatim}
-\item Kačenje slike na njihov repozitorijum:
+\item Kačenje \emph{Docker image} fajla na njihov repozitorijum:
 \begin{verbatim}
     docker push-t gcr.io/<PROJECT_ID>/fe:v1.0
 \end{verbatim}
-\item Deploy servisa: 
+\item Podizanje servisa na okruženje: 
 \begin{verbatim}
     gcloud run deploy antibiotic-sequencing 
     --image gcr.io/<PROJECT_ID>/fe:v1.0 
@@ -904,12 +907,12 @@ Postoji \emph{Google Cloud CLI} alat koji može da se instalira i da se iz termi
 \end{verbatim}
 \end{enumerate}
 
-Nakon toga u terminalu se dobija \emph{URL} na kom može da se pristupi podignutom servisu što se može videti na Slici \ref{fig:gcr_deploy}. Takođe u toj situaciji frontend komponenti mora u \textbf{/.env} fajlu da se promeni \emph{URL} koji vodi do bekend komponente.
+Nakon izvršenih prethodnih koraka u terminalu se dobija \emph{URL} na kom može da se pristupi podignutom servisu što se može videti na Slici \ref{fig:gcr_deploy}. Takođe u toj situaciji frontend komponenti mora u \textbf{/.env} fajlu da se promeni \emph{URL} koji vodi do bekend komponente.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{images/gcr_deploy.png}
-\caption{Dobijeni \emph{URL} nakon što se aplikacija podigne na \emph{Google Cloud Run} servisu}
+\caption{Dobijeni URL nakon što se aplikacija podigne na Google Cloud Run servisu}
 \label{fig:gcr_deploy}
 \end{figure}
 
@@ -921,11 +924,11 @@ U slučaju da je potrebno okačiti novu verziju aplikacije, prate se isti koraci
     --region us-central1
 \end{verbatim}
 
-Ako želimo da pristupimo \emph{Docker} slikama koje smo okačili potrebno je otvoriti \emph{https://console.cloud.google.com/artifacts} (Slika \ref{fig:gcr_images}).
+Ako želimo da pristupimo \emph{Docker image} fajlovima koje smo okačili potrebno je otvoriti \emph{https://console.cloud.google.com/artifacts} (Slika \ref{fig:gcr_images}).
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{images/gcr_images.png}
-\caption{\emph{Docker} slike koje su okačene na \emph{Google Container Registry}}
+\caption{Docker image fajlovi koji su okačeni na Google Container Registry}
 \label{fig:gcr_images}
 \end{figure}
 
@@ -934,7 +937,7 @@ Podignutim servisima može se pristupiti preko \emph{https://console.cloud.googl
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{images/gcr_services.png}
-\caption{Pristupi servisima koji su podignuti na \emph{Google Cloud Run} platformi}
+\caption{Pristupi servisima koji su podignuti na Google Cloud Run platformi}
 \label{fig:gcr_services}
 \end{figure}
 
@@ -953,7 +956,7 @@ Ako se klikne na neki od servisa pristupiće se brojnim metrikama koje su nam do
 \subsection{Početna stranica}
 
 Prilikom otvaranja aplikacije, biće prikazana početna stranica što se može videti na Slici \ref{fig:landing_page}. Na vrhu stranice nalazi se navigacioni meni kojim može da se prelazi sa stranice na stranicu. Takođe, u gornjem desnom uglu nalazi se ikonica koja vodi ka \emph{Github} repozitorijumu gde može da se nađe izvorni kod ove aplikacije.
-Klikom na dugme \emph{Istraži algoritme} odlazi se na stranicu \emph{Uvod}, gde mogu da se nađu teorijska objašnjenja pojma koja su potrebna za razumevanje algoritama.
+Klikom na dugme \emph{Istraži algoritme} prelazi se na stranicu \emph{Uvod}, gde mogu da se nađu teorijska objašnjenja pojmova koji su potrebni za razumevanje algoritama.
 
 \begin{figure}[H]
 \centering
@@ -966,7 +969,7 @@ Klikom na dugme \emph{Istraži algoritme} odlazi se na stranicu \emph{Uvod}, gde
 
 Ova stranica služi da predstavi teorijske osnove i pojmove koji su potrebni za dalje razumevanje algoritama. Na Slici \ref{fig:intro_1} može da se vidi deo ove stranice. Klikom na bilo koju sliku sa ove stranice ona će se otvoriti i omogućiti jasniji prikaz iste.
 
-Na dnu stranice stranice, koja je prikazana na Slici \ref{fig:intro_2}, takođe postoji meni koji vodi ka algoritmima koji su odrađeni u sklopu ovde aplikacije.
+Na dnu stranice stranice, koja je prikazana na Slici \ref{fig:intro_2}, takođe postoji meni koji vodi ka algoritmima koji su implementirani u sklopu ovde aplikacije.
 
 \begin{figure}[H]
 \centering
@@ -985,7 +988,7 @@ Na dnu stranice stranice, koja je prikazana na Slici \ref{fig:intro_2}, takođe 
 \subsection{Pristup grubom silom}
 
 Stranica za pristup grubom silom, prikazana na Slici \ref{fig:brute_force_1}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
-Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i postoji mogućnost da se odabere da li korisnik želi da vidi vizuelizaciju ovog algoritma ili želi da vidi samo rešenja \ref{fig:brute_force_2}. Na Slici \ref{fig:brute_force_4} može da se vidi drvo koje se izgradilo da bi se došlo do rešenja. Postoje i elementi za kontrolisanje izvršavanja animacije kao što su \emph{Play/Pause/Reset} a pored toga postoji i \emph{slider} kojim može da se premota animacija do određenog dela izvršavanja. Pošto drvo izvršavanja može da bude veoma veliko dodata je i opcija uveličavanja tako da određeni deo drveta može da se uveliča a onda ostatak drveta može da se vidi povlačenjem miša. Čvorovi koji su obeleženi zelenom bojom predstavljaju rešenje a crveni čvorovi su odbačeni i ne predstavljaju rešenje. Kada se miš postavi iznad nekog crvenog čvora prikazaće se i objašnjenje zašto on nije rešenje.
+Nakon objašnjenja i prikaza programskog koda može da se unese eksperimentalni spektar i postoji mogućnost da se odabere da li korisnik želi prikaz vizuelizacije ovog algoritma ili želi samo prikaz rešenja (Slika \ref{fig:brute_force_2}). Na Slici \ref{fig:brute_force_4} može da se vidi drvo koje se izgradilo prilikom traženja rešenja. Postoje i elementi za kontrolisanje izvršavanja animacije kao što su \emph{Play/Pause/Reset} a pored toga postoji i \emph{slider} kojim može da se premota animacija do određenog dela izvršavanja. Pošto drvo izvršavanja može da bude veoma veliko dodata je i opcija uveličavanja tako da određeni deo drveta može da se uveliča a onda ostatak drveta može da se vidi povlačenjem miša. Čvorovi koji su obeleženi zelenom bojom predstavljaju rešenje a crveni čvorovi su odbačeni i ne predstavljaju rešenje. Kada se miš postavi iznad nekog crvenog čvora prikazaće se i objašnjenje zašto on nije rešenje.
 Kada se animacija završi moguće je kliknuti i na dugme \emph{Download} čime će se izgrađeno drvo skinuti na Vaš računar u \emph{SVG} formatu.
 \begin{figure}[h]
 \centering
@@ -1044,9 +1047,9 @@ Stranica za algoritam \emph{Leaderboard}, prikazana na Slici \ref{fig:leaderboar
 \label{fig:leaderboard_2}
 \end{figure}
 
-Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i može da se odabere da se vidi vizuelizacija ovog algoritma ili da se prikažu samo rešenja. Pošto ovaj algoritam funkcioniše po principu prolaska u sledeće runde vizuelizacija za ovaj algoritam je tako i odrađena što se može videti na Slici \ref{fig:leaderboard_2}. Za kontrolu animacije postoje strelice za prebacivanje iz runde u rundu, strelica da nas prebaci skroz u poslednju rundu da bismo videli koje je rešenje kao i dugme za resetovanje odnosno prebacivanje na prvu rundu. Uz svaki peptid piše njegova masa, prikazuje se njegov teorijski spektar kao i broj poklapanja teorijskog spektra sa zadatim eksperimentalnim spektrom. Svaki peptid koji prolazi u sledeću rundu je označen zelenom bojom uz tekst da je prošao dalje.
-Teorijski spektar svakog od peptida može da se uveliča po potrebi i da se koristi \emph{drag and drop} mehanizam da se vidi neki određeni deo spektra.
-Da bi se poboljšale performanse vizuelizacije za prikaz svih mogućih kandidata u nekoj rundi korišćen je princip \emph{lazy loading}, odnosno tek kada se lista spušta na dole prikazaće se sledeći kandidati koji su razmatrani u toj rundi.
+Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i može da se odabere da se vidi vizuelizacija ovog algoritma ili da se prikažu samo rešenja. Pošto ovaj algoritam funkcioniše po principu prolaska kroz runde, vizuelizacija za ovaj algoritam je u skladu sa tim i odrađena što se može videti na Slici \ref{fig:leaderboard_2}. Za kontrolu animacije postoje strelice za prebacivanje iz runde u rundu, strelica da nas prebaci skroz u poslednju rundu da bismo videli koje je rešenje kao i dugme za resetovanje odnosno povratak na prvu rundu. Uz svaki peptid ispisuje se njegova masa, prikazuje se njegov teorijski spektar kao i broj poklapanja teorijskog spektra sa zadatim eksperimentalnim spektrom. Svaki peptid koji prolazi u sledeću rundu je označen zelenom bojom uz tekst da je prošao dalje.
+Teorijski spektar svakog od peptida može da se uveliča po potrebi i da se koristi \emph{drag and drop} mehanizam za prikaz određenog dela spektra.
+Da bi se poboljšale performanse vizuelizacije za prikaz svih mogućih kandidata u nekoj rundi korišćen je princip \emph{lazy loading}, odnosno tek kada se lista kandidata spušta na dole učitaće se i prikazaće se sledeći kandidati koji su razmatrani u toj rundi.
 
 U poslednjoj rundi biće prikazani peptidi koji su rešenje zadatog eksperimentalnog spektra i to je prikazano na Slici \ref{fig:leaderboard_3}. Za peptide koji nisu rešenje u nekoj rundi prevlačenjem miša preko njih biće prikazana i poruka o razlogu zašto nisu rešenje.
 \begin{figure}[H]
@@ -1057,7 +1060,7 @@ U poslednjoj rundi biće prikazani peptidi koji su rešenje zadatog eksperimenta
 \end{figure}
 
 \subsection{Spektralna konvolucija}
-Stranica za algoritam spektralne konvolucije, prikazana na Slici \ref{fig:convolution_1}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
+Stranica za algoritam spektralne konvolucije, prikazana na Slici \ref{fig:convolution_1}, sadrži objašnjenje ovog algoritma kao i kod implementacije algoritma u programskom jeziku \emph{Python}.
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\textwidth]{images/convolution_1.png}
@@ -1082,11 +1085,11 @@ Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar
 \end{figure}
 
 \subsection{\emph{DeepNovo}}
-Stranica za \emph{DeepNovo} sekvenciranje, prikazana na Slici \ref{fig:deepnovo_1}, sadrži \emph{tab}-ove koji pružaju uvid u detalje kao što su:
+Stranica za \emph{DeepNovo} sekvenciranje, prikazana na Slici \ref{fig:deepnovo_1}, sadrži sekcije koje pružaju uvid u detalje kao što su:
 \begin{itemize}
     \item \textbf{Postojeće tehnike i problemi} - koje su postojeće tehnike i problemi sekvenciranja
     \item \textbf{\emph{DeepNovo}} - šta je \emph{DeepNovo} i kako funkcioniše
-    \item \textbf{Arhitektura} - koje komponente čine \emph{DeepNovo}
+    \item \textbf{Arhitektura} - koje komponente čine model \emph{DeepNovo}
     \item \textbf{Rezultati} - uspešnost primene \emph{DeepNovo} metode
 \end{itemize}
 
@@ -1101,7 +1104,7 @@ Stranica za \emph{DeepNovo} sekvenciranje, prikazana na Slici \ref{fig:deepnovo_
 
 Stranica za poređenje algoritama prikazuje vremena izvršavanja pristupa grubom silom, algoritama \emph{Branch and Bound}, \emph{Leaderboard} i spektralna konvolucija. Dodatno, za svaki algoritam prikazuje se i kolona \textit{Status} koja govori da li je algoritam uspeo da pronađe rešenje. U slučaju da je algoritam pronašao rešenja, prikazaće se i koliko ih je pronašao. Ukoliko postoji više od 4 rešenja za određeni algoritam, biće prikazana prva 4 rešanja kao i dugme koje kada se klikne vodi na sva rešenja za traženi algoritam. Na kraju će za svaki od algoritama biti prikazana i njegova rešenja. 
 
-U slučaju da se za teorijski spektar unese \textbf{[0, 114, 128, 129, 242, 243, 257, 371]} svi algoritmi pronalaze rešenja što je i prikazano na Slici \ref{fig:comparison_all_solution}.
+U slučaju da se za eksperimentalni spektar unese \textbf{[0, 114, 128, 129, 242, 243, 257, 371]} svi algoritmi pronalaze rešenja što je i prikazano na Slici \ref{fig:comparison_all_solution}.
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\textwidth]{images/comparison_all_solution.png}
@@ -1109,11 +1112,11 @@ U slučaju da se za teorijski spektar unese \textbf{[0, 114, 128, 129, 242, 243,
 \label{fig:comparison_all_solution}
 \end{figure}
 
-Kada se unese teorijski spektar koji ima lažne ili nedostajuće mase, na primer \textbf{[0, 113, 114, 128, 129, 227, 240, 242, 257, 355, 356, 370, 370, 484]}, samo \emph{Leaderboard} algoritam i algoritam spektralne konvolucije pronalaze rešenja (Slika \ref{fig:comparison}).
+Kada se unese eksperimentalni spektar koji ima lažne ili nedostajuće mase, na primer \textbf{[0, 113, 114, 128, 129, 227, 240, 242, 257, 355, 356, 370, 370, 484]}, samo \emph{Leaderboard} algoritam i algoritam spektralne konvolucije pronalaze rešenja (Slika \ref{fig:comparison}).
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\textwidth]{images/comparison.png}
-\caption{Prikaz poređenje brzine algoritama kada samo \emph{Leaderboard} algoritam i algoritam spektralne konvolucije pronalaze rešenja}
+\caption{Prikaz poređenja brzine algoritama kada samo Leaderboard algoritam i algoritam spektralne konvolucije pronalaze rešenja}
 \label{fig:comparison}
 \end{figure}
 
@@ -1124,7 +1127,7 @@ U slučaju da se unese pogrešan \emph{URL} za stranicu prikazaće se da ta stra
 \begin{figure}[H]
 \centering
 \includegraphics[height=0.5\textheight]{images/wrong_page.png}
-\caption{Stranica koja se prikazuje u slučaju da je pogrešan \emph{URL} unet}
+\caption{Stranica koja se prikazuje u slučaju da je pogrešan URL unet}
 \label{fig:wrong_page}
 \end{figure}
 
