@@ -83,6 +83,9 @@ Glavni ciljevi ovog rada su:
 
 Rad je posebno koristan studentima bioinformatike i molekularne biologije kao alat za bolje razumevanje algoritama za rekonstrukciju peptidnih sekvenci.
 
+
+Kako bi se ovi ciljevi ostvarili, rad je strukturiran kroz nekoliko poglavlja. Nakon poglavlja \textbf{Uvod}, u kojem su predstavljeni motivacija i ciljevi rada, sledi poglavlje \textbf{Teorijske osnove}, gde se objašnjava centralna dogma molekularne biologije, pojam masene spektrometrije i koncept teorijskog spektra peptida. Treće poglavlje, \textbf{Algoritmi za sekvenciranje}, daje detaljan pregled različitih pristupa, počevši od klasičnih metoda poput \textbf{pristupa grubom silom (\emph{Brute Force})} i \textbf{\emph{Branch and Bound}} algoritma, pa preko savremenijih tehnika kao što su \textbf{\emph{Leaderboard}} algoritam i \textbf{spektralna konvolucija}, sve do modernog rešenja \textbf{\emph{DeepNovo}}, zasnovanog na dubokom učenju. U četvrtom poglavlju, \textbf{Elektronska platforma}, opisana je implementacija i funkcionalnosti aplikacije za interaktivnu vizuelizaciju i poređenje pomenutih algoritama, dok se u završnom poglavlju, \textbf{Zaključak}, sumiraju postignuti rezultati i daju smernice za buduće radove.
+
 % ------------------------------------------------------------------------------
 \chapter{Teorijske osnove}
 % ------------------------------------------------------------------------------
@@ -115,7 +118,7 @@ Ovaj celokupni protok informacija i proces nastajanja proteina u biološkim sist
 
 
 \section{Odstupanje od centralne dogme}
-Tirocidin B1 je cikličan peptid (ciklopeptid) dužine 10 (Slika \ref{fig:tirocidin}), što znači da su prva i poslednja aminokiselina povezane i da samim tim postoji 10 njegovih različitih linearnih reprezentacija (Tabela \ref{tab:linear_representations}). Prateći centralnu dogmu i činjenicu da se 1 kodon prevodi u 1 aminokiselinu, bilo bi za očekivati da je moguće pronaći 10 kodona odnosno 30 nukleotida u genomu bakterije \emph{Bacillus brevis} od koje nastaje ovaj antibiotik. Da bi se ovaj postupak obavio, potrebno je proveriti više hiljada 30-grama koji mogu da počnu bilo gde u genomu, što može delovati kao dugotrajan zadatak, ali uz moderne računare je ostvariv u prihvatljivom vremenu. Analiziranjem genoma utvrđeno je da ne postoji 30-gram koji se kodira u neku od 10 različitih reprenzatacija odgovarajućeg antibiotika.
+Tirocidin B1 je cikličan peptid (ciklopeptid) dužine 10 (Slika \ref{fig:tirocidin}), što znači da su prva i poslednja aminokiselina povezane i da samim tim postoji 10 njegovih različitih linearnih reprezentacija (Tabela \ref{tab:linear_representations}). Prateći centralnu dogmu i činjenicu da se 1 kodon prevodi u 1 aminokiselinu, gen koji kodira ovaj protein bi trebalo da se sastoji od 10 kodona odnosno 30 nukleotida i da se kao takav nalazi u genomu bakterija \emph{Bacillus brevis} od koje nastaje ovaj antibiotik. Analiziranjem genoma utvrđeno je da ne postoji 30-gram koji se kodira u neku od 10 različitih reprenzatacija odgovarajućeg antibiotika.
 
 \begin{figure}[h]
   \centering
@@ -267,7 +270,7 @@ Sledeći pseudokod (Algoritam \ref{alg:brute_force}) precizno opisuje prethodno 
   \item \textbf{CikličniSpektar(peptid)} – za peptid koji je potencijalno rešenje generiše se ciklični teorijski spektar.
 \end{itemize}
 
-\section{\emph{Branch and Bound}}
+\section{Pristup grananja i ograničavanja (\emph{Branch and Bound})}
 \emph{Branch and Bound} algoritam \cite{online_lecture, online_book} je optimizovana verzija pristupa grubom silom koja koristi strategiju „podeli pa vladaj“ za efikasnije pretraživanje prostora rešenja. Za razliku od pristupa grubom silom koji ispituje sve moguće kombinacije, \emph{Branch and Bound} algoritam inteligentno eliminiše delove prostora pretrage koji ne mogu sadržati optimalno rešenje.
 
 U kontekstu sekvenciranja peptida, algoritam funkcioniše na sledeći način:
@@ -342,7 +345,7 @@ Pseudokod za algoritam \emph{Branch and Bound} može se videti kao algoritam \re
 \noindent
 \textbf{Objašnjenje pomoćnih funkcija:}
 \begin{itemize}
-  \item \textbf{Konzistentan(peptid, eksperimentalniSpektar)} – glavni korak odsecanja i smanjivanja prostora pretrage.  Provera da li se svaka masa u okviru linearnog teorijskog spektra peptida javlja i u okviru eksperimentalnog spektra. Pošto se radi o parcijalnom kandidatu računa se linearni teorijski spektar a ne ciklični teorijski spektar. Ako neka masa postoji u okviru linearnog teorijskog spektra a ne u okviru eksperimentalnog spektra to znaci da spektrum nije konzistentan, obrnuto ne mora da važi, jer se računa spektar parcijalnog peptida a ne još celog pa masa koja trenutno nije prisutna može da se pojavi.
+  \item \textbf{Konzistentan(peptid, eksperimentalniSpektar)} – glavni korak odsecanja i smanjivanja prostora pretrage.  Provera da li se svaka masa u okviru linearnog teorijskog spektra peptida javlja i u okviru eksperimentalnog spektra. Pošto se radi o parcijalnom peptidu računa se linearni teorijski spektar a ne ciklični teorijski spektar. Ako neka masa postoji u okviru linearnog teorijskog spektra a ne u okviru eksperimentalnog spektra to znaci da spektrum nije konzistentan, obrnuto ne mora da važi, jer se računa spektar parcijalnog peptida a ne još celog pa masa koja trenutno nije prisutna može da se pojavi.
 \end{itemize}
 
 \section{Uporedna analiza prethodnih algoritama}
@@ -597,7 +600,7 @@ Algoritam \ref{alg:spectral_convolution} prikazuje pseudokod algoritma spektraln
 \DontPrintSemicolon
 \SetKwFunction{FRec}{SpektralnaKonvolucija}
 \SetKwProg{Fn}{Funkcija}{}{}
-\Fn{\FRec{eksperimentalniSpektar}}{
+\Fn{\FRec{eksperimentalniSpektar, S}}{
     $matricaKonvolucije \gets$ Prazna lista\;
     $n \gets$ Broj elemenata u listi $eksperimentalniSpektar$\;
 
@@ -732,7 +735,7 @@ Proces treniranja obuhvata sledeće ključne faze:
 \end{figure}
 
 \subsubsection{Konvolutivne neuronske mreže (CNN)}
-\textbf{CNN} se koriste za otkrivanje šablona u ulaznim podacima i najčešće se primenjuju na podatke poput slika i zvuka. Oslanja se na tehniku kliznog prozora (eng. \emph{sliding window}) i procesuira male lokalne regione ulaznog vektora, koji predstavlja transformisane spektralne podatke, koristeći filtere (male matrice težina). Ova mreža je trenirana da prepozna različite tipove jonskih fragmenata (delove peptida) koji nastaju u masenom spektrometru i da pretvori sirove podatke u reprezentaciju svojstava ulaznih podataka.
+\textbf{CNN} se koriste za otkrivanje šablona u ulaznim podacima i najčešće se primenjuju na podatke poput slika i zvuka. Oslanja se na tehniku kliznog prozora (eng. \emph{sliding window}) i procesuira male lokalne regione ulaznog vektora, koji predstavlja transformisane spektralne podatke, koristeći filtere (pomoćne matrice koje izdvajaju određene vrste informacija iz ulaza). Ova mreža je trenirana da prepozna različite tipove jonskih fragmenata (delove peptida) koji nastaju u masenom spektrometru i da pretvori sirove podatke u reprezentaciju svojstava ulaznih podataka.
 
 U ovom modelu su korišćene dve \textbf{CNN} mreže:
 
@@ -781,7 +784,7 @@ Primećeno je da je \textbf{\emph{DeepNovo}} model na svakom od datih skupova po
 \begin{itemize}
 \item \textbf{Identifikacija novih antimikrobnih peptida}: Otkrivanje potencijalnih kandidata za nove antibiotike
 \item \textbf{Analiza post-translacionih modifikacija}: Detekcija peptida sa složenim modifikacijama koje su se desile nakon njihove sinteze, što može dovesti do neočekivanih masa koje je teško pronaći
-\item \textbf{Univerzalna primena}: Uspešna implementacija na peptidima poreklom iz različitih bioloških organizama (npr. ljudski, mikrobiološki, životinjski uzorci).
+\item \textbf{Univerzalna primena}: Uspešna implementacija na peptidima poreklom iz različitih vrsta organizama (npr. ljudski, bakterijski, životinjski uzorci).
 \end{itemize}
 
 
@@ -969,7 +972,7 @@ Klikom na dugme \emph{Istraži algoritme} prelazi se na stranicu \emph{Uvod}, gd
 
 Ova stranica služi da predstavi teorijske osnove i pojmove koji su potrebni za dalje razumevanje algoritama. Na Slici \ref{fig:intro_1} može da se vidi deo ove stranice. Klikom na bilo koju sliku sa ove stranice ona će se otvoriti i omogućiti jasniji prikaz iste.
 
-Na dnu stranice stranice, koja je prikazana na Slici \ref{fig:intro_2}, takođe postoji meni koji vodi ka algoritmima koji su implementirani u sklopu ovde aplikacije.
+Na dnu Uvodne stranice, koja je prikazana na Slici \ref{fig:intro_2}, takođe postoji meni koji vodi ka algoritmima koji su implementirani u sklopu ovde aplikacije.
 
 \begin{figure}[H]
 \centering
@@ -989,7 +992,7 @@ Na dnu stranice stranice, koja je prikazana na Slici \ref{fig:intro_2}, takođe 
 
 Stranica za pristup grubom silom, prikazana na Slici \ref{fig:brute_force_1}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
 Nakon objašnjenja i prikaza programskog koda može da se unese eksperimentalni spektar i postoji mogućnost da se odabere da li korisnik želi prikaz vizuelizacije ovog algoritma ili želi samo prikaz rešenja (Slika \ref{fig:brute_force_2}). Na Slici \ref{fig:brute_force_4} može da se vidi drvo koje se izgradilo prilikom traženja rešenja. Postoje i elementi za kontrolisanje izvršavanja animacije kao što su \emph{Play/Pause/Reset} a pored toga postoji i \emph{slider} kojim može da se premota animacija do određenog dela izvršavanja. Pošto drvo izvršavanja može da bude veoma veliko dodata je i opcija uveličavanja tako da određeni deo drveta može da se uveliča a onda ostatak drveta može da se vidi povlačenjem miša. Čvorovi koji su obeleženi zelenom bojom predstavljaju rešenje a crveni čvorovi su odbačeni i ne predstavljaju rešenje. Kada se miš postavi iznad nekog crvenog čvora prikazaće se i objašnjenje zašto on nije rešenje.
-Kada se animacija završi moguće je kliknuti i na dugme \emph{Download} čime će se izgrađeno drvo skinuti na Vaš računar u \emph{SVG} formatu.
+Kada se animacija završi moguće je kliknuti i na dugme \emph{Download} čime će se izgrađeno drvo skinuti na računar korisnika u \emph{SVG} formatu.
 \begin{figure}[h]
 \centering
 \includegraphics[width=1\textwidth]{images/brute_force_1.png}
@@ -1029,7 +1032,7 @@ Stranica za algoritam \emph{Branch and Bound}, prikazana na Slici \ref{fig:branc
 \label{fig:branch_and_bound}
 \end{figure}
 
-Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i može da se odabere da se vidi vizuelizacija ovog algoritma ili samo rešenje. Ovaj algoritam je veoma sličan pristupu grubom silom, tako da je i vizuelizacija i elementi koji čine tu vizuelizaciju potpuno ista. Jedina razlika je što je ovaj algoritam dosta brži i može da ranije odseče kandidate koji nisu rešenje tako da eksperimentalni spektar koji može da se unese je duži. Dodatno, pošto u ovom algoritmu postoji više razloga zašto je neki čvor odsečen tako će i poruke koje se prikazuju kada se mišem prevuče preko nekog čvora biti drugačije. Ovde je takođe po okončanju animacije moguće skinuti igrađeno drvo u \emph{SVG} formatu.
+Nakon objašnjenja i koda za algoritam može da se unese eksperimentalni spektar i može da se odabere da se vidi vizuelizacija ovog algoritma ili samo rešenje. Ovaj algoritam je veoma sličan pristupu grubom silom, tako da su i vizuelizacija i elementi koji čine tu vizuelizaciju potpuno isti. Jedina razlika je što je ovaj algoritam dosta brži i može da ranije odseče kandidate koji nisu rešenje tako da eksperimentalni spektar koji može da se unese je duži. Dodatno, pošto u ovom algoritmu postoji više razloga zašto je neki čvor odsečen tako će i poruke koje se prikazuju kada se mišem prevuče preko nekog čvora biti drugačije. Ovde je takođe po okončanju animacije moguće skinuti izgrađeno drvo u \emph{SVG} formatu.
 
 \subsection{\emph{Leaderboard}}
 Stranica za algoritam \emph{Leaderboard}, prikazana na Slici \ref{fig:leaderboard_1}, sadrži objašnjenje ovog algoritma kao i kod u programskom jeziku \emph{Python} za implementaciju algoritma.
